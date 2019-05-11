@@ -56,14 +56,16 @@ class OccupationForm(BaseForm, forms.ModelForm):
 
 
 class PayrollForm(BaseForm, forms.ModelForm):
-    employee = forms.ModelChoiceField(queryset=Employee.objects.all(), widget=forms.HiddenInput())
-    date_expired = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
+    date_expired = forms.DateField(required=True, label='Ημερομηνία', widget=forms.DateInput(attrs={'type': 'date'}))
 
     class Meta:
         model = Payroll
-        fields = ['date_expired', 'category', 'title', 'payment_method', 'value',
-                  'employee', 'is_paid'
+        fields = ['date_expired', 'employee','category', 'title', 'payment_method', 'value',
+                  'is_paid'
                   ]
+        widgets = {
+            'employee': autocomplete.ModelSelect2(url='warehouse:auto-employee', attrs={'class': 'form-control', })
+        }
 
 
 class CreateCopyForm(BaseForm, forms.Form):

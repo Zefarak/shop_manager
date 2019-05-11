@@ -4,7 +4,7 @@ from .models import InvoiceImage
 from catalogue.product_details import VendorPaycheck
 from .models import Invoice, Vendor
 from .billing import BillCategory, BillInvoice
-from .payroll import Employee, Payroll
+from .payroll import Employee, Payroll, Occupation
 from .billing import BillCategory
 from .generic_expenses import GenericExpense
 from catalogue.models import Product
@@ -122,3 +122,11 @@ class PayrollTable(tables.Table):
         model = BillCategory
         template_name = 'django_tables2/bootstrap.html'
         fields = ['date_expired', 'title', 'person', 'payment_method', 'is_paid', 'tag_final_value']
+
+
+class EmployeeTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+    tag_balance = tables.Column(orderable=False)

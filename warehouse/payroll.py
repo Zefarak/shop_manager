@@ -9,12 +9,9 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 
-
-
 from site_settings.constants import *
 from site_settings.models import PaymentMethod, Store
 from .managers import PayrollManager
-
 
 import datetime
 from django.db import models
@@ -33,9 +30,9 @@ CURRENCY = settings.CURRENCY
 class Occupation(models.Model):
     store = models.ManyToManyField(Store, null=True, blank=True)
     active = models.BooleanField(default=True)
-    title = models.CharField(max_length=64, verbose_name='Occupation')
+    title = models.CharField(max_length=64, verbose_name='Ονομασία')
     notes = models.TextField(blank=True, null=True, verbose_name='Notes')
-    balance = models.DecimalField(max_digits=50, decimal_places=2, default=0, verbose_name='Balance')
+    balance = models.DecimalField(max_digits=50, decimal_places=2, default=0, verbose_name='Υπόλοιπο')
 
     objects = models.Manager()
 
@@ -70,13 +67,13 @@ class Employee(models.Model):
     active = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
-    title = models.CharField(max_length=64, unique=True, verbose_name='Name')
-    phone = models.CharField(max_length=10, verbose_name='Phone', blank=True)
-    phone1 = models.CharField(max_length=10, verbose_name='Cell Phone', blank=True)
+    title = models.CharField(max_length=64, unique=True, verbose_name='Ονομασία')
+    phone = models.CharField(max_length=10, verbose_name='Κινητό', blank=True)
+    phone1 = models.CharField(max_length=10, verbose_name='Σταθερό', blank=True)
     date_started = models.DateField(default=timezone.now, verbose_name='Date started')
-    occupation = models.ForeignKey(Occupation, null=True, verbose_name='Occupation', on_delete=models.PROTECT, related_name='employees')
-    balance = models.DecimalField(max_digits=50, decimal_places=2, default=0, verbose_name='Balance')
-    vacation_days = models.IntegerField(default=0, verbose_name='Remaining Vacation Days')
+    occupation = models.ForeignKey(Occupation, null=True, blank=True, verbose_name='Επάγγελμα', on_delete=models.SET_NULL, related_name='employees')
+    balance = models.DecimalField(max_digits=50, decimal_places=2, default=0, verbose_name='Υπόλοιπο')
+    vacation_days = models.IntegerField(default=0, verbose_name='Υμέρες Άδειας')
 
     objects = models.Manager()
 
@@ -125,9 +122,9 @@ class Employee(models.Model):
 
 
 class Payroll(DefaultOrderModel):
-    employee = models.ForeignKey(Employee, verbose_name='Employee', on_delete=models.PROTECT,
+    employee = models.ForeignKey(Employee, verbose_name='Υπάλληλος', on_delete=models.PROTECT,
                                related_name='person_invoices')
-    category = models.CharField(max_length=1, choices=PAYROLL_CHOICES, default='1')
+    category = models.CharField(max_length=1, choices=PAYROLL_CHOICES, default='1', verbose_name='Κατηγορία')
     objects = models.Manager()
     browser = PayrollManager()
 
@@ -175,8 +172,8 @@ class Payroll(DefaultOrderModel):
         if date_start and date_end and date_end > date_start:
             queryset = queryset.filter(date_expired__range=[date_start, date_end])
         queryset = queryset.filter(category__in=cate_name) if cate_name else queryset
-        queryset = queryset.filter(is_paid=True) if 'paid' in paid_name else queryset.filter(is_paid=False) \
-            if 'not_paid' in paid_name else queryset
+        queryset = queryset.filter(is_paid=True) if '1' in paid_name else queryset.filter(is_paid=False) \
+            if '2' in paid_name else queryset
         queryset = queryset.filter(employee__id__in=person_name) if person_name else queryset
         queryset = queryset.filter(employee__occupation__id__in=occup_name) if occup_name else queryset
         queryset = queryset.filter(Q(title__icontains=search_name) |

@@ -9,7 +9,7 @@ from catalogue.models import Product
 from site_settings.constants import CURRENCY
 from .tables import ProductAddTable
 from django_tables2 import RequestConfig
-from .forms import BillCategoryForm
+from .forms import BillCategoryForm, EmployeeForm
 
 @staff_member_required
 def ajax_paycheck_actions(request, question):
@@ -109,3 +109,12 @@ def popup_new_bill(request):
             '<script>opener.closePopup(window, "%s", "%s", "#id_category");</script>' % (instance.pk, instance))
     return render(request, 'dashboard/form.html', context=locals())
 
+
+@staff_member_required
+def popup_employee(request):
+    form = EmployeeForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save()
+        return HttpResponse(
+            '<script>opener.closePopup(window, "%s", "%s", "#id_employee");</script>' % (instance.pk, instance))
+    return render(request, 'dashboard/form.html', context=locals())

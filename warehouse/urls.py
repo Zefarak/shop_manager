@@ -18,9 +18,9 @@ from .payroll_views import (PayrollListView, EmployeeListView, EmployeeCreateVie
                             OccupationCreateView, OccupationListView, OccupationUpdateView, delete_occupation, EmployeeListCardView,
                             PayrollCreateView, EmployeeCardView, payroll_quick_pay, PayrollUpdateView, delete_payroll
                             )
-from .ajax_calls import ajax_paycheck_actions, ajax_calculate_value, ajax_search_products, popup_new_bill
+from .ajax_calls import ajax_paycheck_actions, ajax_calculate_value, ajax_search_products, popup_new_bill, popup_employee
 from .pdf_views import download_cv_pdf
-
+from .autocomplete_widgets import EmployeeAutocomplete
 
 app_name = 'warehouse'
 
@@ -42,6 +42,8 @@ urlpatterns = [
     path('ajax/paycheck-actions/<slug:question>/', ajax_paycheck_actions, name='ajax_paycheck_actions'),
     path('ajax/search-products/<int:pk>/', ajax_search_products, name='ajax_ware_search'),
     path('popup/new-bill-category/', popup_new_bill, name='popup-new-bill'),
+    path('popup/new-employee/', popup_employee, name='popup-employee'),
+    path('auto-complete-employee/', EmployeeAutocomplete.as_view(), name='auto-employee'),
 
 
     path('invoice/order-image/create/<int:pk>/', CreateInvoiceImageView.as_view(), name='create-order-image'),
@@ -88,7 +90,7 @@ urlpatterns = [
     path('payroll/occupation-edit/<int:pk>/', OccupationUpdateView.as_view(), name='occupation_edit'),
     path('payroll/occupation-delete/<int:pk>/', delete_occupation, name='occupation_delete'),
 
-    path('payroll/create/<int:pk>/', PayrollCreateView.as_view(), name='employee_create_payroll'),
+    path('payroll/create/', PayrollCreateView.as_view(), name='payroll_create'),
     path('payroll/employee-card-detail/<int:pk>/', EmployeeCardView.as_view(), name='employee-card-detail'),
     path('payroll/quick-pay/<int:pk>/', payroll_quick_pay, name='payroll_quick_pay'),
     path('payroll/edit/<int:pk>/', PayrollUpdateView.as_view(), name='payroll_edit'),

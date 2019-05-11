@@ -21,14 +21,24 @@ class PayrollListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        queryset = Payroll.browser.get_queryset().not_paid()
-        return queryset[:10]
+        qs = Payroll.objects.all()
+        qs = Payroll.filters_data(self.request, qs)
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        create_url, back_url, page_title = reverse('warehouse:paycheck_create'), reverse('warehouse:dashboard'), 'Μισθοδοσία'
+        create_url, back_url, page_title = reverse('warehouse:payroll_create'), reverse('warehouse:dashboard'), 'Μισθοδοσία'
         queryset_table = PayrollTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
+
+        #  filters
+        employee_filter, search_filter, paid_filter, date_filter = True, True, True, True
+        employees = Employee.objects.filter(active=True)
+
+        # pdf creator
+        get_params = self.request.get_full_path().split('?', 1)[1] if '?' in self.request.get_full_path() else ''
+        report_button, report_url = True, reverse('warehouse:pdf_create', kwargs={'slug': 'payroll'})+'?' + get_params
+
         context.update(locals())
         return context
 
@@ -69,42 +79,34 @@ class PayrollCreateView(CreateView):
     model = Payroll
     form_class = PayrollForm
     template_name = 'dashboard/form.html'
-
-    def get_initial(self):
-        initial = super().get_initial()
-        self.employee = get_object_or_404(Employee, id=self.kwargs['pk'])
-        initial['employee'] = self.employee
-        return initial
-
-    def get_success_url(self):
-        return self.request.META.get('HTTP_REFERER')
+    success_url = reverse_lazy('warehouse:payroll_homepage')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title = f'Create Payroll for {self.employee}'
-        back_url, delete_url = self.get_success_url(), None
+        form_title, back_url = f'Δημιουργία Μισθοδοσίας', self.success_url
+
+        ajax_request, ajax_url, ajax_title = True, reverse('warehouse:popup-employee'), 'Υπάλληλος'
         context.update(locals())
         return context
 
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'New payroll Added')
-        return self.form_valid(form)
+        return super().form_valid(form)
 
 
 @method_decorator(staff_member_required, name='dispatch')
 class PayrollUpdateView(UpdateView):
     model = Payroll
     form_class = PayrollForm
-    template_name = 'warehouse/form.html'
-
-    def get_success_url(self):
-        return reverse('warehouse:employee-card-detail', kwargs={'pk': self.object.employee.id})
+    template_name = 'dashboard/form.html'
+    success_url = reverse_lazy('warehouse:payroll_homepage')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form_title = f'Edit Payroll {self.object.title}'
-        back_url, delete_url = self.get_success_url(), reverse('warehouse:payroll_delete', kwargs={'pk': self.object.id})
+        back_url, delete_url = self.success_url, reverse('warehouse:payroll_delete', kwargs={'pk': self.object.id})
+        ajax_request, ajax_url, ajax_title = True, reverse('warehouse:popup-employee'), 'Υπάλληλος'
         context.update(locals())
         return context
 
