@@ -1,0 +1,108 @@
+{% extends 'index.html' %} {% load render_table from django_tables2 %}
+
+{% block content %}
+    <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <div class="page-body">
+                        <div class="row">
+                            <!-- task, page, download counter  start -->
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card bg-c-yellow update-card">
+                                    <div class="card-block">
+                                        <div class="row align-items-end">
+                                            <div class="col-8">
+                                                <h4 class="text-white">{{ currency }} {{ billing_dept }}</h4>
+                                                <h6 class="text-white m-b-0">Υπόλοιπο Λογαριασμών</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <canvas id="update-chart-1" height="50"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="{% url 'warehouse:billing_view' %}" class="text-white m-b-0"><i class="feather icon-clock text-white f-14 m-r-10"></i>Λεπτομέριες</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card bg-c-green update-card">
+                                    <div class="card-block">
+                                        <div class="row align-items-end">
+                                            <div class="col-8">
+                                                <h4 class="text-white">{{ currency }} {{ payroll_dept }}</h4>
+                                                <h6 class="text-white m-b-0">Υπόλοιπο Μισθοδοσίας</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <canvas id="update-chart-2" height="50"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="{% url 'point_of_sale:home' %}" class="text-white m-b-0"><i class="feather icon-clock text-white f-14 m-r-10"></i>Λεπτομέριες</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card bg-c-pink update-card">
+                                    <div class="card-block">
+                                        <div class="row align-items-end">
+                                            <div class="col-8">
+                                                <h4 class="text-white">{{ currency }} {{ expense_dept }}</h4>
+                                                <h6 class="text-white m-b-0">Διάφορα Έξοδα</h6>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <canvas id="update-chart-3" height="50"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="{% url 'warehouse:billing_view' %}" class="text-white m-b-0"><i class="feather icon-clock text-white f-14 m-r-10"></i>Λεπτομέριες</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- task, page, download counter  end -->
+                            <!--  sale analytics start -->
+                            <div class="col-xl-4 col-md-4"></div>
+                            <div class="col-xl-4 col-md-4">
+                                <div class="card user-card2">
+                                    <div class="card-block text-center">
+                                        <h6 class="m-b-15">Συνολικά Έξοδα</h6>
+                                        <button class="btn btn-warning btn-block p-t-15 p-b-15">{{ currency }} {{ total_expenses }}</button>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="col-xl-4 col-md-4"></div>
+                                            <!--  sale analytics end -->
+                            <div class="col-xl-4 col-md-4">
+                                 <div class="card">
+                                     <div class="card-header">Λογαριασμοί</div>
+                                     <div class="card-body">
+                                         {% render_table billings %}
+                                     </div>
+                                 </div>
+                            </div>
+                            <div class="col-xl-4 col-md-4">
+                                 <div class="card">
+                                     <div class="card-header">Λογαριασμοί</div>
+                                     <div class="card-body">
+                                         {% render_table billings %}
+                                     </div>
+                                 </div>
+                            </div>
+                            <div class="col-xl-4 col-md-4">
+                                 <div class="card">
+                                     <div class="card-header">Λογαριασμοί</div>
+                                     <div class="card-body">
+                                         {% render_table billings %}
+                                     </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

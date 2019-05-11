@@ -1,0 +1,410 @@
+<!DOCTYPE html> {% load static %}
+<html lang="en">
+
+
+<!-- Mirrored from colorlib.com//polygon/adminty/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 03 May 2019 18:23:26 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+{% include 'include/css.html' %}
+{% block extra_css %} {% endblock %}
+
+<body>
+    <!-- Pre-loader start -->
+    <div class="theme-loader">
+        <div class="ball-scale">
+            <div class='contain'>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pre-loader end -->
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <nav class="navbar header-navbar pcoded-header">
+                <div class="navbar-wrapper">
+                    <div class="navbar-logo">
+                        <a class="mobile-menu" id="mobile-collapse" href="#!">
+                            <i class="feather icon-menu"></i>
+                        </a>
+                        <a href="index.html">
+                            <img class="img-fluid" src="{% static 'assets/images/logo.png' %}" alt="Theme-Logo" />
+                        </a>
+                        <a class="mobile-options">
+                            <i class="feather icon-more-horizontal"></i>
+                        </a>
+                    </div>
+                    <div class="navbar-container container-fluid">
+                        <ul class="nav-left">
+                            <li class="header-search">
+                                <div class="main-search morphsearch-search">
+                                    <div class="input-group">
+                                        <span class="input-group-addon search-close"><i class="feather icon-x"></i></span>
+                                        <input type="text" class="form-control">
+                                        <span class="input-group-addon search-btn"><i class="feather icon-search"></i></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="#!" onclick="if (!window.__cfRLUnblockHandlers) return false; javascript:toggleFullScreen()" data-cf-modified-e35820e19768f5ecccd8693b-="">
+                                    <i class="feather icon-maximize full-screen"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav-right">
+                            <li class="header-notification">
+                                <div class="dropdown-primary dropdown">
+                                    <div class="displayChatbox dropdown-toggle" data-toggle="dropdown">
+                                        <i class="feather icon-message-square"></i>
+                                        <span class="badge bg-c-green">3</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="user-profile header-notification">
+                                <div class="dropdown-primary dropdown">
+                                    <div class="dropdown-toggle" data-toggle="dropdown">
+                                        <span>{{ user }}</span>
+                                        <i class="feather icon-chevron-down"></i>
+                                    </div>
+                                    <ul class="show-notification profile-notification dropdown-menu" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                        <li>
+                                          <a href="{% url 'site_settings:payment_methods' %}">
+                                              <i class="feather icon-log-out"></i> Τρόποι Πληρωμής
+                                          </a>
+                                        </li>
+                                        <li>
+                                          <a href="{% url 'site_settings:stores' %}">
+                                              <i class="feather icon-log-out"></i> Σημεία Πωλήσεων
+                                          </a>
+                                        </li>
+                                        <li>
+                                            <a href="auth-normal-sign-in.html">
+                                                <i class="feather icon-log-out"></i> Logout
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            {% block sidebar %}
+            <!-- Sidebar chat start -->
+            <div id="sidebar" class="users p-chat-user showChat">
+                <div class="had-container">
+                    <div class="card card_main p-fixed users-main">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Φίλτρα</h5>
+                                </div>
+                                <div class="card-block">
+                                    <form class="form" method="get">
+                                        {% if search_filter %}{% include 'filters/search_filter.html' %} {% endif %}
+                                        {% if date_filter %}{% include 'filters/date_range_filter.html' %} {% endif %}
+                                        {% if vendor_filter %} {% include 'filters/vendors_filter.html' %} {% endif %}
+                                        {% if category_filter %} {% include 'filters/category.html' %} {% endif %}
+                                        {% if store_filter %} {% include 'filters/store_filter.html' %} {% endif %}
+                                        {% if paid_filter %} {% include 'filters/paid_filter.html' %} {% endif %}
+                                        <button class="btn btn-primary btn round" type="submit">Υποβολή</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sidebar inner chat start-->
+            {% endblock %}
+
+            <!-- Sidebar inner chat end-->
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    {% include 'include/navbar.html' %}
+                    {% block content %}
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <div class="page-body">
+                                        <div class="row">
+                                            <!-- task, page, download counter  start -->
+                                            <div class="col-xl-3 col-md-6">
+                                                <div class="card bg-c-yellow update-card">
+                                                    <div class="card-block">
+                                                        <div class="row align-items-end">
+                                                            <div class="col-8">
+                                                                <h4 class="text-white">{{ currency }} {{ total_invoices }}</h4>
+                                                                <h6 class="text-white m-b-0">Αξία Τιμολογίων</h6>
+                                                            </div>
+                                                            <div class="col-4 text-right">
+                                                                <canvas id="update-chart-1" height="50"></canvas>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <a href="{% url 'warehouse:dashboard' %}" class="text-white m-b-0"><i class="feather icon-clock text-white f-14 m-r-10"></i>Λεπτομέριες</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6">
+                                                <div class="card bg-c-green update-card">
+                                                    <div class="card-block">
+                                                        <div class="row align-items-end">
+                                                            <div class="col-8">
+                                                                <h4 class="text-white">{{ currency }} {{ total_orders }}</h4>
+                                                                <h6 class="text-white m-b-0">Έσοδα Πωλήσεων</h6>
+                                                            </div>
+                                                            <div class="col-4 text-right">
+                                                                <canvas id="update-chart-2" height="50"></canvas>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <a href="{% url 'point_of_sale:home' %}" class="text-white m-b-0"><i class="feather icon-clock text-white f-14 m-r-10"></i>Λεπτομέριες</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6">
+                                                <div class="card bg-c-pink update-card">
+                                                    <div class="card-block">
+                                                        <div class="row align-items-end">
+                                                            <div class="col-8">
+                                                                <h4 class="text-white">{{ currency }} {{ total_billing }}</h4>
+                                                                <h6 class="text-white m-b-0">Υπόλοιπο Λογαριασμών</h6>
+                                                            </div>
+                                                            <div class="col-4 text-right">
+                                                                <canvas id="update-chart-3" height="50"></canvas>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <a href="{% url 'warehouse:billing_view' %}" class="text-white m-b-0"><i class="feather icon-clock text-white f-14 m-r-10"></i>Λεπτομέριες</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6">
+                                                <div class="card bg-c-lite-green update-card">
+                                                    <div class="card-block">
+                                                        <div class="row align-items-end">
+                                                            <div class="col-8">
+                                                                <h4 class="text-white">{{ currency }} {{ total_payroll }}</h4>
+                                                                <h6 class="text-white m-b-0">Υπόλοιπο Μισθοδοσίας</h6>
+                                                            </div>
+                                                            <div class="col-4 text-right">
+                                                                <canvas id="update-chart-4" height="50"></canvas>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <a href="{% url 'warehouse:payroll_homepage' %}" class="text-white m-b-0"><i class="feather icon-clock text-white f-14 m-r-10"></i>Λεπτομέριες</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- task, page, download counter  end -->
+
+                                            <!--  sale analytics start -->
+                                            <div class="col-xl-9 col-md-12">
+                                                <div class="card table-card">
+                                                    <div class="card-header">
+                                                        <h5>Application Sales</h5>
+                                                        <div class="card-header-right">
+                                                            <ul class="list-unstyled card-option">
+                                                                <li><i class="feather icon-maximize full-card"></i></li>
+                                                                <li><i class="feather icon-minus minimize-card"></i></li>
+                                                                <li><i class="feather icon-trash-2 close-card"></i></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover  table-borderless">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>
+                                                                            <div class="chk-option">
+                                                                                <div class="checkbox-fade fade-in-primary">
+                                                                                    <label class="check-task">
+                                                                                        <input type="checkbox" value="">
+                                                                                        <span class="cr">
+                                                                                            <i class="cr-icon feather icon-check txt-default"></i>
+                                                                                        </span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                            Application</th>
+                                                                        <th>Sales</th>
+                                                                        <th>Change</th>
+                                                                        <th>Avg Price</th>
+                                                                        <th>Total</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="chk-option">
+                                                                                <div class="checkbox-fade fade-in-primary">
+                                                                                    <label class="check-task">
+                                                                                        <input type="checkbox" value="">
+                                                                                        <span class="cr">
+                                                                                            <i class="cr-icon feather icon-check txt-default"></i>
+                                                                                        </span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="d-inline-block align-middle">
+                                                                                <h6>Able Pro</h6>
+                                                                                <p class="text-muted m-b-0">Powerful Admin Theme</p>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>16,300</td>
+                                                                        <td><canvas id="app-sale1" height="50" width="100"></canvas></td>
+                                                                        <td>$53</td>
+                                                                        <td class="text-c-blue">$15,652</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="chk-option">
+                                                                                <div class="checkbox-fade fade-in-primary">
+                                                                                    <label class="check-task">
+                                                                                        <input type="checkbox" value="">
+                                                                                        <span class="cr">
+                                                                                            <i class="cr-icon feather icon-check txt-default"></i>
+                                                                                        </span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="d-inline-block align-middle">
+                                                                                <h6>Photoshop</h6>
+                                                                                <p class="text-muted m-b-0">Design Software</p>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>26,421</td>
+                                                                        <td><canvas id="app-sale2" height="50" width="100"></canvas></td>
+                                                                        <td>$35</td>
+                                                                        <td class="text-c-blue">$18,785</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="chk-option">
+                                                                                <div class="checkbox-fade fade-in-primary">
+                                                                                    <label class="check-task">
+                                                                                        <input type="checkbox" value="">
+                                                                                        <span class="cr">
+                                                                                            <i class="cr-icon feather icon-check txt-default"></i>
+                                                                                        </span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="d-inline-block align-middle">
+                                                                                <h6>Guruable</h6>
+                                                                                <p class="text-muted m-b-0">Best Admin Template</p>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>8,265</td>
+                                                                        <td><canvas id="app-sale3" height="50" width="100"></canvas></td>
+                                                                        <td>$98</td>
+                                                                        <td class="text-c-blue">$9,652</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="chk-option">
+                                                                                <div class="checkbox-fade fade-in-primary">
+                                                                                    <label class="check-task">
+                                                                                        <input type="checkbox" value="">
+                                                                                        <span class="cr">
+                                                                                            <i class="cr-icon feather icon-check txt-default"></i>
+                                                                                        </span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="d-inline-block align-middle">
+                                                                                <h6>Flatable</h6>
+                                                                                <p class="text-muted m-b-0">Admin App</p>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>10,652</td>
+                                                                        <td><canvas id="app-sale4" height="50" width="100"></canvas></td>
+                                                                        <td>$20</td>
+                                                                        <td class="text-c-blue">$7,856</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <div class="text-center">
+                                                                <a href="#!" class=" b-b-primary text-primary">View all Projects</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 col-md-12">
+                                                <div class="card user-card2">
+                                                    <div class="card-block text-center">
+                                                        <h6 class="m-b-15">Project Risk</h6>
+                                                        <div class="risk-rate">
+                                                            <span><b>5</b></span>
+                                                        </div>
+                                                        <h6 class="m-b-10 m-t-10">Balanced</h6>
+                                                        <a href="#!" class="text-c-yellow b-b-warning">Change Your Risk</a>
+                                                        <div class="row justify-content-center m-t-10 b-t-default m-l-0 m-r-0">
+                                                            <div class="col m-t-15 b-r-default">
+                                                                <h6 class="text-muted">Nr</h6>
+                                                                <h6>AWS 2455</h6>
+                                                            </div>
+                                                            <div class="col m-t-15">
+                                                                <h6 class="text-muted">Created</h6>
+                                                                <h6>30th Sep</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-warning btn-block p-t-15 p-b-15">Download Overall Report</button>
+                                                </div>
+                                            </div>
+                                            <!--  sale analytics end -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endblock %}
+                </div>
+            </div>
+    </div>
+{% include 'include/js.html' %}
+{% block extra_js %}{% endblock %}
+</body>
+
+
+<!-- Mirrored from colorlib.com//polygon/adminty/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 03 May 2019 18:26:03 GMT -->
+</html>

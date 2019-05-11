@@ -1,0 +1,49 @@
+
+
+<div class="row">
+    {% for product in products %}
+        <div class="col-lg-3 col-sm-6 ">
+            <div class="card card-hover">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div>
+                                <p>{{ product|truncatechars:30 }}</p>
+                                <p>Sku: {{ product.sku }}</p>
+                                <p>Price: {{ product.tag_final_price }}</p>
+                                {% if product.have_attr %}
+                                    <a href="{% url 'point_of_sale:add_to_order_attr' instance.id product.id %}" class="btn btn-success">Add</a>
+                                {% else %}
+                                <button data-href="{% url 'point_of_sale:ajax_add_product' instance.id product.id %}" class="btn btn-primary add_button">Add</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <hr />
+                        <div class="stats">
+                            <a href=''><i class="ti-link"></i>{{ product.qty }} Unit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+    $('.add_button').click(function (evt) {
+            evt.preventDefault();
+            const btn = $(this);
+            const url = btn.attr('data-href');
+            $.ajax({
+                dataType: 'json',
+                url: url,
+                method: 'GET',
+
+                success: function (data) {
+                    $('#order_items_container').html(data.order_container)
+                }
+            })
+        })
+</script>

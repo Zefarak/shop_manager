@@ -1,0 +1,83 @@
+{% extends 'frontend/index.html' %} {% load static %}
+
+
+{% block content %}
+    <div class="hero-wrap hero-bread" style="background-image: url('{% static 'frontend/images/bg_6.jpg' %}');">
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-center justify-content-center">
+                <div class="col-md-9 ftco-animate text-center">
+                    <h1 class="mb-0 bread">Checkout</h1>
+                    <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Checkout</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-8 ftco-animate">
+                    <form method="post" class="billing-form bg-light p-3 p-md-5">{% csrf_token %}
+                        <h3 class="mb-4 billing-heading">Billing Details</h3>
+                        {{ form }}
+                        <button type="submit" class="btn btn-primary py-3 px-4">Place the Order</button>
+                    </form>
+                    <div class="row mt-5 pt-3 d-flex">
+                        <div class="col-md-6">
+                            <div class="cart-detail bg-light p-3 p-md-4">
+                                <h3 class="billing-heading mb-4">Shipping</h3>
+                                {% for shipping in shipping_methods %}
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <div class="radio">
+                                                <label><input type="radio" name="optradio" class="mr-2">{{ shipping }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="cart-detail bg-light p-3 p-md-4">
+                                <h3 class="billing-heading mb-4">Payment Method</h3>
+                                {% for payment in payment_methods %}
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div class="radio">
+                                            <label><input type="radio" name="payment" class="mr-2"> {{ payment }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                                <p><a href="#" class="btn btn-primary py-3 px-4">Place an order</a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex">
+                            <div class="cart-detail cart-total bg-light p-3 p-md-4">
+                                <h3 class="billing-heading mb-4">Cart Total</h3>
+                                <p class="d-flex">
+                                    <span>Subtotal</span>
+                                    <span>{{ cart.tag_value }}</span>
+                                </p>
+                                <p class="d-flex">
+                                    <span>Delivery</span>
+                                    <span>{{ cart.tag_shipping_cost }}</span>
+                                </p>
+                                <p class="d-flex">
+                                    <span>Discount</span>
+                                    <span>{{ cart.tag_discount_value }}</span>
+                                </p>
+                                <hr>
+                                <p class="d-flex total-price">
+                                    <span>Total</span>
+                                    <span>{{ cart.tag_final_value }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

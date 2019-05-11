@@ -1,0 +1,116 @@
+{% extends 'index.html' %} {% load render_table from django_tables2 %}
+
+{% block content %}
+    <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <div class="page-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="title text-center">{{ object.get_order_type_display }} {{ object.title }}</h4>
+                                        <p class="category">Ημερομηνία... {{ object.date_expired }}</p>
+                                        <br>
+                                        <form class="form">
+                                            <label>Αναζήτηση</label>
+                                            <input type="text" class="form-control form-control-plaintext"
+                                                   id="search_products" placeholder="Search"
+                                                   data-href="{% url 'warehouse:ajax_ware_search' instance.id %}">
+                                        </form>
+                                    </div>
+                                    <div id='products_container' class="card-body">
+                                        {% include 'warehouse/ajax/products_container.html' %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="title">
+                                            <a onclick="confirm('Are you sure?')" href="{{ instance.get_payment_url }}" class="btn btn-info">Δημιουργία Παραστατικού Πληρωμής</a>
+                                            <a href="{{ back_url }}" class="btn btn-warning right">Επιστροφή</a>
+                                            <br>
+                                            <h3>Πληροφορίες</h3>
+                                        </div>
+                                    </div>
+                                    <div class="content" id="order_items_container">
+                                        {% include 'warehouse/ajax/order_container.html' %}
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <button class="btn btn-primary"
+                                                type="button"
+                                                data-toggle="collapse"
+                                                data-target="#actions_info"
+                                                aria-expanded="false"
+                                                aria-controls="actions_info"
+                                        >General Info
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row collapse" id="actions_info">
+                                            <div class="col-md-12">
+                                                <h4>Επεξεργασία</h4>
+                                                <form method="post">{% csrf_token %}
+                                                    {{ form }}
+                                                    <br>
+                                                    <button type='submit' name='order_sub' class="btn btn-primary">Save</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class='card'>
+                                    <div class="card-header text-center">
+                                       <button class="btn btn-primary"
+                                               type="button"
+                                               data-toggle="collapse"
+                                               data-target="#general_info"
+                                               aria-expanded="false"
+                                               aria-controls="general_info "
+                                       >Εικόνες</button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row collapse" id="general_info">
+                                            <div class="col-md-12">
+                                                <a href="{% url 'warehouse:create-order-image' instance.id %}" class="btn btn-success btn-lg btn-raised">Create New Image</a>
+                                                <br>
+                                                {% render_table images_table %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $('#search_products').change(function (evt) {
+        console.log('works!');
+        evt.preventDefault();
+        const text_input = $(this);
+        const url = text_input.attr('data-href');
+        const value = text_input.val();
+        $.ajax({
+            method: 'GET',
+            dataType: 'json',
+            url: url + '?search_name=' + value,
+
+            success: function (data) {
+                $('#products_container').html(data.result)
+            }
+        })
+
+    })
+</script>
+{% endblock %}
