@@ -6,7 +6,7 @@ from .models import Invoice, Vendor
 from .billing import BillCategory, BillInvoice
 from .payroll import Employee, Payroll, Occupation
 from .billing import BillCategory
-from .generic_expenses import GenericExpense
+from .generic_expenses import GenericExpense, GenericExpenseCategory, GenericPerson
 from catalogue.models import Product
 
 
@@ -130,3 +130,56 @@ class EmployeeTable(tables.Table):
         orderable=False,
     )
     tag_balance = tables.Column(orderable=False)
+
+    class Meta:
+        model = Employee
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'occupation', 'store', 'tag_balance', 'active']
+
+
+class OccupationTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+
+    class Meta:
+        model = Occupation
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'store', 'active']
+
+
+class GenericExpenseTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+
+    class Meta:
+        model = GenericExpense
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'store', 'active']
+
+
+class ExpenseCategoryTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+
+    class Meta:
+        model = GenericExpenseCategory
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'active']
+
+
+class GenericPersonTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+
+    class Meta:
+        model = GenericPerson
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'phone', 'active']

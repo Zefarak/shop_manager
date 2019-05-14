@@ -9,7 +9,7 @@ from catalogue.models import Product
 from site_settings.constants import CURRENCY
 from .tables import ProductAddTable
 from django_tables2 import RequestConfig
-from .forms import BillCategoryForm, EmployeeForm
+from .forms import BillCategoryForm, EmployeeForm, OccupationForm, GenericExpenseCategoryForm, GenericPersonForm
 
 @staff_member_required
 def ajax_paycheck_actions(request, question):
@@ -117,4 +117,34 @@ def popup_employee(request):
         instance = form.save()
         return HttpResponse(
             '<script>opener.closePopup(window, "%s", "%s", "#id_employee");</script>' % (instance.pk, instance))
+    return render(request, 'dashboard/form.html', context=locals())
+
+
+@staff_member_required
+def popup_occupation(request):
+    form = OccupationForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save()
+        return HttpResponse(
+            '<script>opener.closePopup(window, "%s", "%s", "#id_occupation");</script>' % (instance.pk, instance))
+    return render(request, 'dashboard/form.html', context=locals())
+
+
+@staff_member_required
+def popup_generic_category(request):
+    form = GenericExpenseCategoryForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save()
+        return HttpResponse(
+            '<script>opener.closePopup(window, "%s", "%s", "#id_category");</script>' % (instance.pk, instance))
+    return render(request, 'dashboard/form.html', context=locals())
+
+
+@staff_member_required
+def popup_generic_person(request):
+    form = GenericPersonForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save()
+        return HttpResponse(
+            '<script>opener.closePopup(window, "%s", "%s", "#id_person");</script>' % (instance.pk, instance))
     return render(request, 'dashboard/form.html', context=locals())

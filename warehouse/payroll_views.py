@@ -8,9 +8,9 @@ from django.db.models import Sum
 
 from .payroll import Payroll, Employee, Occupation, PAYROLL_CHOICES
 from .forms import EmployeeForm, OccupationForm, PayrollForm
-from .tables import PayrollTable
+from .tables import PayrollTable, EmployeeTable, OccupationTable
 from site_settings.models import Store
-
+from site_settings.tools import list_view_table
 from django_tables2 import RequestConfig
 
 
@@ -39,37 +39,6 @@ class PayrollListView(ListView):
         get_params = self.request.get_full_path().split('?', 1)[1] if '?' in self.request.get_full_path() else ''
         report_button, report_url = True, reverse('warehouse:pdf_create', kwargs={'slug': 'payroll'})+'?' + get_params
 
-        context.update(locals())
-        return context
-
-
-@method_decorator(staff_member_required, name='dispatch')
-class EmployeeListCardView(ListView):
-    model = Employee
-    template_name = 'dashboard/list_page.html'
-
-    def get_queryset(self):
-        queryset = Employee.objects.filter(active=True)
-        return queryset
-
-
-@method_decorator(staff_member_required, name='dispatch')
-class EmployeeCardView(ListView):
-    model = Payroll
-    template_name = 'warehouse/payroll/employee_card_detail.html'
-    paginate_by = 20
-
-    def get_queryset(self):
-        self.employee = get_object_or_404(Employee, id=self.kwargs['pk'])
-        queryset = Payroll.objects.filter(employee=self.employee)
-        queryset = Payroll.filters_data(self.request, queryset)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        instance = self.employee
-        categories = PAYROLL_CHOICES
-        back_url = reverse('warehouse:employee-card-list')
         context.update(locals())
         return context
 
@@ -127,19 +96,32 @@ def delete_payroll(request, pk):
 @method_decorator(staff_member_required, name='dispatch')
 class EmployeeListView(ListView):
     model = Employee
-    template_name = 'warehouse/payroll/person_list_view.html'
+    template_name = 'dashboard/list_page.html'
 
     def get_queryset(self):
         queryset = Employee.objects.all()
         queryset = Employee.filters_data(self.request, queryset)
         return queryset
 
+    def get_context_data(self,**kwargs):
+        context = super(EmployeeListView, self).get_context_data(**kwargs)
+        page_title, create_url, back_url = 'Υπάλληλοι', reverse('warehouse:payroll_employee_create'), \
+                                           reverse('warehouse:transcation_homepage')
+        queryset_table = EmployeeTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+
+        store_filter, occupation_filter = True, True
+        stores, occupations = Store.objects.filter(active=True), Occupation.objects.filter(active=True)
+
+        context.update(locals())
+        return context
+
 
 @method_decorator(staff_member_required, name='dispatch')
 class EmployeeCreateView(CreateView):
     model = Employee
     form_class = EmployeeForm
-    template_name = 'warehouse/form.html'
+    template_name = 'dashboard/form.html'
     success_url = reverse_lazy('warehouse:payroll_employee')
 
     def form_valid(self, form):
@@ -149,8 +131,11 @@ class EmployeeCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title = 'Create New Employee'
+        form_title = 'Δημιουργία Νέου Υπαλλήλου'
         back_url, delete_url = self.success_url, None
+
+        # popup
+        ajax_request, ajax_url, ajax_title = True, reverse('warehouse:popup-occupation'), 'Επάγγελμα'
         context.update(locals())
         return context
 
@@ -159,7 +144,7 @@ class EmployeeCreateView(CreateView):
 class EmployeeEditView(UpdateView):
     model = Employee
     form_class = EmployeeForm
-    template_name = 'warehouse/form.html'
+    template_name = 'dashboard/form.html'
     success_url = reverse_lazy('warehouse:payroll_employee')
 
     def form_valid(self, form):
@@ -170,7 +155,10 @@ class EmployeeEditView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         for_title = f'Edit {self.object.title}'
-        back_url, delete_url = self.success_url, ''
+        back_url, delete_url = self.success_url, self.object.get_delete_url()
+
+        # popup
+        ajax_request, ajax_url, ajax_title = True, reverse('warehouse:popup-occupation'), 'Επάγγελμα'
         context.update(locals())
         return context
 
@@ -188,19 +176,29 @@ def delete_employee(request, pk):
 @method_decorator(staff_member_required, name='dispatch')
 class OccupationListView(ListView):
     model = Occupation
-    template_name = 'warehouse/payroll/occup_list_view.html'
+    template_name = 'dashboard/list_page.html'
 
     def get_queryset(self):
         queryset = Occupation.objects.all()
         queryset = Occupation.filters_data(self.request, queryset)
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super(OccupationListView, self).get_context_data(**kwargs)
+        data = {'store': Store.objects.all()}
+        filters = ['search_filter', 'store_filter']
+        page_title, back_url, create_url = 'Επαγγέλματα', reverse('warehouse:transcation_homepage'),\
+                                           reverse('warehouse:occupation_create')
+        list_view_table(self.request, context, OccupationTable(self.object_list), filters, data)
+        context.update(locals())
+        return context
+
 
 @method_decorator(staff_member_required, name='dispatch')
 class OccupationCreateView(CreateView):
     model = Occupation
     form_class = OccupationForm
-    template_name = 'warehouse/form.html'
+    template_name = 'dashboard/form.html'
     success_url = reverse_lazy('warehouse:occupation_list')
 
     def form_valid(self, form):
@@ -220,7 +218,7 @@ class OccupationCreateView(CreateView):
 class OccupationUpdateView(UpdateView):
     model = Occupation
     form_class = OccupationForm
-    template_name = 'warehouse/form.html'
+    template_name = 'dashboard/form.html'
     success_url = reverse_lazy('warehouse:occupation_list')
 
     def form_valid(self, form):

@@ -7,6 +7,33 @@ from .abstract_models import DefaultOrderItemModel,DefaultOrderModel
 from .managers import ExpenseCategoryManager
 
 
+class GenericPerson(models.Model):
+    title = models.CharField(max_length=200)
+    notes = models.TextField(blank=True)
+    balance = models.DecimalField(default=0.00, decimal_places=2, max_digits=20)
+    active = models.BooleanField(default=True)
+    phone = models.CharField(max_length=15, blank=True)
+
+    def __str__(self):
+        return self.title
+
+    def get_edit_url(self):
+        return reverse('warehouse:generic-expense-person-edit', kwargs={'pk': self.id})
+
+    def get_delete_url(self):
+        return reverse('warehouse:generic-expense-person-delete', kwargs={'pk': self.id})
+
+    @staticmethod
+    def filters_data(request, queryset):
+        is_active = request.GET.get('active_name', None)
+        search_name = request.GET.get('search_name', None)
+
+        queryset = queryset.filter(active=True) if is_active == '1' else queryset.filter(active=False) if is_active == '2'\
+            else queryset
+        queryset = queryset.filter(title__contains=search_name) if search_name else queryset
+        return queryset
+
+
 class GenericExpenseCategory(models.Model):
     active = models.BooleanField(default=True)
     title = models.CharField(unique=True, max_length=150)
@@ -30,14 +57,19 @@ class GenericExpenseCategory(models.Model):
     def tag_balance(self):
         return f'{self.balance} {CURRENCY}'
 
-    def get_dashboard_url(self):
-        return reverse('billings:expense_cate_detail', kwargs={'pk': self.id})
+    def get_edit_url(self):
+        return reverse('warehouse:generic-expense-cate-edit', kwargs={'pk': self.id})
+
+    def get_delete_url(self):
+        return reverse('warehouse:generic-expense-cate-delete', kwargs={'pk': self.id})
 
     @staticmethod
     def filters_data(request, queryset):
         search_name = request.GET.get('search_name', None)
-
-        queryset = queryset.filter(title__icontains=search_name) if search_name else queryset
+        active_name = request.GET.get('active_name', None)
+        queryset = queryset.filter(active=True) if active_name == '1' else queryset.filter(active_name=False) \
+            if queryset == '2' else queryset
+        queryset = queryset.filter(title__contains=search_name) if search_name else queryset
         return queryset
 
 
@@ -47,11 +79,9 @@ class GenericExpense(DefaultOrderModel):
                                  on_delete=models.PROTECT,
                                  related_name='expenses'
                                  )
+    person = models.ForeignKey(GenericPerson, blank=True, null=True, on_delete=models.SET_NULL,
+                               verbose_name="Εταιρία/'Ατομο")
     objects = models.Manager()
-
-
-    def tag_model(self):
-        return f'Expenses- {self.category}'
 
     class Meta:
         verbose_name_plural = '3. Εντολή Πληρωμής Γενικών Εξόδων'
@@ -67,20 +97,11 @@ class GenericExpense(DefaultOrderModel):
         super().save(*args, **kwargs)
         self.category.save()
 
-    def get_dashboard_url(self):
-        return reverse('billings:edit_page', kwargs={'pk': self.id, 'slug': 'edit', 'mymodel': 'expense'})
-
-    def get_paid_url(self):
-        return reverse('billings:edit_page', kwargs={'pk': self.id, 'slug': 'paid', 'mymodel': 'expense'})
+    def get_edit_url(self):
+        return reverse('warehouse:generic-expense-cate-edit', kwargs={'pk': self.id})
 
     def get_delete_url(self):
-        return reverse('billings:edit_page', kwargs={'pk': self.id, 'slug': 'delete', 'mymodel': 'expense'})
-
-    def get_dashboard_save_as_url(self):
-        return reverse('billings:save_as_view', kwargs={'pk': self.id, 'slug': 'expense'})
-
-    def get_dashboard_list_url(self):
-        return reverse('billings:expenses_list')
+        return reverse('warehouse:generic-expense-delete', kwargs={'pk': self.id})
 
     def update_category(self):
         self.category.update_balance()

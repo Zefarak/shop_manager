@@ -1,5 +1,6 @@
 import datetime
 from dateutil.relativedelta import relativedelta
+from django_tables2 import RequestConfig
 
 
 def initial_date(request, months=3):
@@ -40,3 +41,13 @@ def estimate_date_start_end_and_months(request):
     start_year, day_now, date_range = clean_date_filter(request, date_pick, date_start=start_year, date_end=day_now)
     months_list = 12
     return [start_year, day_now, date_range, months_list]
+
+
+def list_view_table(request, context, table, filters, data):
+    queryset_table = table
+    RequestConfig(request).configure(queryset_table)
+    for filter in filters:
+        filter = True
+    for key, value in data.items():
+        key = value
+    context.update(locals())

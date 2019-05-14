@@ -106,6 +106,9 @@ class Employee(models.Model):
     def get_edit_url(self):
         return reverse('warehouse:payroll_employee_edit', kwargs={'pk': self.id})
 
+    def get_delete_url(self):
+        return reverse('warehouse:payroll_employee_delete', kwargs={'pk': self.id})
+
     def get_payroll_create_url(self):
         return reverse('warehouse:employee_create_payroll', kwargs={'pk': self.id})
 

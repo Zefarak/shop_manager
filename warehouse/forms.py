@@ -4,6 +4,7 @@ from .payroll import Employee, Occupation, Payroll
 from .models import Invoice, InvoiceOrderItem, InvoiceImage
 from site_settings.models import Store
 from catalogue.models import Product
+from .generic_expenses import GenericExpense, GenericExpenseCategory, GenericPerson
 from dal import autocomplete
 
 
@@ -114,3 +115,24 @@ class InvoiceImageForm(BaseForm, forms.ModelForm):
     class Meta:
         model = InvoiceImage
         fields = '__all__'
+
+
+class GenericExpenseForm(BaseForm, forms.ModelForm):
+
+    class Meta:
+        model = GenericExpense
+        fields = ['date_expired', 'title', 'category', 'person', 'value', 'is_paid']
+
+
+class GenericExpenseCategoryForm(BaseForm, forms.ModelForm):
+
+    class Meta:
+        model = GenericExpenseCategory
+        fields = ['title', 'active']
+
+
+class GenericPersonForm(BaseForm, forms.ModelForm):
+
+    class Meta:
+        model = GenericPerson
+        fields = ['active', 'title', 'phone', 'notes']

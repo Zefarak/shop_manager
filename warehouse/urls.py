@@ -3,8 +3,12 @@ from .views import (
     WarehouseDashboard, BillingHomepageView,
     CreateBillingInvoiceView, BillInvoiceEditView, quick_billing_pay,
     delete_bill_invoice_view, CreateBillingCategoryView, EditBillingCategoryView, delete_bill_category_view,
-    TranscationHomepage, InvoiceBillingCreateView, BillCategoryListView, create_bill_copy
+    TranscationHomepage, InvoiceBillingCreateView, BillCategoryListView, create_bill_copy,
+    GenericExpenseListView, GenericExpenseCreateView, GenericExpenseUpdateView, delete_generic_expense,
+    GenericExpenseCateListView, GenericExpenseCateUpdateView, GenericExpenseCateCreateView, delete_generic_expense_category,
+    GenericExpensePersonListView, GenericExpensePersonCreateView, GenericExpensePersonUpdateView, delete_generic_expense_person,
     )
+
 from .invoice_views import (WarehouseOrderList, create_warehouse_order_view, UpdateWarehouseOrderView,
                             CreateOrderItem, create_or_add_order_item, UpdateInvoiceOrderItem,
                             delete_warehouse_order_item_view,
@@ -15,10 +19,11 @@ from .invoice_views import (WarehouseOrderList, create_warehouse_order_view, Upd
                             )
 
 from .payroll_views import (PayrollListView, EmployeeListView, EmployeeCreateView, EmployeeEditView, delete_employee,
-                            OccupationCreateView, OccupationListView, OccupationUpdateView, delete_occupation, EmployeeListCardView,
-                            PayrollCreateView, EmployeeCardView, payroll_quick_pay, PayrollUpdateView, delete_payroll
+                            OccupationCreateView, OccupationListView, OccupationUpdateView, delete_occupation,
+                            PayrollCreateView, payroll_quick_pay, PayrollUpdateView, delete_payroll
                             )
-from .ajax_calls import ajax_paycheck_actions, ajax_calculate_value, ajax_search_products, popup_new_bill, popup_employee
+from .ajax_calls import ajax_paycheck_actions, ajax_calculate_value, ajax_search_products, popup_new_bill, popup_employee, popup_occupation, popup_generic_category, popup_generic_person
+
 from .pdf_views import download_cv_pdf
 from .autocomplete_widgets import EmployeeAutocomplete
 
@@ -43,7 +48,10 @@ urlpatterns = [
     path('ajax/search-products/<int:pk>/', ajax_search_products, name='ajax_ware_search'),
     path('popup/new-bill-category/', popup_new_bill, name='popup-new-bill'),
     path('popup/new-employee/', popup_employee, name='popup-employee'),
+    path('popup/new-occupation/', popup_occupation, name='popup-occupation'),
     path('auto-complete-employee/', EmployeeAutocomplete.as_view(), name='auto-employee'),
+    path('popup/new-generic-category/', popup_generic_category, name='popup-generic-category'),
+    path('popup/new-generic-person/', popup_generic_person, name='popup-generic-person'),
 
 
     path('invoice/order-image/create/<int:pk>/', CreateInvoiceImageView.as_view(), name='create-order-image'),
@@ -79,7 +87,6 @@ urlpatterns = [
 
     # payroll views
     path('payroll/homepage/', PayrollListView.as_view(), name='payroll_homepage'),
-    path('payroll/employee-card/', EmployeeListCardView.as_view(), name='employee-card-list'),
     path('payroll/employee-list/', EmployeeListView.as_view(), name='payroll_employee'),
     path('payroll/employee-create/', EmployeeCreateView.as_view(), name='payroll_employee_create'),
     path('payroll/employee-edit/<int:pk>/', EmployeeEditView.as_view(), name='payroll_employee_edit'),
@@ -91,10 +98,24 @@ urlpatterns = [
     path('payroll/occupation-delete/<int:pk>/', delete_occupation, name='occupation_delete'),
 
     path('payroll/create/', PayrollCreateView.as_view(), name='payroll_create'),
-    path('payroll/employee-card-detail/<int:pk>/', EmployeeCardView.as_view(), name='employee-card-detail'),
     path('payroll/quick-pay/<int:pk>/', payroll_quick_pay, name='payroll_quick_pay'),
     path('payroll/edit/<int:pk>/', PayrollUpdateView.as_view(), name='payroll_edit'),
     path('payroll/delete/<int:pk>/', delete_payroll, name='payroll_delete'),
+
+    path('generic-expense/list/', GenericExpenseListView.as_view(), name='generic-expense-list'),
+    path('generic-expense/create/', GenericExpenseCreateView.as_view(), name='generic-expense-create'),
+    path('generic-expense/edit/<int:pk>/', GenericExpenseUpdateView.as_view(), name='generic-expense-edit'),
+    path('generic-expense/delete/<int:pk>/', delete_generic_expense, name='generic-expense-delete'),
+
+    path('generic-expense-cate/list/', GenericExpenseCateListView.as_view(), name='generic-expense-cate-list'),
+    path('generic-expense-cate/create/', GenericExpenseCateCreateView.as_view(), name='generic-expense-cate-create'),
+    path('generic-expense-cate/edit/<int:pk>/', GenericExpenseCateUpdateView.as_view(), name='generic-expense-cate-edit'),
+    path('generic-cate/delete/<int:pk>/', delete_generic_expense_category, name='generic-expense-cate-delete'),
+
+    path('generic-expense-person/list/', GenericExpensePersonListView.as_view(), name='generic-expense-person-list'),
+    path('generic-expense-person/create/', GenericExpensePersonCreateView.as_view(), name='generic-expense-person-create'),
+    path('generic-expense-person/edit/<int:pk>/', GenericExpensePersonUpdateView.as_view(), name='generic-expense-person-edit'),
+    path('generic-person/delete/<int:pk>/', delete_generic_expense_person, name='generic-expense-person-delete'),
 
     #  report pdfs
     path('pdf-create/<slug:slug>/', download_cv_pdf, name='pdf_create')

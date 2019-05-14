@@ -7,12 +7,14 @@ from django.contrib import messages
 from django.db.models import Sum
 
 from .models import Store, BillCategory, BillInvoice, Vendor, Invoice, Employee
-from .generic_expenses import GenericExpense
-from .tables import InvoiceTable, BillingCategoryTable, BillInvoiceTable, BillCategoryTable
+from .generic_expenses import GenericExpense, GenericExpenseCategory, GenericPerson
+from .tables import InvoiceTable, BillingCategoryTable, BillInvoiceTable, BillCategoryTable, GenericExpenseTable, ExpenseCategoryTable, GenericPersonTable
 from site_settings.constants import CURRENCY
-from .forms import BillInvoiceEditForm, BillInvoiceCreateForm, BillCategoryForm, CreateCopyForm
+from .forms import BillInvoiceEditForm, BillInvoiceCreateForm, BillCategoryForm, CreateCopyForm, GenericExpenseForm, GenericExpenseCategoryForm, GenericPersonForm
 from django_tables2 import RequestConfig
 from dateutil.relativedelta import relativedelta
+from decimal import Decimal
+
 
 @method_decorator(staff_member_required, name='dispatch')
 class WarehouseDashboard(TemplateView):
@@ -49,7 +51,7 @@ class TranscationHomepage(TemplateView):
         billing_dept = billings.aggregate(Sum('balance'))['balance__sum'] if billings else 0.00
         payroll_dept = payroll.aggregate(Sum('balance'))['balance__sum'] if payroll else 0.00
         expense_dept = expenses.aggregate(Sum('final_value'))['final_value__sum'] if expenses else 0.00
-        total_expenses = billing_dept+payroll_dept+expense_dept
+        total_expenses = Decimal(billing_dept)+Decimal(payroll_dept)+Decimal(expense_dept)
         currency = CURRENCY
         billings, payroll = billings[:10], payroll[:10]
         # tables
@@ -270,5 +272,197 @@ def billing_create_copy(request, pk):
         print(days, months, repeat)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     context = locals()
-    return render(request, 'warehouse/form.html')
+    return render(request, 'dashboard/form.html')
 
+
+@method_decorator(staff_member_required, name='dispatch')
+class GenericExpenseListView(ListView):
+    template_name = 'dashboard/list_page.html'
+    model = GenericExpense
+    paginate_by = 50
+
+    def get_queryset(self):
+        qs = GenericExpense.objects.all()
+        qs = GenericExpense.filters_data(self.request, qs)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(GenericExpenseListView, self).get_context_data(**kwargs)
+        page_title, back_url, create_url = ['Γενικά Έξοδα', reverse('warehouse:transcation_homepage'),
+                                            reverse('warehouse:generic-expense-create')]
+        queryset_table = GenericExpenseCategory(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+        search_filter, category_filter, date_filter, paid_filter = True, True, True, True
+        categories = GenericExpense.objects.all()
+        context.update(locals())
+        return context
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class GenericExpenseCreateView(CreateView):
+    template_name = 'dashboard/form.html'
+    model = GenericExpense
+    form_class = GenericExpenseForm
+    success_url = reverse_lazy('warehouse:generic-expense-list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form_title, back_url = 'Δημιουργία Εξόδου', self.success_url
+        ajax_request, ajax_title, ajax_url = True, 'Δημιουργία Νέας Εταιρίας', reverse('warehouse:popup-generic-person')
+        context.update(locals())
+        return context
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class GenericExpenseUpdateView(UpdateView):
+    model = GenericExpense
+    template_name = 'dashboard/form.html'
+    success_url = reverse_lazy('warehouse:generic-expense-list')
+
+    def get_context_data(self, **kwargs):
+        context = super(GenericExpenseUpdateView, self).get_context_data(**kwargs)
+        form_title, back_url, delete_url = 'Δημιουργία Εξόδου', self.success_url, self.object.get_delete_url()
+        ajax_request, ajax_title, ajax_url = True, 'Δημιουργία Νέας Εταιρίας', reverse('warehouse:popup-generic-person')
+        context.update(locals())
+        return context
+
+
+@staff_member_required
+def delete_generic_expense(request, pk):
+    instance = get_object_or_404(GenericExpense, id=pk)
+    instance.delete()
+    return redirect(reverse('warehouse:generic-expense-list'))
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class GenericExpenseCateListView(ListView):
+    template_name = 'dashboard/list_page.html'
+    model = GenericExpenseCategory
+    paginate_by = 50
+
+    def get_queryset(self):
+        qs = GenericExpenseCategory.objects.all()
+        qs = GenericExpenseCategory.filters_data(self.request, qs)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_title, back_url, create_url = ['Κατηγορίες Εξόδων', reverse('warehouse:transcation_homepage'),
+                                            reverse('warehouse:generic-expense-cate-create')]
+        queryset_table = ExpenseCategoryTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+        search_filter, active_filter = True, True
+        context.update(locals())
+        return context
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class GenericExpenseCateCreateView(CreateView):
+    template_name = 'dashboard/form.html'
+    model = GenericExpenseCategory
+    form_class = GenericExpenseCategoryForm
+    success_url = reverse_lazy('warehouse:generic-expense-cate-list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form_title, back_url = 'Δημιουργία Εξόδου', self.success_url
+        context.update(locals())
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Η κατηγορία δημιουργήθηκε')
+        return super().form_valid(form)
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class GenericExpenseCateUpdateView(UpdateView):
+    model = GenericExpenseCategory
+    template_name = 'dashboard/form.html'
+    success_url = reverse_lazy('warehouse:generic-expense-cate-list')
+    form_class = GenericExpenseCategoryForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form_title, back_url, delete_url = [f'Επεξεργασία {self.object.title}',self.success_url, self.object.get_delete_url()]
+        context.update(locals())
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Η επεξεργασία αποθηκεύτηκε')
+        return super().form_valid(form)
+
+
+@staff_member_required
+def delete_generic_expense_category(request, pk):
+    instance = get_object_or_404(GenericExpenseCategory, id=pk)
+    instance.delete()
+    return redirect(reverse('warehouse:generic-expense-cate-list'))
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class GenericExpensePersonListView(ListView):
+    template_name = 'dashboard/list_page.html'
+    model = GenericPerson
+    paginate_by = 50
+
+    def get_queryset(self):
+        qs = GenericPerson.objects.all()
+        qs = GenericPerson.filters_data(self.request, qs)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_title, back_url, create_url = ['Εταιρίες/Ιδιώτες', reverse('warehouse:transcation_homepage'),
+                                            reverse('warehouse:generic-expense-person-create')]
+        queryset_table = GenericPersonTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+        search_filter, active_filter = True, True
+        context.update(locals())
+        return context
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class GenericExpensePersonCreateView(CreateView):
+    template_name = 'dashboard/form.html'
+    model = GenericPerson
+    form_class = GenericPersonForm
+    success_url = reverse_lazy('warehouse:generic-expense-person-list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form_title, back_url = 'Δημιουργία', self.success_url
+        context.update(locals())
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Η κατηγορία δημιουργήθηκε')
+        return super().form_valid(form)
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class GenericExpensePersonUpdateView(UpdateView):
+    model = GenericPerson
+    template_name = 'dashboard/form.html'
+    success_url = reverse_lazy('warehouse:generic-expense-person-list')
+    form_class = GenericPersonForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form_title, back_url, delete_url = f'Επεξεργασια {self.object.title}', self.success_url, self.object.get_delete_url()
+        context.update(locals())
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Η επεξεργασία ολοκληρώθηκε')
+        return super().form_valid(form)
+
+
+@staff_member_required
+def delete_generic_expense_person(request, pk):
+    instance = get_object_or_404(GenericPerson, id=pk)
+    instance.delete()
+    return redirect(reverse('warehouse:generic-expense-person-list'))

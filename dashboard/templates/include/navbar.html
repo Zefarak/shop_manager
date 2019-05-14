@@ -179,7 +179,7 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="">
+                        <a href="{% url 'warehouse:occupation_list' %}">
                             <span class="pcoded-mtext">Επαγγέλματα</span>
                         </a>
                     </li>
@@ -192,13 +192,18 @@
                 </a>
                 <ul class="pcoded-submenu">
                     <li class=" ">
-                        <a href="">
+                        <a href="{% url 'warehouse:generic-expense-list' %}">
                             <span class="pcoded-mtext">Παραστατικά</span>
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="">
+                        <a href="{% url 'warehouse:generic-expense-cate-list' %}">
                             <span class="pcoded-mtext">Κατηγορίες</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{% url 'warehouse:generic-expense-person-list' %}">
+                            <span class="pcoded-mtext">Εταιρίες</span>
                         </a>
                     </li>
                 </ul>
