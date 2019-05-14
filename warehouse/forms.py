@@ -118,6 +118,7 @@ class InvoiceImageForm(BaseForm, forms.ModelForm):
 
 
 class GenericExpenseForm(BaseForm, forms.ModelForm):
+    date_expired = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
 
     class Meta:
         model = GenericExpense

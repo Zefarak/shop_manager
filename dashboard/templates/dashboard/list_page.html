@@ -7,7 +7,7 @@
                 <div class="page-wrapper">
                     <div class="page-body">
                         <div class="row">
-                            <div class="col-md-10">
+                            <div class="col-md-9">
                                 <!-- Zero config.table start -->
                                 <div class="card">
                                     <div class="card-header">
@@ -23,7 +23,7 @@
                                     </div>
                                 </div>
                             </div>
-                             <div class="col-md-2">
+                             <div class="col-md-3">
                                  <div class="card">
                                      <div class="card-header">
                                          <a href="{{ back_url }}" class="btn btn-warning btn-round" style="float: right;">Επιστροφή</a>
@@ -34,6 +34,17 @@
                                          {% endif %}
                                      </div>
                                  </div>
+                                <br>
+                                {% if reports %}
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <button data-href="{{ report_url }}" class="btn btn-success btn-round report_button">Report</button>
+                                        </div>
+                                        <div class="card-body" id="report_result">
+                                            <p>No data</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -42,3 +53,24 @@
         </div>
     </div>
 {%  endblock %}
+
+{% block extra_js %}
+    {% if reports %}
+        <script type="text/javascript">
+            $('.report_button').click(function (event) {
+                event.preventDefault();
+                const btn = $(this);
+                const url = btn.attr('data-href');
+                $.ajax({
+                    method: 'GET',
+                    dataType: 'json',
+                    url: url,
+
+                    success: function (data) {
+                        $('#report_result').html(data.report_result)
+                    }
+                })
+            })
+        </script>
+    {% endif %}
+{% endblock %}

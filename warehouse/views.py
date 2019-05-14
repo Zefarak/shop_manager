@@ -290,10 +290,14 @@ class GenericExpenseListView(ListView):
         context = super(GenericExpenseListView, self).get_context_data(**kwargs)
         page_title, back_url, create_url = ['Γενικά Έξοδα', reverse('warehouse:transcation_homepage'),
                                             reverse('warehouse:generic-expense-create')]
-        queryset_table = GenericExpenseCategory(self.object_list)
+        queryset_table = GenericExpenseTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
-        search_filter, category_filter, date_filter, paid_filter = True, True, True, True
-        categories = GenericExpense.objects.all()
+        search_filter, category_filter, employee_filter, date_filter, paid_filter = [True]*5
+        categories, employees = GenericExpenseCategory.objects.filter(active=True), GenericPerson.objects.filter(active=True)
+        # reports
+        get_params = self.request.get_full_path().split('?', 1)[1] if '?' in self.request.get_full_path() else ''
+        reports, report_url = True, reverse('warehouse:report_generic_expenses') + '?' + get_params
+
         context.update(locals())
         return context
 
@@ -318,13 +322,26 @@ class GenericExpenseUpdateView(UpdateView):
     model = GenericExpense
     template_name = 'dashboard/form.html'
     success_url = reverse_lazy('warehouse:generic-expense-list')
+    form_class = GenericExpenseForm
 
     def get_context_data(self, **kwargs):
         context = super(GenericExpenseUpdateView, self).get_context_data(**kwargs)
+        self.old_person = self.object.person
         form_title, back_url, delete_url = 'Δημιουργία Εξόδου', self.success_url, self.object.get_delete_url()
         ajax_request, ajax_title, ajax_url = True, 'Δημιουργία Νέας Εταιρίας', reverse('warehouse:popup-generic-person')
         context.update(locals())
         return context
+
+    def form_valid(self, form):
+        old_instance = get_object_or_404(GenericExpense, id=self.kwargs['pk'])
+        form.save()
+        changed_data = form.cleaned_data
+        if 'person' in changed_data:
+            old_instance.person.save()
+        if 'category' in changed_data:
+            old_instance.category.save()
+        messages.success(self.request, 'Το παραστατικό επεξεργάστηκε')
+        return super(GenericExpenseUpdateView, self).form_valid(form)
 
 
 @staff_member_required

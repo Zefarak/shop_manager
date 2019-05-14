@@ -150,6 +150,7 @@ class OccupationTable(tables.Table):
 
 
 class GenericExpenseTable(tables.Table):
+    tag_final_value = tables.Column(orderable=False, verbose_name='Αξία')
     action = tables.TemplateColumn(
         "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
         orderable=False,
@@ -158,7 +159,7 @@ class GenericExpenseTable(tables.Table):
     class Meta:
         model = GenericExpense
         template_name = 'django_tables2/bootstrap.html'
-        fields = ['title', 'store', 'active']
+        fields = ['title', 'category', 'person', 'is_paid']
 
 
 class ExpenseCategoryTable(tables.Table):
@@ -166,11 +167,12 @@ class ExpenseCategoryTable(tables.Table):
         "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
         orderable=False,
     )
+    tag_balance = tables.Column(orderable=False, verbose_name='Υπόλοιπο')
 
     class Meta:
         model = GenericExpenseCategory
         template_name = 'django_tables2/bootstrap.html'
-        fields = ['title', 'active']
+        fields = ['title', 'tag_balance', 'active']
 
 
 class GenericPersonTable(tables.Table):
@@ -182,4 +184,4 @@ class GenericPersonTable(tables.Table):
     class Meta:
         model = GenericPerson
         template_name = 'django_tables2/bootstrap.html'
-        fields = ['title', 'phone', 'active']
+        fields = ['title', 'phone', 'tag_balance', 'active']

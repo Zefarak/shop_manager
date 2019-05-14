@@ -5,6 +5,7 @@ from django.db.models import Sum
 from django.dispatch import receiver
 from .abstract_models import DefaultOrderItemModel,DefaultOrderModel
 from .managers import ExpenseCategoryManager
+from site_settings.constants import CURRENCY
 
 
 class GenericPerson(models.Model):
@@ -14,6 +15,11 @@ class GenericPerson(models.Model):
     active = models.BooleanField(default=True)
     phone = models.CharField(max_length=15, blank=True)
 
+    def save(self, **kwargs):
+        invoices = self.person_invoices.all().filter(is_paid=False)
+        self.balance = invoices.aggregate(Sum('final_value'))['final_value__sum'] if invoices else 0.00
+        super().save()
+
     def __str__(self):
         return self.title
 
@@ -22,6 +28,9 @@ class GenericPerson(models.Model):
 
     def get_delete_url(self):
         return reverse('warehouse:generic-expense-person-delete', kwargs={'pk': self.id})
+
+    def tag_balance(self):
+        return f'{self.balance} {CURRENCY}'
 
     @staticmethod
     def filters_data(request, queryset):
@@ -49,9 +58,8 @@ class GenericExpenseCategory(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        orders = self.expenses.all()
-        self.balance = orders.aggregate(Sum('final_value'))['final_value__sum'] if orders else 0
-        self.balance -= orders.aggregate(Sum('paid_value'))['paid_value__sum'] if orders else 0
+        orders = self.expenses.all().filter(is_paid=False)
+        self.balance = orders.aggregate(Sum('final_value'))['final_value__sum'] if orders else 0.00
         super(GenericExpenseCategory, self).save(*args, *kwargs)
 
     def tag_balance(self):
@@ -77,10 +85,11 @@ class GenericExpense(DefaultOrderModel):
     category = models.ForeignKey(GenericExpenseCategory,
                                  null=True,
                                  on_delete=models.PROTECT,
+                                 verbose_name='Κατηγορία Εξόδων',
                                  related_name='expenses'
                                  )
     person = models.ForeignKey(GenericPerson, blank=True, null=True, on_delete=models.SET_NULL,
-                               verbose_name="Εταιρία/'Ατομο")
+                               verbose_name="Εταιρία/'Ατομο", related_name='person_invoices')
     objects = models.Manager()
 
     class Meta:
@@ -96,34 +105,31 @@ class GenericExpense(DefaultOrderModel):
         self.paid_value = self.final_value if self.is_paid else 0
         super().save(*args, **kwargs)
         self.category.save()
+        self.person.save()
 
     def get_edit_url(self):
-        return reverse('warehouse:generic-expense-cate-edit', kwargs={'pk': self.id})
+        return reverse('warehouse:generic-expense-edit', kwargs={'pk': self.id})
 
     def get_delete_url(self):
         return reverse('warehouse:generic-expense-delete', kwargs={'pk': self.id})
 
-    def update_category(self):
-        self.category.update_balance()
-
-    def destroy_payments(self):
-        queryset = self.payment_orders.all()
-        for payment in queryset:
-            payment.delete()
+    def tag_final_value(self):
+        return f'{self.final_value} {CURRENCY}'
 
     @staticmethod
     def filters_data(request, queryset):
         search_name = request.GET.get('search_name', None)
         cate_name = request.GET.getlist('cate_name', None)
         paid_name = request.GET.getlist('paid_name', None)
+        employee_name = request.GET.getlist('employee_name', None)
         date_start, date_end = request.GET.get('date_start', None), request.GET.get('date_end', None)
-
+        queryset = queryset.filter(person__id__in=employee_name) if employee_name else queryset
         if date_start and date_end and date_end > date_start:
             queryset = queryset.filter(date_expired__range=[date_start, date_end])
         queryset = queryset.filter(is_paid=True) if 'paid' in paid_name else queryset.filter(is_paid=False) \
             if 'not_paid' in paid_name else queryset
         queryset = queryset.filter(category__id__in=cate_name) if cate_name else queryset
-        queryset = queryset.filter(Q(title__icontains=search_name )|
+        queryset = queryset.filter(Q(title__icontains=search_name)|
                                    Q(category__title__icontains=search_name)
                                    ).distinct() if search_name else queryset
         return queryset
@@ -131,9 +137,7 @@ class GenericExpense(DefaultOrderModel):
 
 @receiver(post_delete, sender=GenericExpense)
 def update_expense_category(sender, instance, **kwargs):
-    instance.category.update_balance()
+    instance.person.save()
+    instance.category.save()
 
 
-@receiver(pre_delete, sender=GenericExpense)
-def delete_generic_order_items(sender, instance, **kwargs):
-    for order in instance.payment_orders.all(): order.delete()

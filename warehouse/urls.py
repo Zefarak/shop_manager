@@ -24,6 +24,7 @@ from .payroll_views import (PayrollListView, EmployeeListView, EmployeeCreateVie
                             )
 from .ajax_calls import ajax_paycheck_actions, ajax_calculate_value, ajax_search_products, popup_new_bill, popup_employee, popup_occupation, popup_generic_category, popup_generic_person
 
+from .report_views import report_generic_expenses_view
 from .pdf_views import download_cv_pdf
 from .autocomplete_widgets import EmployeeAutocomplete
 
@@ -52,6 +53,9 @@ urlpatterns = [
     path('auto-complete-employee/', EmployeeAutocomplete.as_view(), name='auto-employee'),
     path('popup/new-generic-category/', popup_generic_category, name='popup-generic-category'),
     path('popup/new-generic-person/', popup_generic_person, name='popup-generic-person'),
+
+    #  reports
+    path('report/generic-expenses/', report_generic_expenses_view, name='report_generic_expenses'),
 
 
     path('invoice/order-image/create/<int:pk>/', CreateInvoiceImageView.as_view(), name='create-order-image'),
