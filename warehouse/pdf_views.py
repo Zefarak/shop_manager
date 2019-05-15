@@ -7,7 +7,8 @@ from xhtml2pdf import pisa
 import os
 from .billing import BillInvoice, BillCategory
 from .payroll import Payroll
-from .tables import BillInvoiceTable, PayrollTable
+from .generic_expenses import GenericExpense
+from .tables import BillInvoiceTable, PayrollTable, GenericExpenseTable
 from django_tables2 import RequestConfig
 
 
@@ -37,6 +38,9 @@ def download_cv_pdf(request, slug):
     if slug == 'payroll':
         payroll = Payroll.filters_data(request, Payroll.objects.all())
         queryset_table = PayrollTable(payroll)
+    if slug == 'generic-expenses':
+        qs = GenericExpense.filters_data(request, GenericExpense.objects.all())
+        queryset_table = GenericExpenseTable(qs)
     RequestConfig(request).configure(queryset_table)
     response = HttpResponse(content_type='application/pdf')
     response["Content-Disposition"] = f"attachment; filename={slug}_report.pdf"
@@ -53,3 +57,5 @@ def download_cv_pdf(request, slug):
     if status.err:
         response = HttpResponseServerError("The Pdf could not created")
     return response
+
+

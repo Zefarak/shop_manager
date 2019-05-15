@@ -82,9 +82,13 @@ class BillingHomepageView(ListView):
         RequestConfig(self.request).configure(queryset_table)
         category_filter, search_filter, paid_filter, categories = True, True, True, BillCategory.objects.filter(active=True)
 
-        # report button
+        # print
         get_params = self.request.get_full_path().split('?', 1)[1] if '?' in self.request.get_full_path() else ''
-        report_button, report_url = True, reverse('warehouse:pdf_create', kwargs={'slug': 'billing'})+'?' + get_params
+        print_button, print_url = True, reverse('warehouse:pdf_create', kwargs={'slug': 'billing'})+'?' + get_params
+
+        #  reports
+        reports, report_url = True, reverse('warehouse:report_billing')
+
         context.update(locals())
         return context
 
@@ -293,10 +297,16 @@ class GenericExpenseListView(ListView):
         queryset_table = GenericExpenseTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
         search_filter, category_filter, employee_filter, date_filter, paid_filter = [True]*5
-        categories, employees = GenericExpenseCategory.objects.filter(active=True), GenericPerson.objects.filter(active=True)
+        categories, employees = [GenericExpenseCategory.objects.filter(active=True),
+                                 GenericPerson.objects.filter(active=True)]
+
         # reports
         get_params = self.request.get_full_path().split('?', 1)[1] if '?' in self.request.get_full_path() else ''
         reports, report_url = True, reverse('warehouse:report_generic_expenses') + '?' + get_params
+
+        #  print
+        report_button, report_url =[True, reverse('warehouse:pdf_create', kwargs={'slug': 'generic-expense'})
+                                    + '?' + get_params]
 
         context.update(locals())
         return context
