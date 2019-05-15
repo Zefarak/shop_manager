@@ -11,7 +11,7 @@ User = get_user_model()
 
 class DefaultOrderModel(models.Model):
     uid = models.UUIDField(default=uuid.uuid4, editable=False, verbose_name='Friendly ID')
-    title = models.CharField(max_length=150, verbose_name='Title')
+    title = models.CharField(max_length=150, verbose_name='Τίτλος')
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
     user_account = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
@@ -19,15 +19,15 @@ class DefaultOrderModel(models.Model):
     payment_method = models.ForeignKey(PaymentMethod,
                                        null=True,
                                        on_delete=models.PROTECT,
-                                       verbose_name='Payment Type')
-    date_expired = models.DateField(default=timezone.now(), verbose_name='Date')
-    value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Value')
-    taxes_modifier = models.CharField(max_length=1, choices=TAXES_CHOICES, default='1')
-    paid_value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Paid Value')
-    final_value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Final Value')
-    discount = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Discount')
-    is_paid = models.BooleanField(default=False, verbose_name='Is Paid')
-    printed = models.BooleanField(default=False, verbose_name='Printed')
+                                       verbose_name='Τρόπος Πληρωμής')
+    date_expired = models.DateField(default=timezone.now(), verbose_name='Ημερομηνία')
+    value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Αρχική Αξία')
+    taxes_modifier = models.CharField(max_length=1, choices=TAXES_CHOICES, default='1', verbose_name='ΦΠΑ')
+    paid_value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Πληρωτέο Ποσό')
+    final_value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Αξία')
+    discount = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Έκπτωση')
+    is_paid = models.BooleanField(default=False, verbose_name='Πληρωμένο')
+    printed = models.BooleanField(default=False, verbose_name='Εκτυπωμένο')
     objects = models.Manager()
 
     class Meta:

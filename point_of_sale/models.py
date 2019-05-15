@@ -32,10 +32,10 @@ User = get_user_model()
 
 class Order(DefaultOrderModel):
     number = models.CharField(max_length=128, db_index=True, blank=True)
-    status = models.CharField(max_length=1, choices=ORDER_STATUS, default='1')
-    order_type = models.CharField(max_length=1, choices=ORDER_TYPES, default='r', verbose_name='Order Type')
+    status = models.CharField(max_length=1, choices=ORDER_STATUS, default='1', verbose_name="Κατάσταση")
+    order_type = models.CharField(max_length=1, choices=ORDER_TYPES, default='r', verbose_name='Είδος')
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0,
-                                     verbose_name='Total Cost')
+                                     verbose_name='Συνολικο Κόστος')
     user = models.ForeignKey(User,
                              blank=True,
                              null=True,

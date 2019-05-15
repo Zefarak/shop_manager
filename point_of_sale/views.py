@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
 from django.shortcuts import reverse, get_object_or_404, redirect, render
+from django.db.models import Sum
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
@@ -12,7 +13,9 @@ from site_settings.models import PaymentMethod
 from accounts.models import Profile, User
 from accounts.forms import ProfileForm
 from .tables import ProfileTable, OrderTable
+from site_settings.constants import CURRENCY
 from django_tables2 import RequestConfig
+import datetime
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -21,8 +24,18 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        order_table = OrderTable(Order.objects.all()[:10])
-        RequestConfig(self.request).configure(order_table)
+        #  create table
+        queryset_table = OrderTable(Order.objects.all()[:10])
+        RequestConfig(self.request).configure(queryset_table)
+
+        qs_today = Order.objects.filter(date_expired=datetime.datetime.now())
+        today_sells = qs_today.filter(order_type__in=['r', 'e']).aggregate(Sum('final_value'))['final_value__sum'] \
+            if qs_today.filter(order_type__in=['r', 'e']).exists() else 0.00
+        today_returns = qs_today.filter(order_type__in=['b', 'c', 'wr']).aggregate(Sum('final_value'))['final_value__sum']\
+            if qs_today.filter(order_type__in=[]).exists() else 0.00
+        today_sells, today_returns = f'{today_sells} {CURRENCY}', f'{today_returns} {CURRENCY}'
+        costumers_dept = f'0.00 {CURRENCY}'
+        billings = OrderTable(Order.objects.all())
         context.update(locals())
         return context
 
