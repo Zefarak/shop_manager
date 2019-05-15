@@ -1,83 +1,82 @@
 
 <div class="card">
-    <div class="header">
+    <div class="card-header">
         <div class="title">
-
-            <a href="{% url 'point_of_sale:order_list' %}" class="btn"><i class="fa fa-save"></i> Save</a>
-
-            <a href="{% url 'point_of_sale:action_order_done' instance.id %}" class="btn btn-info"><i class="fa fa-done"></i>Done</a>
-            <h3>Title... {{ instance.title }}</h3>
+            <a href="" class="btn btn-danger btn-outline-danger btn-block"><i class="fa fa-remove"></i>Διαγραφή</a>
+            <br>
+            <h3>{{ instance.title }}</h3>
         </div>
     </div>
     <div class="content">
         <div class="row">
             <div class="col-md-6 text-center">
                 <table class="table table-responsive">
+                    <thead>
+
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ημερομηνία</td>
+                            <th>{{ instance.date_expired|date }}</th>
+                        </tr>
+                        <tr>
+                            <td>Είδος Παραστατικού</td>
+                            <th>{{ instance.get_order_type_display }}</th>
+                        </tr>
+                        <tr>
+                            <td>Πελάτης</td>
+                            <th>{{ instance.user }}</th>
+                        </tr>
+                        <tr>
+                            <td>Αρχική Αξία</td>
+                            <th>{{ instance.tag_value }}</th>
+                        </tr>
+                        <tr>
+                            <td>Φπα</td>
+                            <th>{{ instance.get_taxes_modifier_display }} %</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6 text-center">
+                <table class="table table-responsive">
                     <thead></thead>
                     <tbody>
-                    <tr>
-                        <td>Date</td>
-                        <th>{{ instance.date_expired|date }}</th>
-                    </tr>
-                    <tr>
-                <td>Order Type</td>
-                <th>{{ instance.get_order_type_display }}</th>
-            </tr>
+                        <tr>
+                            <td>Τίτλος</td>
+                            <th>{{ instance.get_status_display }}</th>
+                        </tr>
+                        <tr>
+                            <td>Αξία</td>
+                            <th>{{ instance.tag_final_value }}</th>
+                        </tr>
+                        <tr>
+                            <td>Έκπτωση</td>
+                            <th>{{ instance.tag_discount }}</th>
+                        </tr>
+                        <tr>
+                            <td>Φόρος</td>
+                            <th>{{ instance.tag_taxes }}</th>
+                        </tr>
+                        <tr>
+                            <td>Πληρωμένο?</td>
+                            <th>{{ instance.tag_paid }}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <table class='table'>
+            <thead>
             <tr>
-                <td>Costumer</td>
-                <th>{{ instance.user }}</th>
+                <th>Sku</th>
+                <th>Προϊόν</th>
+                <th>Ποσότητα</th>
+                <th>Τιμή</th>
+                <th>Σύνολο</th>
+                <th colspan="2">Actions</th>
             </tr>
-            <tr>
-                <td>Clean Value</td>
-                <th>{{ instance.tag_value }}</th>
-            </tr>
-            <tr>
-                <td>Taxes modifier</td>
-                <th>{{ instance.get_taxes_modifier_display }} %</th>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-md-6 text-center">
-        <table class="table table-responsive">
-            <thead></thead>
-            <tbody>
-            <tr>
-                <td>Title</td>
-                <th>{{ instance.get_status_display }}</th>
-            </tr>
-            <tr>
-                <td>Value</td>
-                <th>{{ instance.tag_final_value }}</th>
-            </tr>
-            <tr>
-                <td>Discount</td>
-                <th>{{ instance.tag_discount }}</th>
-            </tr>
-            <tr>
-                <td>Taxes</td>
-                <th>{{ instance.tag_taxes }}</th>
-            </tr>
-            <tr>
-                <td>Paid </td>
-                <th>{{ instance.tag_paid }}</th>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-<br>
-
-<table class='table'>
-    <thead>
-    <tr>
-        <th>Sku</th>
-        <th>Product</th>
-        <th>Qty</th>
-        <th>Price</th>
-        <th>Total</th>
-        <th colspan="2">Actions</th>
-    </tr>
     </thead>
     <tbody>
     {% for order_item in instance.order_items.all %}
@@ -119,7 +118,11 @@
         <td>Final Price</td>
         <td>{{ instance.tag_final_value }}</td>
     </tr>
+    <tr>
+        <td colspan="6"><a href="{% url 'point_of_sale:action_order_done' instance.id %}" class="btn btn-success btn-outline-success btn-block"><i class="fa fa-save"></i>Ολοκλήρωση</a></td>
+    </tr>
     </tfoot>
+
 </table>
 
 <script>

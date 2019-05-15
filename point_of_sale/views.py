@@ -42,14 +42,31 @@ class DashboardView(TemplateView):
 
 @method_decorator(staff_member_required, name='dispatch')
 class OrderListView(ListView):
-    template_name = 'point_of_sale/order-list.html'
+    template_name = 'dashboard/list_page.html'
     model = Order
     paginate_by = 50
 
     def get_queryset(self):
-        queryset = Order.objects.all()
+        qs = Order.objects.all()
+        qs = Order.eshop_orders_filtering(self.request, qs)
+        return qs
 
-        return queryset
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset_table = OrderTable(self.object_list)
+        page_title, create_url, back_url = ['Παταστατικά Πωλήσεων', reverse('point_of_sale:order_create'),
+                                            reverse('point_of_sale:home')]
+
+        #  filters
+        search_filter, date_filter, paid_filter, costumer_filter = [True]*4
+
+        # print
+        print_button, print_url = True, reverse('dashboard:home')
+
+        # report
+        reports, report_url = True, reverse('dashboard:home')
+        context.update(locals())
+        return context
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -68,7 +85,11 @@ class EshopListView(ListView):
 class CreateOrderView(CreateView):
     model = Order
     form_class = OrderCreateForm
-    template_name = 'point_of_sale/form.html'
+    template_name = 'dashboard/form.html'
+
+    def get_success_url(self):
+        self.new_object.refresh_from_db()
+        return reverse('point_of_sale:order_detail', kwargs={'pk': self.new_object.id})
 
     def get_initial(self):
         initial = super().get_initial()
@@ -76,15 +97,11 @@ class CreateOrderView(CreateView):
         if my_qs.exists():
             initial['payment_method'] = my_qs.first()
         return initial
-    
-    def get_success_url(self):
-        self.new_object.refresh_from_db()
-        return reverse('point_of_sale:order_detail', kwargs={'pk': self.new_object.id})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title = 'Create New Order'
-        back_url, delete_url = reverse('point_of_sale:order_list'), None
+        form_title = 'Δημιουργία Νέου Παραστατικού'
+        back_url = self.request.META.get('HTTP_REFERER')
         context.update(locals())
         return context
 

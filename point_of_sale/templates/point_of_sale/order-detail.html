@@ -1,69 +1,44 @@
-{% extends 'point_of_sale/dashboard.html' %} {% load static %}
+{% extends 'index.html' %} {% load render_table from django_tables2 %}
 
-{% block extra_css %}
-    {% if is_return %}
-    <style>
-        .my_header {
-            background-color: #ff8f6e;
-
-        }
-    </style>
-    {% else %}
-         <style>
-        .my_header {
-            background-color: #a2ff82;
-
-        }
-    </style>
-
-    {% endif %}
-{% endblock %}
 {% block content %}
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6">
-                   <div class="card">
-                       <div class="header">
-                           <h4 class="title text-center ">Add Product</h4>
-                           <p class="category"></p>
-                           <br>
-                           <form class="form">
-                               <label>Search</label>
-                               <input type="text" class="form-control form-control-plaintext" data-href="{% url 'point_of_sale:ajax_search' instance.id %}"
-                                      id="search_products" placeholder="Search">
-                           </form>
-                       </div>
-                       <div id='products_container' class="content">
-                           {% include 'point_of_sale/ajax/products_container.html' %}
-                       </div>
-                   </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="header my_header">
-                            <div class="title .my_header">
-                                <h3>Details</h3>
-                                <br>
+    <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <div class="page-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Λίστα Προϊόντων</h5>
+                                        <input type="text" style="width: 30%" class="form-control waves-effect waves-light f-right d-inline-block md-trigger" data-href="{% url 'point_of_sale:ajax_search' instance.id %}"
+                                               id="search_products" placeholder="Search">
+                                    </div>
+                                    <div id='products_container' class="content">
+                                        {% include 'point_of_sale/ajax/products_container.html' %}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="content" id="order_items_container">
-                            {% include 'point_of_sale/ajax/order_container.html' %}
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="header text-center">
-                            <button class="btn btn-primary"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target="#actions_info"
-                                    aria-expanded="false"
-                                    aria-controls="actions_info"
-                            >General Info
-                            </button>
-                        </div>
-                        <div class="content">
+
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="header my_header">
+                                        <div class="title .my_header"></div>
+                                    </div>
+                                    <div class="content" id="order_items_container">{% include 'point_of_sale/ajax/order_container.html' %}</div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="header text-center">
+                                        <button class="btn btn-primary"
+                                                type="button"
+                                                data-toggle="collapse"
+                                                data-target="#actions_info"
+                                                aria-expanded="false"
+                                                aria-controls="actions_info"
+                                        >General Info</button>
+                                    </div>
+                                    <div class="content">
                             <div class="row collapse" id="actions_info">
                                 <div class="col-md-6">
                                     <h4>Επεξεργασία</h4>
@@ -141,7 +116,7 @@
             </div>
 
         </div>
-    </div>
+                </div></div></div></div>
 {% endblock %}
 
 {% block extra_js %}

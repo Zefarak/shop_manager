@@ -1,35 +1,51 @@
-
-
 <div class="row">
+    <!-- Invoice list card start -->
     {% for product in products %}
-        <div class="col-lg-3 col-sm-6 ">
-            <div class="card card-hover">
-                <div class="content">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div>
-                                <p>{{ product|truncatechars:30 }}</p>
-                                <p>Sku: {{ product.sku }}</p>
-                                <p>Price: {{ product.tag_final_price }}</p>
-                                {% if product.have_attr %}
+        <div class="col-sm-6">
+        <div class="card card-border-primary">
+            <div class="card-header">
+                <h5>{{ product }} </h5>
+                <!-- <span class="label label-default f-right"> 28 January, 2015 </span> -->
+                <div class="dropdown-secondary dropdown f-right">
+                    <!-- end of dropdown menu -->
+                    <span class="f-left m-r-5 text-inverse">Αξία : {{ product.tag_final_price }}</span>
+                </div>
+            </div>
+            <div class="card-block">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ul class="list list-unstyled">
+                            <li>Sku #: &nbsp;{{ product.sku }}</li>
+                            <li>Αρχική Αξία: <span class="text-semibold">{{ product.tag_value }}</span></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <ul class="list list-unstyled text-right">
+                            <li>$8,750</li>
+                            <li>Method: <span class="text-semibold">SWIFT</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="task-list-table">
+                    <p class="task-due"><strong> Υπόλοιπο : </strong><strong class="label label-primary">{{ product.qty }}</strong></p>
+                </div>
+                <div class="task-board m-0">
+                    {% if product.have_attr %}
                                     <a href="{% url 'point_of_sale:add_to_order_attr' instance.id product.id %}" class="btn btn-success">Add</a>
                                 {% else %}
                                 <button data-href="{% url 'point_of_sale:ajax_add_product' instance.id product.id %}" class="btn btn-primary add_button">Add</button>
                                 {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <hr />
-                        <div class="stats">
-                            <a href=''><i class="ti-link"></i>{{ product.qty }} Unit</a>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
+        </div>
     {% endfor %}
 </div>
+
+
 
 <script>
     $('.add_button').click(function (evt) {
