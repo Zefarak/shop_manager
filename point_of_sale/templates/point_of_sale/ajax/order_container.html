@@ -2,8 +2,6 @@
 <div class="card">
     <div class="card-header">
         <div class="title">
-            <a href="" class="btn btn-danger btn-outline-danger btn-block"><i class="fa fa-remove"></i>Διαγραφή</a>
-            <br>
             <h3>{{ instance.title }}</h3>
         </div>
     </div>
@@ -11,9 +9,7 @@
         <div class="row">
             <div class="col-md-6 text-center">
                 <table class="table table-responsive">
-                    <thead>
-
-                    </thead>
+                    <thead> </thead>
                     <tbody>
                         <tr>
                             <td>Ημερομηνία</td>
@@ -106,16 +102,16 @@
     </tbody>
     <tfoot>
     <tr>
-        <td>Shipping Cost</td>
+        <td>Μεταφορικά</td>
         <td>{{ instance.tag_shipping_cost }}</td>
-        <td>Payment Cost</td>
+        <td>Κόστος Αντικαταβολής</td>
         <td>{{ instance.tag_payment_cost }}</td>
-        <td>Discount</td>
+        <td>Έκπτωση</td>
         <td>{{ instance.tag_discount }}</td>
     </tr>
     <tr>
         <td colspan="4"></td>
-        <td>Final Price</td>
+        <td>Τελική Αξία</td>
         <td>{{ instance.tag_final_value }}</td>
     </tr>
     <tr>

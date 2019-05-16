@@ -12,6 +12,7 @@ from .forms import OrderCreateForm, OrderItemCoffeeForm, OrderUpdateForm, forms
 from site_settings.models import PaymentMethod
 from accounts.models import Profile, User
 from accounts.forms import ProfileForm
+from .tools import generate_or_remove_queryset
 from .tables import ProfileTable, OrderTable
 from site_settings.constants import CURRENCY
 from django_tables2 import RequestConfig
@@ -162,7 +163,7 @@ def order_add_product_with_attr(request, pk, dk):
     back_url = reverse('point_of_sale:order_detail', kwargs={'pk': pk})
     return render(request, 'point_of_sale/add_to_order_with_attr.html', context=locals())
 '''
-from .tools import generate_or_remove_queryset
+
 
 
 @staff_member_required

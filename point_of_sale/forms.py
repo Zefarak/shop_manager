@@ -26,9 +26,13 @@ class OrderUpdateForm(BaseForm, forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = ['is_paid', 'discount', 'date_expired', 'title', 'payment_method', 'status', 'profile']
+        fields = ['is_paid', 'discount', 'date_expired', 'title',
+                  'payment_method', 'status', 'profile', 'taxes_modifier'
+                  ]
         widgets = {
-            'profile': autocomplete.ModelSelect2(url='point_of_sale:autocomplete_profile', attrs={'class': 'form-control', })
+            'profile': autocomplete.ModelSelect2(url='point_of_sale:autocomplete_profile', attrs={
+                'class': 'form-control', }
+                                                 )
         }
 
 
