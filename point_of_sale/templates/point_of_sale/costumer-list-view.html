@@ -1,175 +1,331 @@
-{% extends 'point_of_sale/dashboard.html' %} {% load render_table from django_tables2 %}
+{% extends 'index.html' %} {% load render_table from django_tables2 %}
 
 {% block content %}
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-9">
-                    <div class="card">
-                        <div class="header">
-                            <h4 class="title text-center">Costumer List</h4>
-                            <p class="category">
-                                <a href="{% url 'point_of_sale:costumer_create_view' %}"
-                                   class="btn btn-success">Create Costumer
-                                </a>
-                            </p>
-                        </div>
-                        <div class="content table-responsive table-full-width">
-                            {% render_table my_table %}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="card">
-                       <div class="header">
-                            <h4>Filters</h4>
-                       </div>
-                       <div class="content">
-                           <form method="get">
-                                <div class="pagination">
-                                    <span class="step-links">
-                                        {% if page_obj.has_previous %}
-                                            <a href='{{ request.build_absolute_uri }}&page=1' class="btn btn-primary">First Page</a>
-                                            <a href='{{ request.build_absolute_uri }}&page={{ page_obj.previous_page_number }}' class="btn btn-primary">Previous</a>
-                                        {% endif %}
-                                        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                                        {%  if page_obj.has_next %}
-                                            {% if '?' in request.build_absolute_uri %}
-                                            <a href='{{ request.build_absolute_uri }}&page={{ page_obj.next_page_number }}' class="btn btn-primary">Next</a>
-                                            {% else %}
-                                            <a href='?page={{ page_obj.next_page_number }}' class="btn btn-primary">Next</a>
-                                            {% endif %}
-                                        {% endif %}
-                                    </span>
+    <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <!-- Main-body start -->
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <!-- Page-header start -->
+                    <div class="page-header">
+                        <div class="row align-items-end">
+                            <div class="col-lg-8">
+                                <div class="page-header-title">
+                                    <div class="d-inline">
+                                        <h4>{{ page_title }}</h4>
+                                        <span>Υπόλοιπο {{ instance.tag_balance }}</span>
+                                    </div>
                                 </div>
-
-                               <div class="form-group">
-                                   <input type="text"
-                                   {% if request.GET.search_name %}
-                                         value="{{ request.GET.search_name }}" placeholder="{{ request.GET.search_name }}"
-                                    {% else %}
-                                          placeholder="Search" {% endif %}
-                                          class="form-control" name="search_name"
-                                   />
-                               </div>
-                               <div class="checkbox">
-                                   <input id="check_active" name="active_name" type="checkbox" value="1" {% if request.GET.active_name == '1' %} checked {% endif %}>
-                                   <label for="check_active">Active</label>
-                               </div>
-                               <div class="red checkbox">
-                                   <input id="de_check_active" name="active_name" type="checkbox" value="2" {% if request.GET.active_name == '2' %} checked {% endif %}>
-                                   <label for="de_check_active">De-Active</label>
-                               </div>
-
-                               <div id="accordion" role="tablist" aria-multiselectable="true">
-                                   <div class="card">
-                                       <div class="card-header" role="tab" id="headingTwo">
-                                           <h6 class="mb-0">
-                                               <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
-                                                  href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                   Choose Category
-                                               </a>
-                                           </h6>
-                                       </div>
-                                       <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                           <div class="card-block">
-                                               {% for category in categories %}
-                                                   {% if category.id|stringformat:"s" in request.GET %}
-                                                   <div class="checkbox">
-                                                       <input name="cate_name" value="{{ category.id }}" id="checkbox1" type="checkbox" checked>
-                                                       <label for="checkbox1">
-                                                           {{ category}}
-                                                       </label>
-                                                   </div>
-                                                   {% else %}
-                                                   <div class="checkbox">
-                                                       <input name="cate_name" value="{{ category.id }}" id="checkbox1" type="checkbox">
-                                                       <label for="checkbox1">
-                                                           {{ category}}
-                                                       </label>
-                                                   </div>
-                                                   {% endif %}
-                                               {% endfor %}
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <div class="card">
-                                       <div class="card-header" role="tab" id="headingThree">
-                                           <h6 class="mb-0">
-                                               <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
-                                                  href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                   Choose Brand
-                                               </a>
-                                           </h6>
-                                       </div>
-                                       <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
-                                           <div class="card-block">
-                                               {% for brand in brands %}
-                                                  {% if brand.id|stringformat:"s" in request.GET %}
-                                                   <div class="checkbox">
-                                                       <input name="brand_name" value="{{ brand.id }}"
-                                                              id="checkbox1" type="checkbox" checked>
-                                                       <label for="checkbox1">
-                                                           {{ brand }}
-                                                       </label>
-                                                   </div>
-                                                   {% else %}
-                                                   <div class="checkbox">
-                                                       <input name="brand_name" value="{{ brand.id }}"
-                                                              id="checkbox1" type="checkbox">
-                                                       <label for="checkbox1">
-                                                           {{ brand }}
-                                                       </label>
-                                                   </div>
-                                                   {% endif %}
-                                               {% endfor %}
-                                           </div>
-                                       </div>
-                                   </div>
-                               </div>
-                               <button type="submit" class="btn btn-primary">Submit</button>
-                               <a href="{{ request.path }}" class="btn btn-danger">Reset Filters</a>
-                           </form>
-                       </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="page-header-breadcrumb">
+                                    <ul class="breadcrumb-title">
+                                        <li class="breadcrumb-item">
+                                            <a href="index.html"> <i class="feather icon-home"></i> </a>
+                                        </li>
+                                        <li class="breadcrumb-item"><a href="#!">Widget</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-               </div>
-           </div>
-       </div>
-   </div>
+                    <!-- Page-header end -->
+
+                    <!-- Page body start -->
+                    <div class="page-body invoice-list-page">
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-12 push-xl-9">
+                                <!-- Search Box card start -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-header-text">Search Box</h5>
+                                    </div>
+                                    <div class="card-block p-t-10">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Search here...">
+                                            <span class="input-group-addon" id="basic-addon1"><i class="icofont icofont-search"></i></span>
+                                        </div>
+                                        <div class="task-right">
+                                            <div class="task-right-header-status">
+                                                <span data-toggle="collapse">Completed Status</span>
+                                                <i class="icofont icofont-rounded-down f-right"></i>
+                                            </div>
+                                            <!-- end of sidebar-header completed status-->
+                                            <div class="taskboard-right-progress">
+                                                <h6>Highest Priority</h6>
+                                                <div class="faq-progress">
+                                                    <div class="progress">
+                                                        <!-- <span class="faq-text3"></span> -->
+                                                        <div class="faq-bar3" style="width: 80%;"></div>
+                                                    </div>
+                                                </div>
+                                                <h6>High Priority</h6>
+                                                <div class="faq-progress">
+                                                    <div class="progress">
+                                                        <!-- <span class="faq-text1"></span> -->
+                                                        <div class="faq-bar1" style="width: 70%;"></div>
+                                                    </div>
+                                                </div>
+                                                <h6>Normal Priority</h6>
+                                                <div class="faq-progress">
+                                                    <div class="progress">
+                                                        <!-- <span class="faq-text2"></span> -->
+                                                        <div class="faq-bar2" style="width: 50%;"></div>
+                                                    </div>
+                                                </div>
+                                                <h6>Low Priority</h6>
+                                                <div class="faq-progress">
+                                                    <div class="progress">
+                                                        <!-- <span class="faq-text4"></span> -->
+                                                        <div class="faq-bar4" style="width: 60%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- end of task-board-right progress -->
+                                            <!-- start task right users -->
+                                            <div class="task-right-header-users">
+                                                                <span data-toggle="collapse">Assign Users</span>
+                                                                <i class="icofont icofont-rounded-down f-right"></i>
+                                                            </div>
+                                            <div class="user-box assign-user taskboard-right-users">
+                                                                <div class="media">
+                                                                    <div class="media-left media-middle photo-table">
+                                                                        <a href="#">
+                                                                            <img class="media-object img-radius" src="../files/assets/images/avatar-1.jpg" alt="Generic placeholder image">
+                                                                            <div class="live-status bg-danger"></div>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="media-body">
+                                                                        <h6>Josephin Doe</h6>
+                                                                        <p>Santa Ana,CA</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="media">
+                                                                    <div class="media-left media-middle photo-table">
+                                                                        <a href="#">
+                                                                            <img class="media-object img-radius" src="../files/assets/images/avatar-2.jpg" alt="Generic placeholder image">
+                                                                            <div class="live-status bg-success"></div>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="media-body">
+                                                                        <h6>Josephin Doe</h6>
+                                                                        <p>Huntingston, NJ</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="media">
+                                                                    <div class="media-left media-middle photo-table">
+                                                                        <a href="#">
+                                                                            <img class="media-object img-radius" src="../files/assets/images/avatar-3.jpg" alt="Generic placeholder image">
+                                                                            <div class="live-status bg-danger"></div>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="media-body">
+                                                                        <h6>Josephin Doe</h6>
+                                                                        <p>Willingstion, WA</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="media">
+                                                                    <div class="media-left media-middle photo-table">
+                                                                        <a href="#">
+                                                                            <img class="media-object img-radius" src="../files/assets/images/avatar-2.jpg" alt="Generic placeholder image">
+                                                                            <div class="live-status bg-success"></div>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="media-body">
+                                                                        <h6>Josephin Doe</h6>
+                                                                        <p>Illions, IL</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end of task-board-right users -->
+                                                            <div class="task-right-header-revision">
+                                                                <span data-toggle="collapse">Revision</span>
+                                                                <i class="icofont icofont-rounded-down f-right"></i>
+                                                            </div>
+                                                            <div class="taskboard-right-revision user-box">
+                                                                <div class="media">
+                                                                    <div class="media-left">
+                                                                        <a class="btn btn-outline-primary btn-lg bg-white txt-muted btn-icon" href="#!" role="button"><i class="icofont icofont-gears"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="media-body">
+                                                                        <div class="chat-header">Drop the IE specific hacks for temporal inputs</div>
+                                                                        <p class="chat-header  text-muted">4 minutes ago</p>
+                                                                    </div>
+                                                                    <!-- end of media body -->
+                                                                </div>
+                                                                <!-- end of media -->
+                                                                <div class="media">
+                                                                    <div class="media-left">
+                                                                        <a class="btn btn-outline-danger btn-lg bg-white txt-muted btn-icon" href="#!" role="button"><i class="icofont icofont-share"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="media-body">
+                                                                        <div class="chat-header">Have Carousel ignore keyboard events</div>
+                                                                        <p class="chat-header  text-muted">12 Dec,2015</p>
+                                                                    </div>
+                                                                    <!-- end of media body -->
+                                                                </div>
+                                                                <!-- end of media -->
+                                                                <div class="media">
+                                                                    <div class="media-left">
+                                                                        <a class="btn btn-outline-warning btn-lg bg-white txt-muted btn-icon" href="#!" role="button"><i class="icofont icofont-font"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="media-body">
+                                                                        <div class="chat-header">Add full font overrides for popovers and tooltips</div>
+                                                                        <p class="chat-header text-muted">2 month ago</p>
+                                                                    </div>
+                                                                    <!-- end of media body -->
+                                                                </div>
+                                                                <!-- end of media -->
+                                                                <div class="media">
+                                                                    <div class="media-left">
+                                                                        <a class="btn btn-outline-success btn-lg bg-white txt-muted btn-icon" href="#!" role="button"><i class="icofont icofont-responsive"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="media-body">
+                                                                        <div class="chat-header">Responsive Asssignment</div>
+                                                                        <p class="chat-header  text-muted">6 month ago</p>
+                                                                    </div>
+                                                                    <!-- end of media body -->
+                                                                </div>
+                                                                <!-- end of media -->
+                                                            </div>
+                                                            <!-- end of task-right-revision -->
+                                                        </div>
+                                                        <!-- end of sidebar-right -->
+                                                    </div>
+                                                    <!-- end of card-block -->
+                                                </div>
+                                                <!-- Search Box card end -->
+                                            </div>
+                                            <div class="col-xl-9 col-lg-12 pull-xl-3 filter-bar">
+                                                <!-- Navigation start -->
+                                                <nav class="navbar navbar-light bg-faded m-b-30 p-10">
+                                                    <ul class="nav navbar-nav">
+                                                        <li class="nav-item active">
+                                                            <a class="nav-link" href="#!">Filter: <span class="sr-only">(current)</span></a>
+                                                        </li>
+                                                        <li class="nav-item dropdown">
+                                                            <a class="nav-link dropdown-toggle" href="#!" id="bydate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-clock-time"></i> By Date</a>
+                                                            <div class="dropdown-menu" aria-labelledby="bydate">
+                                                                <a class="dropdown-item" href="#!">Show all</a>
+                                                                <div class="dropdown-divider"></div>
+                                                                <a class="dropdown-item" href="#!">Today</a>
+                                                                <a class="dropdown-item" href="#!">Yesterday</a>
+                                                                <a class="dropdown-item" href="#!">This week</a>
+                                                                <a class="dropdown-item" href="#!">This month</a>
+                                                                <a class="dropdown-item" href="#!">This year</a>
+                                                            </div>
+                                                        </li>
+                                                        <!-- end of by date dropdown -->
+                                                        <li class="nav-item dropdown">
+                                                            <a class="nav-link dropdown-toggle" href="#!" id="bystatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-chart-histogram-alt"></i> By Status</a>
+                                                            <div class="dropdown-menu" aria-labelledby="bystatus">
+                                                                <a class="dropdown-item" href="#!">Show all</a>
+                                                                <div class="dropdown-divider"></div>
+                                                                <a class="dropdown-item" href="#!">Open</a>
+                                                                <a class="dropdown-item" href="#!">On hold</a>
+                                                                <a class="dropdown-item" href="#!">Resolved</a>
+                                                                <a class="dropdown-item" href="#!">Closed</a>
+                                                                <a class="dropdown-item" href="#!">Dublicate</a>
+                                                                <a class="dropdown-item" href="#!">Wontfix</a>
+                                                            </div>
+                                                        </li>
+                                                        <!-- end of by status dropdown -->
+                                                        <li class="nav-item dropdown">
+                                                            <a class="nav-link dropdown-toggle" href="#!" id="bypriority" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-sub-listing"></i> By Priority</a>
+                                                            <div class="dropdown-menu" aria-labelledby="bypriority">
+                                                                <a class="dropdown-item" href="#!">Show all</a>
+                                                                <div class="dropdown-divider"></div>
+                                                                <a class="dropdown-item" href="#!">Highest</a>
+                                                                <a class="dropdown-item" href="#!">High</a>
+                                                                <a class="dropdown-item" href="#!">Normal</a>
+                                                                <a class="dropdown-item" href="#!">Low</a>
+                                                            </div>
+                                                        </li>
+                                                        </ul>
+                                                    <!-- end of by priority dropdown -->
+                                                </nav>
+                                                <!-- Navigation end  -->
+                                                <div class="row">
+                                                    {% for card in object_list %}
+                                                    <div class="col-sm-6">
+                                                        <div class="card card-border-primary">
+                                                            <div class="card-header">
+                                                                <h5>John Doe </h5>
+                                                                <!-- <span class="label label-default f-right"> 28 January, 2015 </span> -->
+                                                                <div class="dropdown-secondary dropdown f-right">
+                                                                    <button class="btn btn-primary btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overdue</button>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdown1" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                        <a class="dropdown-item waves-light waves-effect" href="#!"><span class="point-marker bg-danger"></span>Pending</a>
+                                                                        <a class="dropdown-item waves-light waves-effect" href="#!"><span class="point-marker bg-warning"></span>Paid</a>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <a class="dropdown-item waves-light waves-effect active" href="#!"><span class="point-marker bg-success"></span>On Hold</a>
+                                                                        <a class="dropdown-item waves-light waves-effect" href="#!"><span class="point-marker bg-info"></span>Canceled</a>
+                                                                    </div>
+                                                                    <!-- end of dropdown menu -->
+                                                                    <span class="f-left m-r-5 text-inverse">Status : </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-block">
+                                                                <div class="row">
+                                                                    <div class="col-sm-6">
+                                                                        <ul class="list list-unstyled">
+                                                                            <li>Invoice #: &nbsp;0028</li>
+                                                                            <li>Issued on: <span class="text-semibold">2015/01/25</span></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <ul class="list list-unstyled text-right">
+                                                                            <li>$8,750</li>
+                                                                            <li>Method: <span class="text-semibold">SWIFT</span></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-footer">
+                                                                <div class="task-list-table">
+                                                                    <p class="task-due"><strong> Due : </strong><strong class="label label-primary">23 hours</strong></p>
+                                                                </div>
+                                                                <div class="task-board m-0">
+                                                                    <a href="invoice.html" class="btn btn-info btn-mini b-none"><i class="icofont icofont-eye-alt m-0"></i></a>
+                                                                    <!-- end of dropdown-secondary -->
+                                                                    <div class="dropdown-secondary dropdown">
+                                                                        <button class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown14" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                                        <div class="dropdown-menu" aria-labelledby="dropdown14" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
+                                                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-attachment"></i> Download invoice</a>
+                                                                            <div class="dropdown-divider"></div>
+                                                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
+                                                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
+                                                                        </div>
+                                                                        <!-- end of dropdown menu -->
+                                                                    </div>
+                                                                    <!-- end of seconadary -->
+                                                                </div>
+                                                                <!-- end of pull-right class -->
+                                                            </div>
+                                                            <!-- end of card-footer -->
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Page body end -->
+                                </div>
+                            </div>
+                            <!-- Main-body end -->
+
+                            <div id="styleSelector">
+
+                            </div>
+                        </div>
+                    </div>
+
+
 
 {% endblock %}
-
-{% block extra_js %}
-
-
-    <script>
-        $('#myModal').on('shown.bs.modal', function () {
-            $('#myInput').trigger('focus')
-        });
-   </script>
-
-    <script type="text/javascript">
-        {% if messages %}
-            {% for message in messages %}
-                function showNotification(from, align){
-                    color = Math.floor((Math.random() * 4) + 1);
-                    $.notify({
-                        icon: "ti-gift",
-                        message: "{{ message }}"
-                    }, {
-                        type: type[color],
-                        timer: 4000,
-                        placement: {
-                            from: from,
-                            align: align
-                        }
-                    });
-                }
-            {% endfor %}
-        {% endif %}
-
-    </script>
-{% endblock %}
-
-

@@ -17,29 +17,31 @@ class CostumerAccountManager(models.Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE, related_name='profile')
-    first_name = models.CharField(blank=True, null=True, max_length=150, verbose_name='First Name')
-    last_name = models.CharField(blank=True, null=True, max_length=150, verbose_name='Last Name')
+    first_name = models.CharField(blank=True, null=True, max_length=150, verbose_name='Όνομα')
+    last_name = models.CharField(blank=True, null=True, max_length=150, verbose_name='Επίθετο')
+    notes = models.TextField(blank=True, verbose_name='Σημειώσεις')
     #  shipping_information
-    shipping_address = models.CharField(max_length=100, blank=True, null=True, verbose_name='Shipping Address')
-    shipping_city = models.CharField(max_length=50, blank=True, null=True, verbose_name='City')
-    shipping_zip_code = models.IntegerField(blank=True, null=True, verbose_name='Postal')
+    shipping_address = models.CharField(max_length=100, blank=True, null=True, verbose_name='Διεύθυνση Αποστολής')
+    shipping_city = models.CharField(max_length=50, blank=True, null=True, verbose_name='Πόλη')
+    shipping_zip_code = models.IntegerField(blank=True, null=True, verbose_name='Τκ')
     #  billing information
     billing_name = models.CharField(max_length=100, blank=True, null=True)
     billing_address = models.CharField(max_length=100, blank=True, null=True)
     billing_city = models.CharField(max_length=100, blank=True, null=True)
     billing_zip_code = models.IntegerField(blank= True, null=True, )
     #  personal stuff
-    phone = models.CharField(max_length=10, blank=True, verbose_name="Phone")
-    phone1 = models.CharField(max_length=10, blank=True, verbose_name="Τηλέφωνο")
-    cellphone = models.CharField(max_length=10, blank=True, verbose_name='Cell Phone')
+    phone = models.CharField(max_length=10, blank=True, verbose_name="Τηλέφωνο")
+    phone1 = models.CharField(max_length=10, blank=True, verbose_name="Τηλέφωνο 1")
+    cellphone = models.CharField(max_length=10, blank=True, verbose_name='Κινητό')
     fax = models.CharField(max_length=10, blank=True, verbose_name="Fax")
     #  if costumer is not Retail
     is_retail = models.BooleanField(default=True)
     is_eshop = models.BooleanField(default=True)
     vat = models.CharField(max_length=9, blank=True, verbose_name="ΑΦΜ")
-    vat_city = models.CharField(max_length=100, blank=True, null=True)
-    value = models.DecimalField(max_digits=20, decimal_places=2, default=0, help_text='Off the record Manual Balance')
-    balance = models.DecimalField(max_digits=20, decimal_places=2, default=0, verbose_name='Balance')
+    vat_city = models.CharField(max_length=100, blank=True, null=True, verbose_name='Εφορία')
+    value = models.DecimalField(max_digits=20, decimal_places=2, default=0.00,
+                                help_text='Off the record Manual Balance', verbose_name='Επιπλέον Αξία')
+    balance = models.DecimalField(max_digits=20, decimal_places=2, default=0.00, verbose_name='Υπόλοιπο')
     my_query = CostumerAccountManager()
     objects = models.Manager()
 

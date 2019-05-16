@@ -2,10 +2,14 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Sum
 
 from catalogue.models import Product
 from .models import OrderItem, Order
+from .tables import ProfileTable
+from accounts.models import Profile
+from site_settings.constants import CURRENCY
+from django_tables2 import RequestConfig
 
 
 @staff_member_required
@@ -69,4 +73,40 @@ def ajax_add_product(request, pk, dk):
                                                context={
                                                    'instance': order
                                                })
+    return JsonResponse(data)
+
+
+@staff_member_required
+def ajax_costumers_report(request):
+    data = {}
+    costumers = Profile.filters_data(request, Profile.objects.all())
+    dept = costumers.aggregate(Sum('balance'))['balance__sum'] if costumers.exists() else 0.00
+    data['report_result'] = render_to_string(template_name='point_of_sale/ajax/report_result.html',
+                                             request=request,
+                                             context={
+                                                 'page_title': 'Υπόλοιπο Πελατών',
+                                                 'dept': dept,
+                                                 'currency': CURRENCY
+                                             }
+                                             )
+    return JsonResponse(data)
+
+
+@staff_member_required
+def ajax_search_costumers(request):
+    data = dict()
+    search_name = request.GET.get('search_name', None)
+    qs = Profile.objects.filter(Q(last_name__contains=search_name)|
+                                Q(first_name__contains=search_name)|
+                                Q(notes__contains=search_name)
+                                ).distinct() if search_name else Profile.objects.none()
+    queryset_table = ProfileTable(qs)
+    print(qs, search_name, 'works!')
+    RequestConfig(request).configure(queryset_table)
+    data['result_table'] = render_to_string(template_name='point_of_sale/ajax/search_container.html',
+                                            request=request,
+                                            context={
+                                                'queryset_table': queryset_table
+                                            }
+                                            )
     return JsonResponse(data)

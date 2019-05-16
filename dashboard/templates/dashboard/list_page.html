@@ -17,7 +17,7 @@
 
                                     </div>
                                     <div class="card-block">
-                                        <div class="dt-responsive table-responsive">
+                                        <div class="dt-responsive table-responsive" id="result_table">
                                             {% render_table queryset_table %}
                                         </div>
                                     </div>
@@ -55,6 +55,24 @@
 {%  endblock %}
 
 {% block extra_js %}
+    <script>
+        $('#search_ajax').change(function(event){
+            event.preventDefault();
+            const btn = $(this);
+            const url = btn.attr('data-href');
+            const search_name = btn.val();
+            console.log('works', url, search_name)
+            $.ajax({
+                method: 'GET',
+                dataType: 'json',
+                url: url + '?search_name='+ search_name,
+
+                success: function (data) {
+                    $('#result_table').html(data.result_table)
+                }
+            })
+        })
+    </script>
     {% if reports %}
         <script type="text/javascript">
             $('.report_button').click(function (event) {

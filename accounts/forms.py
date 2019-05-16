@@ -26,7 +26,7 @@ class ProfileForm(BaseForm, forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'user',
+        fields = ['first_name', 'last_name', 'user', 'notes',
                   'shipping_address', 'shipping_city', 'shipping_zip_code',
                   'billing_address', 'billing_city', 'billing_zip_code',
                   'cellphone', 'phone', 'value'

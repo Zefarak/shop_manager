@@ -71,15 +71,26 @@ class OrderListView(ListView):
 
 
 @method_decorator(staff_member_required, name='dispatch')
-class EshopListView(ListView):
+class SellListView(ListView):
     template_name = 'point_of_sale/order-list.html'
     model = Order
     paginate_by = 30
 
     def get_queryset(self):
-        queryset = Order.my_query.get_queryset().eshop_orders()
+        queryset = Order.my_query.get_queryset().sells()
         queryset = Order.eshop_orders_filtering(self.request, queryset)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_title, back_url, create_url = 'Πωλήσεις', reverse('point_of_sale:home'), reverse('point_of_sale:order_create')
+        queryset_table = OrderTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+        #  filters
+        search_filter, date_filter, costumer_filter, paid_filter = [True]*4
+
+        context.update(locals())
+        return context
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -139,32 +150,6 @@ def check_product(request, pk, dk):
     else:
         return redirect(reverse('point_of_sale:add_product', kwargs={'pk': pk, 'dk': dk}))
 
-'''
-@staff_member_required
-def order_add_product(request, pk, dk):
-    instance = get_object_or_404(Product, id=dk)
-    order = get_object_or_404(Order, id=pk)
-    order_item, created = OrderItem.objects.get_or_create(title=instance, order=order)
-    order_item.qty = 1 if created else order_item.qty + 1
-    if created:
-        order_item.value = instance.price
-        order_item.discount_value = instance.price_discount
-        order_item.cost = instance.price_buy
-    order_item.save()
-    return redirect(reverse('point_of_sale:order_detail', kwargs={'pk': pk}))
-
-
-@staff_member_required
-def order_add_product_with_attr(request, pk, dk):
-    instance = get_object_or_404(Product, id=dk)
-    order = get_object_or_404(Order, id=pk)
-    get_attr = instance.attr_class.filter(class_related__have_transcations=True)
-    all_attrs = Attribute.objects.filter(class_related=get_attr.first()) if get_attr.exists() else Attribute.objects.none()
-    back_url = reverse('point_of_sale:order_detail', kwargs={'pk': pk})
-    return render(request, 'point_of_sale/add_to_order_with_attr.html', context=locals())
-'''
-
-
 
 @staff_member_required
 def add_to_order_with_attr(request, pk, dk):
@@ -219,13 +204,13 @@ def done_order_view(request, pk):
     instance.is_paid = True
     instance.status = "8"
     instance.save()
-    return redirect(reverse('point_of_sale:order_list', kwargs={'pk': instance.id}))
+    return redirect(reverse('point_of_sale:order_list'))
 
 
 @method_decorator(staff_member_required, name='dispatch')
 class CostumerListView(ListView):
     model = Profile
-    template_name = 'point_of_sale/costumer-list-view.html'
+    template_name = 'dashboard/list_page.html'
     paginate_by = 50
 
     def get_queryset(self):
@@ -235,8 +220,15 @@ class CostumerListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        my_table = ProfileTable(self.object_list)
-        RequestConfig(self.request).configure(my_table)
+        page_title, back_url, create_url = 'Πελάτες', reverse('point_of_sale:home'), reverse('point_of_sale:costumer_create_view')
+        queryset_table = ProfileTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+        search_filter = True
+
+        # report
+        reports, report_url = True, reverse('point_of_sale:ajax_costumer_report')
+        ajax_search_url = reverse('point_of_sale:ajax_costumer_search')
+
         context.update(locals())
         return context
 
@@ -244,31 +236,41 @@ class CostumerListView(ListView):
 @method_decorator(staff_member_required, name='dispatch')
 class CostumerCreateView(CreateView):
     form_class = ProfileForm
-    template_name = 'point_of_sale/form.html'
+    template_name = 'dashboard/form.html'
     model = Profile
     success_url = reverse_lazy('point_of_sale:costumer_list_view')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         back_url, delete_url = self.success_url, None
-        form_title = 'Create Costumer'
+        form_title = 'Δημιουργία Πελάτη'
         context.update(locals())
         return context
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Νέος Πελάτης Προστέθηκε')
+        return super().form_valid(form)
 
 
 @method_decorator(staff_member_required, name='dispatch')
 class CostumerUpdateView(UpdateView):
     form_class = ProfileForm
-    template_name = 'point_of_sale/form.html'
+    template_name = 'dashboard/form.html'
     model = Profile
     success_url = reverse_lazy('point_of_sale:costumer_list_view')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         back_url, delete_url = self.success_url, self.object.get_delete_url()
-        form_title = 'Create Costumer'
+        form_title = f'Επεξεργασία {self.object}'
         context.update(locals())
         return context
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Ο Πελάτης Επεξεργάστηκε.')
+        return super().form_valid(form)
 
 
 @staff_member_required
@@ -278,3 +280,23 @@ def delete_costumer_view(request, pk):
         return redirect(reverse('point_of_sale:costumer_list_view'))
     instance.delete()
     return redirect(reverse('point_of_sale:costumer_list_view'))
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class CostumerAccountCardView(ListView):
+    model = Order
+    template_name = 'point_of_sale/costumer-list-view.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        self.instance = get_object_or_404(Profile, id=self.kwargs['pk'])
+        qs = self.instance.profile_orders.all()
+        qs = Order.eshop_orders_filtering(self.request, qs)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(CostumerAccountCardView, self).get_context_data(**kwargs)
+        page_title = f'{self.instance}'
+
+        context.update(locals())
+        return context
