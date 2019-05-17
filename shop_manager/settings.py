@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-     'dal',
+    'dal',
     'dal_select2',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'point_of_sale',
     'frontend',
     'accounts',
+    'report',
 
     'mptt',
     'django_tables2',

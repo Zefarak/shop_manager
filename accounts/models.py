@@ -8,6 +8,7 @@ from django.urls import reverse
 from site_settings.models import Country
 from site_settings.constants import CURRENCY, ADDRESS_TYPES
 
+from decimal import Decimal
 
 class CostumerAccountManager(models.Manager):
 
@@ -47,9 +48,10 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         qs = self.profile_orders.all()
-        total_value = qs.aggregate(Sum('final_value'))['final_value__sum'] if qs.exists() else 0
-        paid_value = qs.aggregate(Sum('paid_value__sum')) if qs.exists() else 0
-        self.balance = total_value + self.value - paid_value
+        total_value = qs.aggregate(Sum('final_value'))['final_value__sum'] if qs.exists() else 0.00
+        paid_value = qs.filter(is_paid=True).aggregate(Sum('final_value'))['final_value__sum']\
+            if qs.filter(is_paid=True).exists() else 0.00
+        self.balance = Decimal(total_value) + Decimal(self.value) - Decimal(paid_value)
         super().save(*args, **kwargs)
 
     def full_name(self):
@@ -60,6 +62,9 @@ class Profile(models.Model):
 
     def get_edit_url(self):
         return reverse('point_of_sale:costumer_update_view', kwargs={'pk': self.id})
+
+    def get_card_url(self):
+        return reverse('point_of_sale:costumer_account_card', kwargs={'pk': self.id})
 
     def get_delete_url(self):
         return reverse('point_of_sale:costumer_delete_view', kwargs={'pk': self.id})
