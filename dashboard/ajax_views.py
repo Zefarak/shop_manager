@@ -24,7 +24,27 @@ def ajax_category_site(request, slug,  pk, dk):
     instance.save()
     selected_data = instance.category_site.all()
     data = dict()
-    data['result'] = render_to_string(template_name='dashboard/catalogue/ajax_calls/result_container.html',
+    data['result'] = render_to_string(template_name='dashboard/ajax_calls/result_container.html',
+                                      request=request,
+                                      context={'selected_data': selected_data,
+                                               'instance': instance
+                                               }
+                                      )
+    return JsonResponse(data)
+
+
+@staff_member_required
+def ajax_related_products_view(request, slug, pk, dk):
+    instance = get_object_or_404(Product, id=pk)
+    related = get_object_or_404(Product, id=dk)
+    if slug == 'add':
+        instance.related_products.add(related)
+    if slug == 'delete':
+        instance.related_products.remove(related)
+    instance.save()
+    selected_data = instance.related_products.all()
+    data = dict()
+    data['result'] = render_to_string(template_name='dashboard/ajax_calls/result_container.html',
                                       request=request,
                                       context={'selected_data': selected_data,
                                                'instance': instance

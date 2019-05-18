@@ -26,7 +26,7 @@ from cart.models import Cart, CartItem
 from .managers import OrderManager, OrderItemManager
 from .address_models import ShippingAddress, BillingAddress
 from accounts.models import Profile
-RETAIL_TRANSCATIONS, PRODUCT_ATTRITUBE_TRANSCATION  = settings.RETAIL_TRANSCATIONS, settings.PRODUCT_ATTRITUBE_TRANSCATION
+RETAIL_TRANSCATIONS, PRODUCT_ATTRIBUTE_TRANSCATIONS = settings.RETAIL_TRANSCATIONS, settings.PRODUCT_ATTRIBUTE_TRANSCATIONS
 User = get_user_model()
 
 

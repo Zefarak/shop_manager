@@ -142,9 +142,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = '/static/'
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -152,7 +151,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CURRENCY = '€'
 USE_WAREHOUSE = True
 WAREHOUSE_ORDERS_TRANSCATIONS = True
-RETAIL_TRANSCATIONS = False
-PRODUCT_ATTRITUBE_TRANSCATION = True
+RETAIL_TRANSCATIONS = True
+PRODUCT_ATTRIBUTE_TRANSCATIONS = True
 
 USE_QTY_LIMIT = False

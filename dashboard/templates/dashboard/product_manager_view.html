@@ -11,7 +11,7 @@
                             <div class='col-lg-6 col-md-6'>
                                 <div class="card">
                                     <div class="card-header">
-                                        <h3>Product.. {{ instance }} - {{ page_title }}</h3>
+                                        <h3>Προϊόν.. {{ instance }} - {{ page_title }}</h3>
                                         <div class="card-body">
                                              <form method='GET'>
                                                  <input data-href="" type='text' class='form-control search_button' name='search_name' placeholder="Search">
@@ -22,8 +22,8 @@
                                                      <thead>
                                                      <tr>
                                                          <th>#</th>
-                                                         <th>Title</th>
-                                                         <th>Actions</th>
+                                                         <th>Ονομασία</th>
+                                                         <th>Επιλογές</th>
                                                      </tr>
                                                      </thead>
                                                      <tbody>
@@ -35,6 +35,8 @@
                                                                  <td><a href="{% url 'dashboard:product_char_create_view' instance.id ele.id %}" class="btn btn-primary">Add</a></td>
                                                              {% elif attrs %}
                                                                  <td><a href="{% url 'dashboard:product_create_attr_view' instance.id ele.id %}" class="btn btn-primary">Add</a></td>
+                                                             {% elif related_product %}
+                                                                  <td><button data-href="{% url 'dashboard:ajax_related_product' 'add' instance.id ele.id %}" class="btn btn-success ajax_button">Προσθήκη</button></td>
                                                              {% else %}
                                                                  <td><button data-href="{% url 'dashboard:ajax_category_site' 'add' instance.id ele.id %}" class="btn btn-success ajax_button">Add</button></td>
                                                              {% endif %}
@@ -47,8 +49,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-6" id='result_container'>
-                                {% include 'dashboard/ajax_calls/result_container.html' %}
+                            <div class="col-lg-6 col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <a href="{{ back_url }}" class="btn btn-warning">Επιστροφή</a>
+                                        <h4>Επιλεγμενα</h4>
+                                    </div>
+                                    <div class="card-body" id='result_container'>
+                                        {% include 'dashboard/ajax_calls/result_container.html' %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -62,7 +72,6 @@
 <script>
     $('.ajax_button').click(function(event) {
         event.preventDefault();
-        console.log('feg')
         const btn = $(this);
         const href = btn.attr('data-href');
         $.ajax({

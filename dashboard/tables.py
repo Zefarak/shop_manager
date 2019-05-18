@@ -4,6 +4,7 @@ from catalogue.models import Product, ProductClass
 from catalogue.categories import WarehouseCategory, Category
 from catalogue.product_details import VendorPaycheck
 from catalogue.product_details import Brand
+from catalogue.product_attritubes import Characteristics, Attribute, AttributeClass
 
 
 class ImageColumn(tables.Column):
@@ -33,7 +34,7 @@ class ProductClassTable(tables.Table):
 
 
 class WarehouseCategoryTable(tables.Table):
-    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Edit</a>",
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Επεξεργασία</a>",
                                    orderable=False)
 
     class Meta:
@@ -62,3 +63,47 @@ class BrandTable(tables.Table):
         fields = ['id', 'title', 'active']
 
 
+class CharacteristicsTable(tables.Table):
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Επεξεργασία</a>",
+                                   orderable=False)
+
+    class Meta:
+        model = Characteristics
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'active']
+
+
+class AttributeTable(tables.Table):
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Επεξεργασία</a>",
+                                   orderable=False)
+
+    class Meta:
+        model = Attribute
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'active']
+
+
+class AttributeClassTable(tables.Table):
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Επεξεργασία</a>",
+                                   orderable=False)
+
+    class Meta:
+        model = AttributeClass
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'active']
+
+
+class ProductTable(tables.Table):
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Επεξεργασία</a>",
+                                   orderable=False)
+
+    class Meta:
+        model = AttributeClass
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'category', 'vendor', 'active']
+
+
+class CategorySiteAddToProductTable(tables.Table):
+    action = tables.TemplateColumn('<button data-href="{% url "dashboard:ajax_category_site" "add" '
+                                   'instance.id ele.id %}" class="btn btn-success ajax_button">Add</button>',
+                                   orderable=False)

@@ -64,7 +64,11 @@ class UpdateWarehouseOrderView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         back_url = reverse('warehouse:invoices')
-        products = Product.my_query.active().filter(vendor=self.object.vendor)
+        print(self.object.order_type)
+        if self.object.order_type in ['4', '5']:
+            products = Product.my_query.active_warehouse()
+        else:
+            products = Product.my_query.active().filter(vendor=self.object.vendor)
         products = ProductAddTable(products)
         instance = self.object
         images = InvoiceImage.objects.filter(order_related=self.object)
@@ -113,6 +117,10 @@ class CreateOrderItem(CreateView):
         back_url, delete_url = self.get_success_url(), None
         context.update(locals())
         return context
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
 
 @method_decorator(staff_member_required, name='dispatch')

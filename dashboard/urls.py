@@ -21,7 +21,7 @@ from .dashboard_actions import copy_product_view
 from .ajax_views import (ajax_category_site, ajax_product_images, ajax_add_or_delete_attribute,
                          ajax_change_qty_on_attribute,
                          popup_category, popup_brand, popup_vendor,
-                         ajax_product_calculate_view,
+                         ajax_product_calculate_view, ajax_related_products_view
                          )
 app_name = 'dashboard'
 
@@ -52,9 +52,10 @@ urlpatterns = [
 
     path('product/related/<int:pk>/', RelatedProductsView.as_view(), name='related_products_manager_view'),
 
-
+    # ajax
     path('ajax/product/analysis/<slug:question>/', ajax_product_calculate_view, name='ajax_product_analysis'),
     path('ajax/category-site-manager/<slug:slug>/<int:pk>/<int:dk>/', ajax_category_site, name='ajax_category_site'),
+    path('ajax/related-product-manager/<slug:slug>/<int:pk>/<int:dk>/', ajax_related_products_view, name='ajax_related_product'),
     path('ajax/image-manager/<slug:slug>/<int:pk>/<int:dk>/', ajax_product_images, name='ajax_image'),
     path('ajax/add-or-delete-attr/<slug:slug>/<int:pk>/<int:dk>/', ajax_add_or_delete_attribute, name='ajax_manage_attribute'),
     path('ajax/add-qty/<int:pk>/', ajax_change_qty_on_attribute, name='ajax_manage_qty_attribute'),

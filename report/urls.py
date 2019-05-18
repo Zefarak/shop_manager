@@ -6,6 +6,6 @@ app_name = 'reports'
 
 urlpatterns = [
    path('warehouse-product-reports/', warehouse_product_report_view, name='ware_product_report'),
-   path('ajax/warehouse-analysis/', warehouse_product_report_view, name='product_ware_analysis'),
+   path('ajax/warehouse-analysis/', ajax_warehouse_analysis, name='product_ware_analysis'),
 
 ]

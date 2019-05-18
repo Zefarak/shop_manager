@@ -24,7 +24,7 @@ from catalogue.forms import (CreateProductClassForm, CategorySiteForm,
 from catalogue.product_attritubes import (ProductCharacteristics, Characteristics, CharacteristicsValue,
                                           Attribute, AttributeTitle, AttributeClass
                                           )
-from .tables import ProductClassTable, CategorySiteTable, BrandTable
+from .tables import ProductClassTable, CategorySiteTable, BrandTable, CharacteristicsTable, AttributeTable, AttributeClassTable
 CURRENCY = settings.CURRENCY
 
 
@@ -79,7 +79,9 @@ class CategorySiteListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CategorySiteListView, self).get_context_data(**kwargs)
-        page_title, back_url, create_url = 'Site Categories', reverse('dashboard:home'),reverse('dashboard:category_create_view')
+        page_title, back_url, create_url = ['Κατηγορίες Site', reverse('dashboard:home'),
+                                            reverse('dashboard:category_create_view')
+                                            ]
         queryset_table = CategorySiteTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
         search_filter = True
@@ -96,7 +98,7 @@ class CategorySiteEditView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title = f'Edit {self.object}'
+        form_title = f'Επεξεργασία {self.object}'
         back_url, delete_url = reverse('dashboard:category_list'),\
                                reverse('dashboard:delete_category_site', kwargs={'pk': self.kwargs.get('pk')})
         context.update(locals())
@@ -111,13 +113,13 @@ class CategorySiteEditView(UpdateView):
 @method_decorator(staff_member_required, name='dispatch')
 class CategorySiteCreateView(CreateView):
     model = Category
-    template_name = 'dashboard/settings/form.html'
+    template_name = 'dashboard/form.html'
     form_class = CategorySiteForm
     success_url = reverse_lazy('dashboard:category_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title = 'Create New Site Category'
+        form_title = 'Δημιουργία Νέας Κατηγορίας'
         back_url, delete_url = reverse('dashboard:category_list'), None
         context.update(locals())
         return context
@@ -169,7 +171,7 @@ class BrandEditView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title = f'Edit {self.object.title}'
+        form_title = f'Επεξεργασία {self.object.title}'
         back_url, delete_url = self.success_url, reverse('dashboard:delete_brand', kwargs={'pk': self.object.id})
         context.update(locals())
         return context
@@ -189,7 +191,7 @@ class BrandCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title = 'Create Brand'
+        form_title = 'Δημιουργία Brand'
         back_url, delete_url = reverse('dashboard:brand_list_view'), None
         context.update(locals())
         return context
@@ -211,8 +213,38 @@ def delete_brand(request, pk):
 @method_decorator(staff_member_required, name='dispatch')
 class CharacteristicsListView(ListView):
     model = Characteristics
-    template_name = 'dashboard/settings/characteristics_list.html'
+    template_name = 'dashboard/list_page.html'
     paginate_by = 50
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_title, back_url, create_url = 'Χαρακτηριστικά', reverse('dashboard:home'), reverse('dashboard:char_create_view')
+        queryset_table = CharacteristicsTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+        #  filters
+        search_filter = True
+        context.update(locals())
+        return context
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class CharacterCreateView(CreateView):
+    model = Characteristics
+    template_name = 'dashboard/form.html'
+    form_class = CharacteristicsForm
+    success_url = reverse_lazy('dashboard:characteristics_list_view')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        back_url, delete_url = self.success_url, None
+        form_title = 'Δημιουργία Χαρακτηριστικού'
+        context.update(locals())
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'New Characteristic added')
+        return super().form_valid(form)
 
 
 @staff_member_required
@@ -220,6 +252,7 @@ def characteristics_detail_view(request, pk):
     instance = get_object_or_404(Characteristics, id=pk)
     form = CharacteristicsForm(instance=instance)
     add_form = CharacteristicsValueForm(initial={'char_related': instance})
+    back_url = reverse('dashboard:characteristics_list_view')
     if request.POST:
         if 'add_form' in request.POST:
             add_form = CharacteristicsValueForm(request.POST, initial={'char_related': instance})
@@ -238,26 +271,6 @@ def characteristics_detail_view(request, pk):
     return render(request, 'dashboard/settings/characteristic_detail_view.html', context)
 
 
-@method_decorator(staff_member_required, name='dispatch')
-class CharacterCreateView(CreateView):
-    model = Characteristics
-    template_name = 'dashboard/settings/form.html'
-    form_class = CharacteristicsForm
-    success_url = reverse_lazy('dashboard:characteristics_list_view')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        back_url, delete_url = self.success_url, None
-        form_title = 'Create New Characteristic'
-        context.update(locals())
-        return context
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'New Characteristic added')
-        return super().form_valid(form)
-
-
 @staff_member_required
 def characteristic_delete_view(request, pk):
     instance = get_object_or_404(Characteristics, id=pk)
@@ -272,7 +285,7 @@ def characteristic_delete_view(request, pk):
 class CharValueEditView(UpdateView):
     model = CharacteristicsValue
     form_class = CharacteristicsValueForm
-    template_name = 'dashboard/settings/form.html'
+    template_name = 'dashboard/form.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -301,13 +314,23 @@ def delete_char_value_view(request, pk):
 @method_decorator(staff_member_required, name='dispatch')
 class AttributeClassListView(ListView):
     model = AttributeClass
-    template_name = 'dashboard/settings/attribute_class.html'
+    template_name = 'dashboard/list_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AttributeClassListView, self).get_context_data(**kwargs)
+        page_title, back_url, create_url = 'Ιδιοτητες', reverse('dashboard:home'), reverse('dashboard:attribute_class_create_view')
+
+        queryset_table = AttributeClassTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+
+        context.update(locals())
+        return context
 
 
 @method_decorator(staff_member_required, name='dispatch')
 class AttributeClassCreateView(CreateView):
     model = AttributeClass
-    template_name = 'dashboard/settings/form.html'
+    template_name = 'dashboard/form.html'
     success_url = reverse_lazy('dashboard:attribute_class_list_view')
     form_class = AttributeClassForm
 
@@ -329,6 +352,7 @@ def attribute_class_edit_view(request, pk):
     instance = get_object_or_404(AttributeClass, id=pk)
     add_form = AttributeTitleForm(initial={'attri_by': instance})
     form = AttributeClassForm(instance=instance)
+    back_url = reverse('dashboard:attribute_class_list_view')
     if request.POST:
         if 'add_form' in request.POST:
             add_form = AttributeTitleForm(request.POST, initial={'attri_by': instance})
@@ -350,7 +374,7 @@ def attribute_class_edit_view(request, pk):
 class AttributeTitleEditView(UpdateView):
     model = AttributeTitle
     form_class = AttributeTitleForm
-    template_name = 'dashboard/settings/form.html'
+    template_name = 'dashboard/form.html'
 
     def get_success_url(self):
         return reverse('dashboard:attribute_class_edit_view', kwargs={'pk': self.object.attri_by.id})

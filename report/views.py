@@ -43,6 +43,7 @@ def warehouse_product_report_view(request):
 
 @staff_member_required
 def ajax_warehouse_analysis(request):
+    print('here')
     data = dict()
     products = Product.filters_data(request, Product.objects.all())
     queryset = InvoiceOrderItem.objects.filter(product__in=products)
@@ -51,6 +52,7 @@ def ajax_warehouse_analysis(request):
                   total_value=Sum('total_final_value')
                 ).order_by('product__title') \
         if queryset else 'No data'
+    print(queryset_table)
     data['result_analysis'] = render_to_string(template_name='reports/ajax_analysis.html',
                                                request=request,
                                                context={

@@ -18,7 +18,7 @@ from catalogue.categories import Category
 from catalogue.product_details import Brand, Vendor
 from catalogue.forms import CreateProductForm, ProductPhotoUploadForm, ProductCharacteristicForm, WarehouseCategoryForm
 from .product_forms import ProductForm, ProductNoQty
-from .tables import TableProduct, WarehouseCategoryTable
+from .tables import TableProduct, WarehouseCategoryTable, ProductTable
 from catalogue.product_attritubes import ProductCharacteristics, Characteristics, CharacteristicsValue, Attribute, AttributeTitle, AttributeClass, AttributeProductClass
 
 from point_of_sale.models import Order
@@ -44,6 +44,8 @@ class DashBoard(TemplateView):
         currency = CURRENCY
 
         active_products = Product.objects.all().filter(active=True)[:10]
+        queryset_table = ProductTable(active_products)
+        RequestConfig(self.request).configure(queryset_table)
         categories = Category.objects.all()[:10]
         brands = Brand.objects.all()[:10]
         context.update(locals())
@@ -152,7 +154,7 @@ def product_detail(request, pk):
         else:
             print('form_invalid', form.errors)
 
-    if 'update_' in request.POST:
+    if '_update' in request.POST:
         form = ProductNoQty(request.POST, instance=instance) if instance.product_class.have_attribute else ProductForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
@@ -195,7 +197,7 @@ class CategorySiteManagerView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CategorySiteManagerView, self).get_context_data(**kwargs)
         instance = get_object_or_404(Product, id=self.kwargs['pk'])
-        page_title, back_url = 'Category Site', reverse('dashboard:product_detail', kwargs={'pk': instance.id})
+        page_title, back_url = 'Category Site', instance.get_edit_url()
         selected_data = instance.category_site.all()
         context.update(locals())
         return context
@@ -314,7 +316,7 @@ class ProductAttributeManagerView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         instance = get_object_or_404(Product, id=self.kwargs['pk'])
-        page_title, attrs = 'Create Attribute', True
+        page_title, attrs, back_url = 'Create Attribute', True, instance.get_edit_url()
         selected_data = instance.attr_class.all()
         context.update(locals())
         return context
@@ -331,7 +333,7 @@ def create_attr_product_class(request, pk, dk):
 @method_decorator(staff_member_required, name='dispatch')
 class ProductAttriClassManagerView(ListView):
     model = AttributeTitle
-    template_name = 'dashboard/catalogue/ProductAttriClassManager.html'
+    template_name = 'dashboard/ProductAttriClassManager.html'
 
     def get_queryset(self):
         self.product_attr_class = get_object_or_404(AttributeProductClass, id=self.kwargs['pk'])
@@ -372,8 +374,8 @@ class RelatedProductsView(ListView):
         instance = get_object_or_404(Product, id=self.kwargs['pk'])
         related_products = instance.related_products.all()
         search_name = self.request.GET.get('search_name', None)
-        title = f'Add Related Products to {instance.title}'
-        table_title = 'Related Products'
+        title = f'Προσθήκη Παρόμοιων Προϊόντων στο {instance.title}'
+        table_title, related_product, back_url = 'Παρόμοια Προϊόντα', True, instance.get_edit_url()
         context.update(locals())
         return context
 
@@ -381,7 +383,7 @@ class RelatedProductsView(ListView):
 @method_decorator(staff_member_required, name='dispatch')
 class WarehouseCategoryListView(ListView):
     model = WarehouseCategory
-    template_name = 'dashboard/catalogue/warehouse_list_view.html'
+    template_name = 'dashboard/list_page.html'
     paginate_by = 50
 
     def get_queryset(self):
@@ -390,8 +392,13 @@ class WarehouseCategoryListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        my_table = WarehouseCategoryTable(self.object_list)
-        RequestConfig(self.request).configure(my_table)
+        queryset_table = WarehouseCategoryTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+        page_title, back_url, create_url = ['Κατηγορίες Αποθήκης', reverse('dashboard:home'),
+                                            reverse('dashboard:ware_cate_create_view')
+                                            ]
+        # filters
+        search_filter, active_filter = [True]*2
         context.update(locals())
         return context
 
@@ -400,7 +407,7 @@ class WarehouseCategoryListView(ListView):
 class WarehouseCategoryCreateView(CreateView):
     model = WarehouseCategory
     form_class = WarehouseCategoryForm
-    template_name = 'warehouse/form.html'
+    template_name = 'dashboard/form.html'
     success_url = reverse_lazy('dashboard:ware_cate_list_view')
 
     def get_context_data(self, **kwargs):
@@ -415,13 +422,13 @@ class WarehouseCategoryCreateView(CreateView):
 class WarehouseCategoryUpdateView(UpdateView):
     model = WarehouseCategory
     form_class = WarehouseCategoryForm
-    template_name = 'warehouse/form.html'
+    template_name = 'dashboard/form.html'
     success_url = reverse_lazy('dashboard:ware_cate_list_view')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         back_url, delete_url = self.success_url, self.object.get_delete_url()
-        form_title = f'Edit {self.object.title}'
+        form_title = f'Επεξεργασια {self.object.title}'
         context.update(locals())
         return context
 
