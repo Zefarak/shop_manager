@@ -6,10 +6,12 @@ from django.db.models import Sum, F, Q
 from .models import Invoice
 from catalogue.product_details import VendorPaycheck
 from catalogue.models import Product
+from catalogue.product_attritubes import Attribute, AttributeProductClass, AttributeTitle
 from site_settings.constants import CURRENCY
 from .tables import ProductAddTable
 from django_tables2 import RequestConfig
 from .forms import BillCategoryForm, EmployeeForm, OccupationForm, GenericExpenseCategoryForm, GenericPersonForm
+
 
 @staff_member_required
 def ajax_paycheck_actions(request, question):
@@ -96,6 +98,26 @@ def ajax_search_products(request, pk):
                                           'instance': instance
                                       }
                                     )
+    return JsonResponse(data)
+
+
+@staff_member_required
+def ajax_form_with_attr_view(request, pk, dk, at):
+    qty = request.GET.get('qty', 1)
+    invoice = get_object_or_404(Invoice, id=pk)
+    product = get_object_or_404(Product, id=dk)
+    product_attribute_class = get_object_or_404(AttributeProductClass, id=pk)
+    attribute_title = get_object_or_404(AttributeTitle, id=pk)
+    attibrute, created = Attribute.objects.get_or_create(class_related=product_attribute_class.class_related,
+                                                         title=attribute_title,
+                                                         )
+    attibrute.qty = qty if created else attibrute.qty + qty
+    attibrute.save()
+    data = dict()
+    data['result'] = render_to_string(template_name='',
+                                      request=request,
+                                      context=locals()
+                                      )
     return JsonResponse(data)
 
 

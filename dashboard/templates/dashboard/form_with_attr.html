@@ -1,0 +1,85 @@
+{% extends 'index.html' %} {% load render_table from django_tables2 %}
+
+
+{% block content %}
+     <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <div class="page-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>Μεγαθολόγιο</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>Τίτλος</th>
+                                                <th>Ποσότητα</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for ele in chart_size %}
+                                                    <tr>
+                                                        <td>{{ ele }}</td>
+                                                        <td>
+                                                            <input id='qty__{{ ele.id }}' type="number" placeholder="1" class="form-control">
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-info btn-round" data-href="{% url '' %}" data-id="{{ ele.id }}">Προσθήκη</button>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <a href="{{ back_url }}" class="btn btn-warning">Επιστροφή</a>
+                                    </div>
+                                    <div class="card-body">
+                                        <h4>Είναι στο Τιμολόγιο</h4>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script type="text/javascript">
+    $('.add_button').click(function(event){
+        event.preventDefault();
+        const btn = $(this);
+        const url = btn.attr('data-href');
+        const edit_id = btn.attr('data-id');
+        const qty_id = '.qty_'+ edit_id;
+        const value = $(qty_id).val();
+        console.log('did anything fucking worked?', url, qty_id, value);
+        $.ajax({
+            method: 'GET',
+            dataType: 'json',
+            url: url+ '?qty='+value,
+
+            success: function (data) {
+                $('.somthething here').html(data.result)
+            }
+        })
+    })
+</script>
+{% endblock %}

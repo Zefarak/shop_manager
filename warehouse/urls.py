@@ -15,7 +15,7 @@ from .invoice_views import (WarehouseOrderList, create_warehouse_order_view, Upd
                             VendorListView, VendorCreateView, VendorUpdateView, delete_vendor,
                             CreateInvoiceImageView, UpdateInvoiceImageView, delete_invoice_image_view,
                             PaycheckCreateView, PayCheckListView, PaycheckDetailView, delete_paycheck,
-                            create_payment_from_order_view
+                            create_payment_from_order_view, create_order_item_with_attrribute_view
                             )
 
 from .payroll_views import (PayrollListView, EmployeeListView, EmployeeCreateView, EmployeeEditView, delete_employee,
@@ -38,6 +38,7 @@ urlpatterns = [
     path('create-invoice/', create_warehouse_order_view, name='create_invoice'),
     path('invoices/update/<int:pk>/', UpdateWarehouseOrderView.as_view(), name='update_order'),
     path('invoice/order-item/check/<int:pk>/<int:dk>/', create_or_add_order_item, name='order_item_check'),
+    path('invoice/order-item-with_attr/<int:pk>/<int:dk>/', create_order_item_with_attrribute_view, name='create_order_item_with_attr'),
     path('invoice/order-item/create/<int:pk>/<int:dk>/', CreateOrderItem.as_view(), name='create-order-item'),
     path('invoices/order-item/update/<int:pk>/', UpdateInvoiceOrderItem.as_view(), name='order-item-update'),
     path('invoices/order-item/delete/<int:pk>/', delete_warehouse_order_item_view, name='order-item-delete'),

@@ -64,17 +64,16 @@ class UpdateWarehouseOrderView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         back_url = reverse('warehouse:invoices')
-        print(self.object.order_type)
         if self.object.order_type in ['4', '5']:
-            products = Product.my_query.active_warehouse()
+            qs = Product.my_query.active_warehouse()
         else:
-            products = Product.my_query.active().filter(vendor=self.object.vendor)
-        products = ProductAddTable(products)
+            qs = Product.my_query.active().filter(vendor=self.object.vendor)
+        products_table = ProductAddTable(qs)
         instance = self.object
         images = InvoiceImage.objects.filter(order_related=self.object)
         images_table = InvoiceImageTable(images)
         RequestConfig(self.request).configure(images_table)
-        RequestConfig(self.request).configure(products)
+        RequestConfig(self.request).configure(products_table)
         context.update(locals())
         return context
 
@@ -83,13 +82,25 @@ class UpdateWarehouseOrderView(UpdateView):
 def create_or_add_order_item(request, pk, dk):
     instance = get_object_or_404(Invoice, id=pk)
     product = get_object_or_404(Product, id=dk)
-    order_item = InvoiceOrderItem.objects.filter(order=instance, product=product)
-    if not order_item.exists():
-        return 'fave attr' if product.have_attr else redirect(reverse('warehouse:create-order-item', kwargs={'pk': pk,
-                                                                                                             'dk': dk})
-                                                              )
-    return 'fave attr' if product.have_attr else redirect(reverse('warehouse:create-order-item'))
+    if product.have_attr:
+        print('works mother fucker')
+        return redirect(reverse('warehouse:create_order_item_with_attr', kwargs={'pk': pk, 'dk': dk}))
+    print('did continue?')
+    return redirect(reverse('warehouse:create-order-item'))
 
+
+@staff_member_required
+def create_order_item_with_attrribute_view(request, pk, dk):
+    instance = get_object_or_404(Invoice, id=pk)
+    product = get_object_or_404(Product, id=dk)
+    attr_qs = product.attr_class.filter(class_related__have_transcations=True)
+    class_attribute = attr_qs.first() if attr_qs.exists() else None
+
+    '''
+    if not class_attribute:
+        return redirect(instance.get_edit_url())
+    '''
+    return render(request, 'dashboard/form.html', context=locals())
 
 @method_decorator(staff_member_required, name='dispatch')
 class CreateOrderItem(CreateView):
