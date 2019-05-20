@@ -5,6 +5,7 @@ from .models import Invoice, InvoiceOrderItem, InvoiceImage
 from site_settings.models import Store
 from catalogue.models import Product
 from .generic_expenses import GenericExpense, GenericExpenseCategory, GenericPerson
+from site_settings.constants import WAREHOUSE_ORDER_TYPE
 from dal import autocomplete
 
 
@@ -137,3 +138,8 @@ class GenericPersonForm(BaseForm, forms.ModelForm):
     class Meta:
         model = GenericPerson
         fields = ['active', 'title', 'phone', 'notes']
+
+
+class CopyInvoiceForm(BaseForm):
+    date_expired = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}), label='Νέα Ημερομηνία')
+    order_type = forms.ChoiceField(choices=WAREHOUSE_ORDER_TYPE, required=True, label='Είδος Παραστατικού')

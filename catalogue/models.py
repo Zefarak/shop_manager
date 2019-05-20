@@ -45,10 +45,10 @@ class Product(DefaultBasicModel):
     price_buy = models.DecimalField(decimal_places=2, max_digits=6, default=0, verbose_name="Αξία Αγοράς")
     order_discount = models.IntegerField(default=0, verbose_name="'Έκπτωση Τιμολογίου")
     category = models.ForeignKey(WarehouseCategory, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='Κατηγορία Αποθήκης')
-    vendor = models.ForeignKey(Vendor, blank=True, null=True, on_delete=models.SET_NULL)
+    vendor = models.ForeignKey(Vendor, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='Προμηθευτής')
 
     qty_measure = models.DecimalField(max_digits=5, decimal_places=3, default=1, verbose_name='Ποσότητα Ανά Τεμάχιο')
-    qty = models.DecimalField(default=0, verbose_name="Qty", max_digits=10, decimal_places=2)
+    qty = models.DecimalField(default=0, max_digits=10, decimal_places=2, verbose_name='Ποσότητα')
     qty_add = models.DecimalField(default=0, verbose_name="Qty Add", max_digits=10, decimal_places=2,
                                   help_text='System use it only if warehouse transations')
     qty_remove = models.DecimalField(default=0, verbose_name="Qty Remove", max_digits=10, decimal_places=2,
@@ -83,6 +83,7 @@ class Product(DefaultBasicModel):
     def save(self, *args, **kwargs):
         self.final_price = self.price_discount if self.price_discount > 0 else self.price
         self.is_offer = True if self.price_discount > 0 else False
+
         self.qty = self.qty_add - self.qty_remove
         super(Product, self).save(*args, **kwargs)
 
@@ -96,11 +97,15 @@ class Product(DefaultBasicModel):
 
     def warehouse_calculations(self):
         if not WAREHOUSE_ORDERS_TRANSCATIONS:
+            # if our program don't support warehouse transcations, we pass
             pass
         warehouse_order_items = self.invoice_products.all()
-        add_invoices = warehouse_order_items.filter(order__order_type__in=['1', '2', '4'])
-        qty_add = add_invoices.aggregate(Sum('qty'))['qty__sum'] if add_invoices else 0
-        self.qty_add = qty_add
+        # we will calculate two different values, the incomes and outcomes
+        warehouse_in_items = warehouse_order_items.filter(order__order_type__in=['1', '2', '4'])
+        warehouse_out_items = warehouse_order_items.filter(order__order_type='5')
+        warehouse_in_qty = warehouse_in_items.aggregate(Sum('qty'))['qty__sum'] if warehouse_in_items else 0
+        warehouse_out_qty = warehouse_out_items.aggregate(Sum('qty'))['qty__sum'] if warehouse_out_items else 0
+        self.qty_add = warehouse_in_qty - warehouse_out_qty
         self.save()
 
     def order_calculations(self):

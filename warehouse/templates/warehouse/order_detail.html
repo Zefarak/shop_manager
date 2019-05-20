@@ -29,8 +29,12 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="title">
-                                            <a onclick="confirm('Are you sure?')" href="{{ instance.get_payment_url }}" class="btn btn-info">Δημιουργία Παραστατικού Πληρωμής</a>
                                             <a href="{{ back_url }}" class="btn btn-warning right">Επιστροφή</a>
+                                            <br>
+                                            <a onclick="confirm('Are you sure?')" href="{{ instance.get_payment_url }}" class="btn btn-info">Δημιουργία Παραστατικού Πληρωμής</a>
+                                            <a href="{% url 'warehouse:invoice_create_copy' instance.id %}" class="btn btn-info">Αντιγραφή Παραστατικού</a>
+                                            <br>
+
                                             <br>
                                             <h3>Πληροφορίες</h3>
                                         </div>
@@ -61,6 +65,7 @@
                                                 </form>
                                             </div>
                                         </div>
+                                        <a href="{{ instance.get_delete_url }}" class="btn btn-delete"> Διαγραφή</a>
                                     </div>
                                 </div>
 

@@ -15,7 +15,8 @@ from .invoice_views import (WarehouseOrderList, create_warehouse_order_view, Upd
                             VendorListView, VendorCreateView, VendorUpdateView, delete_vendor,
                             CreateInvoiceImageView, UpdateInvoiceImageView, delete_invoice_image_view,
                             PaycheckCreateView, PayCheckListView, PaycheckDetailView, delete_paycheck,
-                            create_payment_from_order_view, create_order_item_with_attrribute_view
+                            create_payment_from_order_view, create_order_item_with_attrribute_view,
+                            create_copy_invoice_view, delete_warehouse_order_view
                             )
 
 from .payroll_views import (PayrollListView, EmployeeListView, EmployeeCreateView, EmployeeEditView, delete_employee,
@@ -35,6 +36,7 @@ urlpatterns = [
 
     # invoices
     path('invoices/', WarehouseOrderList.as_view(), name='invoices'),
+    path('invoice/delete/<int:pk>/', delete_warehouse_order_view, name='invoice_delete'),
     path('create-invoice/', create_warehouse_order_view, name='create_invoice'),
     path('invoices/update/<int:pk>/', UpdateWarehouseOrderView.as_view(), name='update_order'),
     path('invoice/order-item/check/<int:pk>/<int:dk>/', create_or_add_order_item, name='order_item_check'),
@@ -43,6 +45,7 @@ urlpatterns = [
     path('invoices/order-item/update/<int:pk>/', UpdateInvoiceOrderItem.as_view(), name='order-item-update'),
     path('invoices/order-item/delete/<int:pk>/', delete_warehouse_order_item_view, name='order-item-delete'),
     path('invoices/create-payment-order/<int:pk>/', create_payment_from_order_view, name='create-payment-order'),
+    path('invoice/<int:pk>/', create_copy_invoice_view, name='invoice_create_copy'),
 
     # ajax urls
     path('ajax/calculate/<slug:question>/', ajax_calculate_value, name='ajax_invoice'),

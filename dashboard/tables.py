@@ -15,8 +15,8 @@ class ImageColumn(tables.Column):
 
 class TableProduct(tables.Table):
     action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Edit</a>", orderable=False)
-    tag_final_price = tables.Column(orderable=False, verbose_name='Price')
-    tag_price_buy = tables.Column(orderable=False, verbose_name='Price Buy')
+    tag_final_price = tables.Column(orderable=False, verbose_name='Τιμή Πώλησης')
+    tag_price_buy = tables.Column(orderable=False, verbose_name='Τιμή Αγοράς')
 
     class Meta:
         model = Product

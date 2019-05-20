@@ -51,8 +51,10 @@ class Vendor(models.Model):
         self.save()
 
     def update_output_value(self):
-        qs = self.vendor_orders.all()
-        self.output_value = qs.aggregate(Sum('final_value'))['final_value__sum'] if qs.exists() else 0.00
+        qs = self.vendor_orders.filter(order_type__in=['1', '2'])
+        total_value = qs.aggregate(Sum('final_value'))['final_value__sum'] if qs.exists() else 0.00
+        paid_value = qs.aggregate(Sum('paid_value'))['paid_value__sum'] if qs.exists() else 0.00
+        self.output_value = total_value - paid_value
         self.save()
 
     def get_edit_url(self):

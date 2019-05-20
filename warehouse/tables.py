@@ -2,7 +2,7 @@ import django_tables2 as tables
 from django.utils.html import format_html
 from .models import InvoiceImage
 from catalogue.product_details import VendorPaycheck
-from .models import Invoice, Vendor
+from .models import Invoice, Vendor, InvoiceAttributeItem
 from .billing import BillCategory, BillInvoice
 from .payroll import Employee, Payroll, Occupation
 from .billing import BillCategory
@@ -185,3 +185,15 @@ class GenericPersonTable(tables.Table):
         model = GenericPerson
         template_name = 'django_tables2/bootstrap.html'
         fields = ['title', 'phone', 'tag_balance', 'active']
+
+
+class InvoiceAttributeItemTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+
+    class Meta:
+        model = InvoiceAttributeItem
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['attribute_related', ]

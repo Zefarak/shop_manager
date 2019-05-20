@@ -8,6 +8,7 @@ from .generic_expenses import *
 from .managers import InvoiceManager
 from .abstract_models import DefaultOrderModel, DefaultOrderItemModel
 from catalogue.models import Product
+from catalogue.product_attritubes import Attribute
 from site_settings.tools import estimate_date_start_end_and_months
 from decimal import Decimal
 
@@ -41,11 +42,12 @@ class Invoice(DefaultOrderModel):
         if order_items.exists():
             self.clean_value = order_items.aggregate(Sum('total_clean_value'))['total_clean_value__sum']
             self.taxes = Decimal(self.clean_value) * Decimal((self.get_taxes_modifier_display())/100)
-
         else:
             self.clean_value, self.taxes, self.final_value = 0, 0, 0
+
         self.final_value = self.clean_value + self.taxes + self.additional_value
         self.paid_value = self.final_value if self.is_paid else self.paid_value
+
         super().save(*args, **kwargs)
         self.vendor.update_output_value()
 
@@ -71,6 +73,9 @@ class Invoice(DefaultOrderModel):
 
     def get_payment_url(self):
         return reverse('warehouse:create-payment-order', kwargs={'pk': self.id})
+
+    def get_delete_url(self):
+        return reverse('warehouse:invoice_delete', kwargs={'pk': self.id})
 
     @staticmethod
     def filter_data(request, queryset):
@@ -122,9 +127,6 @@ class InvoiceOrderItem(DefaultOrderItemModel):
     total_clean_value = models.DecimalField(default=0, max_digits=15, decimal_places=2, verbose_name='Συνολική Καθαρή Αξία')
     total_final_value = models.DecimalField(default=0, max_digits=14, decimal_places=2, verbose_name='Συνολίκή Αξία')
 
-    class Meta:
-        unique_together = ['order', 'product']
-
     def __str__(self):
         return f'{self.product}'
 
@@ -136,8 +138,11 @@ class InvoiceOrderItem(DefaultOrderItemModel):
         super().save(*args, **kwargs)
         self.product.price_buy = self.value
         self.product.order_discount = self.discount_value
-        self.product.save()
+        self.product.order_code = self.sku
         self.order.save()
+
+        if WAREHOUSE_ORDERS_TRANSCATIONS:
+            self.product.warehouse_calculations()
 
     def get_edit_url(self):
         return reverse('warehouse:order-item-update', kwargs={'pk': self.id})
@@ -200,3 +205,11 @@ def update_qty_on_delete(sender, instance, *args, **kwargs):
     product.save() if WAREHOUSE_ORDERS_TRANSCATIONS else ''
     self.order.save()
 
+
+class InvoiceAttributeItem(models.Model):
+    order_item = models.ForeignKey(InvoiceOrderItem, on_delete=models.CASCADE, related_name='my_attributes')
+    attribute_related = models.ForeignKey(Attribute, on_delete=models.PROTECT)
+    qty = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f'{self.order_item} - {self.attribute_related}'

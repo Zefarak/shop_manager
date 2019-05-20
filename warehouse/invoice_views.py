@@ -3,16 +3,15 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView, CreateView
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Sum, F
-from django.template.loader import render_to_string
-from django.http import JsonResponse
-from .models import Invoice, InvoiceOrderItem, InvoiceImage
+from django.db.models import Sum
+from django.contrib import messages
+from .models import Invoice, InvoiceOrderItem, InvoiceImage, InvoiceAttributeItem
 from catalogue.models import Product
 from catalogue.product_details import Vendor, VendorPaycheck
 from catalogue.forms import VendorForm, PaycheckVendorForm
 from site_settings.constants import CURRENCY
-from .forms import CreateInvoiceForm, UpdateInvoiceForm, CreateOrderItemForm, InvoiceImageForm
-from .tables import InvoiceImageTable, PaycheckTable, InvoiceTable, VendorTable, ProductAddTable
+from .forms import CreateInvoiceForm, UpdateInvoiceForm, CreateOrderItemForm, InvoiceImageForm, CopyInvoiceForm
+from .tables import InvoiceImageTable, PaycheckTable, InvoiceTable, VendorTable, ProductAddTable, InvoiceAttributeItemTable
 
 from django_tables2 import RequestConfig
 
@@ -69,6 +68,7 @@ class UpdateWarehouseOrderView(UpdateView):
         else:
             qs = Product.my_query.active().filter(vendor=self.object.vendor)
         products_table = ProductAddTable(qs)
+        print(qs)
         instance = self.object
         images = InvoiceImage.objects.filter(order_related=self.object)
         images_table = InvoiceImageTable(images)
@@ -86,7 +86,7 @@ def create_or_add_order_item(request, pk, dk):
         print('works mother fucker')
         return redirect(reverse('warehouse:create_order_item_with_attr', kwargs={'pk': pk, 'dk': dk}))
     print('did continue?')
-    return redirect(reverse('warehouse:create-order-item'))
+    return redirect(reverse('warehouse:create-order-item', kwargs={'pk': pk, 'dk': dk}))
 
 
 @staff_member_required
@@ -96,11 +96,12 @@ def create_order_item_with_attrribute_view(request, pk, dk):
     attr_qs = product.attr_class.filter(class_related__have_transcations=True)
     class_attribute = attr_qs.first() if attr_qs.exists() else None
 
-    '''
-    if not class_attribute:
-        return redirect(instance.get_edit_url())
-    '''
-    return render(request, 'dashboard/form.html', context=locals())
+    qs_order_item = InvoiceOrderItem.objects.filter(order=instance, product=product)
+    selected_data = qs_order_item.first().my_attributes.all() if qs_order_item.exists() else InvoiceAttributeItem.objects.none()
+    selected_data_table = InvoiceAttributeItemTable(selected_data)
+    RequestConfig(request).configure(selected_data_table)
+    return render(request, 'dashboard/form_with_attr.html', context=locals())
+
 
 @method_decorator(staff_member_required, name='dispatch')
 class CreateOrderItem(CreateView):
@@ -160,9 +161,40 @@ def delete_warehouse_order_item_view(request, pk):
 
 @staff_member_required
 def delete_warehouse_order_view(request, pk):
-    instance = get_object_or_404(InvoiceOrderItem, id=pk)
+    instance = get_object_or_404(Invoice, id=pk)
     instance.delete()
-    return redirect(reverse('warehouse:update_order', kwargs={'pk': instance.order.id}))
+    return redirect(reverse('warehouse:invoices'))
+
+
+@staff_member_required
+def create_copy_invoice_view(request, pk):
+    instance = get_object_or_404(Invoice, id=pk)
+    form = CopyInvoiceForm(request.POST or None)
+    if form.is_valid():
+        date_expired = form.cleaned_data.get('date_expired', None)
+        order_type = form.cleaned_data.get('order_type', None)
+        if date_expired and order_type:
+            new_invoice = Invoice.objects.create(
+                order_type=order_type,
+                date_expired=date_expired,
+                vendor=instance.vendor,
+                is_paid=instance.is_paid,
+                payment_method=instance.payment_method,
+                taxes_modifier=instance.taxes_modifier,
+
+            )
+            for item in instance.order_items.all():
+                InvoiceOrderItem.objects.create(
+                    order=new_invoice,
+                    product=item.product,
+                    qty=item.qty,
+                    value=item.value,
+                    discount_value=item.discount_value
+                )
+            return redirect(new_invoice.get_edit_url())
+    form_title, back_url = f'Αντιγραφή...', instance.get_edit_url()
+    context = locals()
+    return render(request, 'dashboard/form.html', context=context)
 
 
 @staff_member_required
@@ -252,9 +284,11 @@ class PayCheckListView(ListView):
     def get_context_data(self,  **kwargs):
         context = super().get_context_data(**kwargs)
         vendors = Vendor.objects.filter(active=True)
-        page_title, back_url, vendor_filter = 'Επιταγές', reverse('warehouse:dashboard'), True
+        page_title, back_url, create_url = 'Επιταγές', reverse('warehouse:dashboard'), reverse('warehouse:paycheck_create')
         queryset_table = PaycheckTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
+        search_filter, vendor_filter, paid_filter = [True]*3
+        vendors = Vendor.objects.filter(active=True)
         context.update(locals())
         return context
 
@@ -268,10 +302,15 @@ class PaycheckDetailView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title = f'Edit {self.object}'
+        form_title = f'Επεξεργασία {self.object}'
         back_url, delete_url = self.success_url, self.object.get_delete_url
         context.update(locals())
         return context
+
+    def form_valid(self, form):
+        form.save()
+
+        return super().form_valid(form)
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -283,10 +322,15 @@ class PaycheckCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title = 'Create New Payment'
+        form_title = 'Δημιουργία Νέας Πληρωμής'
         back_url, delete_url = self.success_url, None
         context.update(locals())
         return context
+
+    def form_valid(self, form):
+        form.save()
+
+        return super().form_valid(form)
 
 
 @staff_member_required
