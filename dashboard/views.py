@@ -54,7 +54,7 @@ class DashBoard(TemplateView):
 
 @method_decorator(staff_member_required, name='dispatch')
 class ProductsListView(ListView):
-    template_name = 'dashboard/product_list.html'
+    template_name = 'dashboard/list_page.html'
     model = Product
     paginate_by = 50
     total_products = 0
@@ -72,7 +72,9 @@ class ProductsListView(ListView):
         queryset_table = TableProduct(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
         # filters
-        search_filter, vendor_filter = True, True
+        search_filter, vendor_filter, category_flter, active_filter = [True] * 4
+        #  reports
+        reports, report_url = True, reverse('dashboard:ajax_product_analysis')
         context.update(locals())
         return context
 
@@ -123,7 +125,8 @@ class ProductCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title, back_url = 'Δημιουργία νέου Προϊόντος', reverse('dashboard:products')
+        form_title, back_url = 'Δημιουργία νέου Προϊόντος', self.request.GET.get('next', None)
+        back_url = back_url if back_url else reverse('dashboard:products')
         context.update(locals())
         return context
 
@@ -165,6 +168,16 @@ def product_detail(request, pk):
                 print(error)
     context = locals()
     return render(request, 'dashboard/product_detail.html', context)
+
+
+@staff_member_required
+def copy_product_view(request, pk):
+    product = get_object_or_404(Product, id=pk)
+    new_product = Product.objects.get(id=pk)
+    new_product.pk = None
+    new_product.save()
+    new_product.refresh_from_db()
+    return redirect(new_product.get_edit_url())
 
 
 @staff_member_required

@@ -13,7 +13,7 @@
                                     <div class="card-header">
                                         <h5>{{ page_title }}</h5>
                                         <br><br>
-                                        <a href="{{ create_url }}" class="btn btn-info btn-round">Δημιουργία</a>
+                                        <a href="{{ create_url }}?next={{ request.get_full_path|urlencode }}" class="btn btn-info btn-round">Δημιουργία</a>
 
                                     </div>
                                     <div class="card-block">
@@ -61,7 +61,6 @@
             const btn = $(this);
             const url = btn.attr('data-href');
             const search_name = btn.val();
-            console.log('works', url, search_name)
             $.ajax({
                 method: 'GET',
                 dataType: 'json',

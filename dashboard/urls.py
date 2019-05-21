@@ -3,7 +3,7 @@ from django.urls import path, include, re_path
 
 from .views import (DashBoard, ProductsListView, ProductCreateView,
                     product_detail, CategorySiteManagerView, ProductMultipleImagesView, CharacteristicsManagerView,
-                    delete_product,
+                    delete_product, copy_product_view,
                     ProductCharacteristicCreateView, ProductAttributeManagerView, create_attr_product_class,
                     ProductAttriClassManagerView, RelatedProductsView, product_characteristic_delete_view,
                     WarehouseCategoryCreateView, WarehouseCategoryListView, WarehouseCategoryUpdateView, warehouse_category_delete
@@ -34,6 +34,7 @@ urlpatterns = [
     path('product/delete/<int:pk>/', delete_product, name='product_delete'),
     path('product/category-site-manager/<int:pk>/', CategorySiteManagerView.as_view(), name='category_manager_view'),
     path('add-multiply-images/<int:pk>/', ProductMultipleImagesView.as_view(), name='image_manager_view'),
+    path('product/create-copy/<int:pk>/', copy_product_view, name='create_copy_product'),
 
     #popups
     path('product/popups/create-category/', popup_category, name='popup_category'),
@@ -53,7 +54,7 @@ urlpatterns = [
     path('product/related/<int:pk>/', RelatedProductsView.as_view(), name='related_products_manager_view'),
 
     # ajax
-    path('ajax/product/analysis/<slug:question>/', ajax_product_calculate_view, name='ajax_product_analysis'),
+    path('ajax/product/analysis/', ajax_product_calculate_view, name='ajax_product_analysis'),
     path('ajax/category-site-manager/<slug:slug>/<int:pk>/<int:dk>/', ajax_category_site, name='ajax_category_site'),
     path('ajax/related-product-manager/<slug:slug>/<int:pk>/<int:dk>/', ajax_related_products_view, name='ajax_related_product'),
     path('ajax/image-manager/<slug:slug>/<int:pk>/<int:dk>/', ajax_product_images, name='ajax_image'),

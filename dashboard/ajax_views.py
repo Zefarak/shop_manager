@@ -161,39 +161,24 @@ def popup_vendor(request):
 
 
 @staff_member_required
-def ajax_product_calculate_view(request, question):
+def ajax_product_calculate_view(request):
     data = dict()
-    queryset = Product.filters_data(request, Product.objects.all())
-    my_data, page_title, header_list = [], '', []
-    if question == 'value':
-        page_title = 'Total Value Analysis'
-        total_buy_value = queryset.aggregate(total=Sum(F('price_buy')*F('qty')))['total'] if queryset.exists() else 0
-        total_sell_value = queryset.aggregate(total=Sum(F('final_price')*F('qty')))['total'] if queryset.exists() else 0
-        my_data = [('Total Buy Cost', total_buy_value), ('Total Sell', total_sell_value)]
-    if question == 'vendors':
-        my_data = queryset.values_list('vendor__title').annotate(count_items=Sum('qty'),
-                                                                 buy_total=Sum(F('qty')*F('price_buy')),
-                                                                 total=Sum(F('qty') * F('final_price'))
-                                                                 ).order_by('-count_items')
-        page_title = 'Vendor Analysis'
-        question = 'annotate'
-        header_list = [('Vendor', ''), ('Qty', ''), ('Total Warehouse Value', 'danger'), ('Total Sell Value', 'success')]
-    if question == 'categories':
-        my_data = queryset.values_list('category__title').annotate(count_items=Sum('qty'),
-                                                                 buy_total=Sum(F('qty') * F('price_buy')),
-                                                                 total=Sum(F('qty') * F('final_price'))
-                                                                 ).order_by('-count_items')
-        page_title = 'Category Analysis'
-        question = 'annotate'
-        header_list = [('Category', ''), ('Qty', ''), ('Total Warehouse Value', 'danger'),
-                       ('Total Sell Value', 'success')]
-    data['result'] = render_to_string(template_name='ajax_site/results.html',
-                                      request=request,
-                                      context={'my_data': my_data,
-                                               'currency': CURRENCY,
-                                               'page_title': page_title,
-                                               'question': question,
-                                               'header_list': header_list
-                                               }
-                                      )
+    qs = Product.filters_data(request, Product.objects.all())
+    total_qty = qs.aggregate(Sum('qty'))['qty__sum'] if qs.exists() else 0
+    total_cost_value = qs.aggregate(total=Sum(F('qty')*F('price_buy')))['total'] if qs.exists() else 0
+    total_value = qs.aggregate(total=Sum(F('qty')*F('final_price')))['total'] if qs.exists() else 0
+    qs_vendor = qs.values_list('vendor__title').annotate(qty_=Sum('qty'),
+                              total_cost_=Sum(F('qty')*F('price_buy')),
+                              total_value_=Sum(F('qty')*F('final_price'))
+                              ).order_by('qty_')
+    data['report_result'] = render_to_string(
+        template_name='dashboard/ajax_calls/product_result.html',
+        request=request,
+        context={
+            'currency': CURRENCY,
+            'qs_vendor': qs_vendor,
+            'total_qty': total_qty,
+            'total_cost_value': total_cost_value,
+            'total_value': total_value
+        })
     return JsonResponse(data)

@@ -1,9 +1,11 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponse
+from django.shortcuts import get_object_or_404
 from django.db.models import Sum, F, Q
 from .generic_expenses import GenericExpense
 from .billing import BillInvoice
+from catalogue.models import Product
 from site_settings.constants import CURRENCY
 
 
@@ -37,3 +39,5 @@ def report_billing_view(request):
                                              context=locals()
                                              )
     return JsonResponse(data)
+
+

@@ -139,8 +139,8 @@ class Product(DefaultBasicModel):
     def have_attr(self):
         return self.product_class.have_attribute if self.product_class else False
 
-    def get_edit_url(self):
-        return reverse('dashboard:product_detail', kwargs={'pk': self.id})
+    def get_copy_url(self):
+        return reverse('dashboard:create_copy_product', kwargs={'pk': self.id})
 
     def get_cart_url(self):
         return reverse('cart:check', kwargs={'pk': self.id, 'action': 'add'})

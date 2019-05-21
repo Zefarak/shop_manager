@@ -154,10 +154,16 @@
                                     </div>
                                 </div>
                                 <div class="card">
-                                    <div class="header">Reports</div>
+                                    <div class="header">Επιλογές</div>
                                     <div class="card-body">
-                                        <a href="" class="btn btn-warning">Αγορές</a>
-                                        <a href="" class="btn btn-success">Πωλήσεις</a>
+                                        <a href="" class="btn btn-success"><i class="fa fa-database"></i></a>
+                                        <a href="{{ instance.get_copy_url }}" class="btn btn-primary">
+                                            <i class="fa fa-copy"></i>
+                                        </a>
+                                        <a onclick="return confirm('Είσαι σίγουρος;')"
+                                           href="{{ instance.get_delete_url }}"
+                                           class="btn btn-danger">Διαγραφή
+                                        </a>
                                     </div>
                                 </div>
                             </div>

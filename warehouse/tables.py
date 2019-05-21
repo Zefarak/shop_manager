@@ -38,11 +38,24 @@ class PaycheckTable(tables.Table):
 
 
 class InvoiceTable(tables.Table):
-    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Edit</a>",
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>"
+                                   "<i class='fa fa-edit'></i></a>",
                                    orderable=False,
                                    )
-    tag_clean_value = tables.Column(orderable=False, verbose_name='Clean Value')
-    tag_final_value = tables.Column(orderable=False, verbose_name='Value')
+    test_button = tables.TemplateColumn('''
+        <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton_{{ record.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Επιλογές
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_{{ record_id }}">
+    <a class="dropdown-item" href="{{ record.get_print_url }}">Εκτύπωση</a>
+    <a class="dropdown-item" href="{{ record.get_copy_url }}">Αντίγραφο</a>
+    <a onclick="return confirm("Είσαι σίγουρος;")" class="dropdown-item" href="{{ record.get_delete_url }}">Διαγραφή</a>
+  </div>
+</div>
+    ''')
+    tag_clean_value = tables.Column(orderable=False, verbose_name='Καθαρή Αξία')
+    tag_final_value = tables.Column(orderable=False, verbose_name='Τελική Αξία')
 
     class Meta:
         model = Invoice

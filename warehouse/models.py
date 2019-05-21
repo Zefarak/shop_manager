@@ -150,6 +150,9 @@ class InvoiceOrderItem(DefaultOrderItemModel):
     def get_delete_url(self):
         return reverse('warehouse:order-item-delete', kwargs={'pk': self.id})
 
+    def get_copy_url(self):
+        return reverse('warehouse:invoice_create_copy', kwargs={'pk': self.id})
+
     def remove_from_order(self, qty):
         if WAREHOUSE_ORDERS_TRANSCATIONS:
             product = self.product
