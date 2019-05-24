@@ -27,6 +27,7 @@ class TableProduct(tables.Table):
         fields = ['id', 'title', 'vendor', 'tag_price_buy', 'tag_final_price', 'qty', 'category', 'active', 'action']
 
 
+
 class ProductClassTable(tables.Table):
     action = tables.TemplateColumn('<a href="{{ record.get_edit_url }}" class="btn btn-info btn-round">Επεξεργασία</a>')
 

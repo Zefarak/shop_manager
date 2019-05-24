@@ -11,7 +11,6 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="title text-center">{{ object.get_order_type_display }} {{ object.title }}</h4>
-                                        <p class="category">Ημερομηνία... {{ object.date_expired }}</p>
                                         <br>
                                         <form class="form">
                                             <label>Αναζήτηση</label>
@@ -28,16 +27,13 @@
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="card-header">
-                                        <div class="title">
-                                            <a href="{{ back_url }}" class="btn btn-warning right">Επιστροφή</a>
-                                            <br>
-                                            <a onclick="confirm('Are you sure?')" href="{{ instance.get_payment_url }}" class="btn btn-info">Δημιουργία Παραστατικού Πληρωμής</a>
-                                            <a href="{% url 'warehouse:invoice_create_copy' instance.id %}" class="btn btn-info">Αντιγραφή Παραστατικού</a>
-                                            <br>
+                                        <a href="{{ back_url }}" class="btn btn-warning btn-round clone-btn-right">Επιστροφή</a>
+                                        <br><br>
 
-                                            <br>
-                                            <h3>Πληροφορίες</h3>
-                                        </div>
+                                        <a onclick="confirm('Are you sure?')" href="{{ instance.get_payment_url }}" class="btn btn-info">Δημιουργία Παραστατικού Πληρωμής</a>
+                                        <a href="{% url 'warehouse:invoice_create_copy' instance.id %}" class="btn btn-info">Αντιγραφή Παραστατικού</a>
+                                        <br><br>
+                                        <h3>Πληροφορίες</h3>
                                     </div>
                                     <div class="content" id="order_items_container">
                                         {% include 'warehouse/ajax/order_container.html' %}

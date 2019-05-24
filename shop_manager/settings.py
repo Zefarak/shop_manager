@@ -53,11 +53,14 @@ INSTALLED_APPS = [
     'mptt',
     'django_tables2',
     'import_export',
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -155,3 +158,23 @@ RETAIL_TRANSCATIONS = True
 PRODUCT_ATTRIBUTE_TRANSCATIONS = True
 
 USE_QTY_LIMIT = False
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.api.utils.my_jwt_response_handler'
+}
+
+CORS_ORIGIN_WHITELIST = (
+    'localhost:3000',
+)

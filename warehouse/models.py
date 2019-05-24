@@ -26,7 +26,7 @@ class Invoice(DefaultOrderModel):
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, related_name='vendor_orders', verbose_name='Προμηθευτής')
     additional_value = models.DecimalField(default=0.00, max_digits=15, decimal_places=2, verbose_name='Επιπλέον Κόστος')
     clean_value = models.DecimalField(default=0.00, max_digits=15, decimal_places=2, verbose_name='Καθαρή Αξία')
-    taxes_modifier = models.CharField(max_length=1, choices=TAXES_CHOICES, default='1', verbose_name='ΦΠΑ')
+    taxes_modifier = models.CharField(max_length=1, choices=TAXES_CHOICES, default='3', verbose_name='ΦΠΑ')
     taxes = models.DecimalField(default=0.00, max_digits=15, decimal_places=2, verbose_name='Φόρος')
     order_type = models.CharField(default=1, max_length=1, choices=WAREHOUSE_ORDER_TYPE, verbose_name='Είδος')
     paycheck = models.ManyToManyField(VendorPaycheck, verbose_name='Πληρωμές')
