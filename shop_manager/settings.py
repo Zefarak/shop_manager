@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'import_export',
     'rest_framework',
     'corsheaders',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -169,12 +170,18 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100,
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+
 }
 
 JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.api.utils.my_jwt_response_handler'
 }
 
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
-    'localhost:3000',
+    'http://localhost:3000'
 )
