@@ -10,7 +10,7 @@ from point_of_sale.api.views import (OrderListApiView, OrderCreateApiView, Token
 app_name = 'api'
 
 urlpatterns = [
-    path('catalogue/product/list/', ProductListCreateApiView.as_view(), name='api_product_list'),
+    path('products/', ProductListCreateApiView.as_view(), name='api_product_list'),
     path('token-auth/', obtain_jwt_token),
     path('current-user/', current_user),
     path('users/', UserList.as_view()),
