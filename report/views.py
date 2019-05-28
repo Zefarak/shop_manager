@@ -59,3 +59,11 @@ def ajax_warehouse_analysis(request):
                                                  'queryset_table': queryset_table
                                                })
     return JsonResponse(data)
+
+
+@staff_member_required
+def vendor_analysis_view(request):
+    vendors = Vendor.objects.filter(active=True)
+
+
+    return render(request, 'reports/vendor_report.html', context=locals())

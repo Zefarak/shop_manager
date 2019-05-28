@@ -1,0 +1,82 @@
+{% extends 'index.html' %}
+
+{% block extra_css %}
+<style>
+    .vendor_form {
+        height: 500px;
+        overflow-y: scroll;
+    }
+</style>
+{% endblock %}
+{% block content %}
+ <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <div class="page-body">
+                        <div class="row">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    Επιλογή
+                                </div>
+                                <div class="card-body">
+                                    <form class="form vendor_form" method="get">
+                                        {% for vendor in vendors %}
+                                            <div class="form-check">
+                                                <input value="{{ vendor.id }}" class="form-check-input" type="checkbox" value="" id="vendor_{{ vendor.id }}">
+                                                <label class="form-check-label" for="vendor_{{ vendor.id }}">
+                                                    {{ vendor }}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                        <br />
+                                        <button class="btn btn-primary form_button">Αναζήτηση</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Επιλογή Κινήσεων</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form class="form" method="get">
+                                         <div class="form-check">
+                                             <input value="actions_buys" class="form-check-input" type="checkbox" value="" id="action_buys">
+                                             <label class="form-check-label" for="action_buys">
+                                                Υπολόγισε Αγορές
+                                             </label>
+                                         </div>
+                                         <div class="form-check">
+                                             <input value="actions_sells" class="form-check-input" type="checkbox" value="" id="action_sells">
+                                             <label class="form-check-label" for="action_sells">
+                                                Υπολόγισε Πωλήσεις
+                                             </label>
+                                         </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+ </div>
+{% endblock %}
+
+
+{% block extra_js %}
+    <script>
+        $('.form_button').click(function (event) {
+            event.preventDefault();
+            const btn = $(this);
+            const form_data = $('vendor_form').serialize();
+            console.log('My data is...', document.forms, form_data);
+        })
+    </script>
+{% endblock %}

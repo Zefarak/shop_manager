@@ -223,7 +223,7 @@ class CostumerListView(ListView):
         page_title, back_url, create_url = 'Πελάτες', reverse('point_of_sale:home'), reverse('point_of_sale:costumer_create_view')
         queryset_table = ProfileTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
-        search_filter = True
+        search_filter, balance_name = [True] * 2
 
         # report
         reports, report_url = True, reverse('point_of_sale:ajax_costumer_report')
