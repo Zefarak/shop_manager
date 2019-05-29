@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
-from django.shortcuts import reverse, get_object_or_404, redirect, render
+from django.shortcuts import reverse, get_object_or_404, redirect, render, HttpResponseRedirect
 from django.db.models import Sum
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -8,10 +8,11 @@ from django.contrib import messages
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute
 from .models import Order, OrderItem, OrderItemAttribute
-from .forms import OrderCreateForm, OrderItemCoffeeForm, OrderUpdateForm, forms
+from .forms import OrderCreateForm, OrderCreateCopyForm, OrderUpdateForm, forms
 from site_settings.models import PaymentMethod
-from accounts.models import Profile, User
+from accounts.models import Profile
 from accounts.forms import ProfileForm
+from cart.models import Cart, CartItem
 from .tools import generate_or_remove_queryset
 from .tables import ProfileTable, OrderTable
 from site_settings.constants import CURRENCY
@@ -199,12 +200,41 @@ def delete_order(request, pk):
 
 
 @staff_member_required
-def done_order_view(request, pk):
+def done_order_view(request, pk, action):
     instance = get_object_or_404(Order, id=pk)
-    instance.is_paid = True
-    instance.status = "8"
+    order_items = instance.order_items.exists()
+    if not order_items:
+        instance.delete()
+        return redirect(reverse('point_of_sale:order_list'))
+    if action == 'paid':
+        instance.is_paid = True
+        instance.status = "8"
     instance.save()
     return redirect(reverse('point_of_sale:order_list'))
+
+
+@staff_member_required
+def create_copy_order(request, pk):
+    instance = get_object_or_404(Order, id=pk)
+    form_title, back_url = f'Αντιγραφή {instance.title}', reverse('point_of_sale:order_list')
+    form = OrderCreateCopyForm(request.POST or None)
+    if form.is_valid():
+        order_type = form.cleaned_data.get('order_type', instance.order_type)
+        new_instance = Order.objects.get(id=pk)
+        new_instance.pk = None
+        new_instance.date_expired = datetime.datetime.now()
+        new_instance.order_type = order_type
+        new_instance.save()
+        new_instance.refresh_from_db()
+        for order_item in instance.order_items.all():
+            new_order_item = OrderItem.objects.get(id=order_item.id)
+            new_order_item.pk = None
+            new_order_item.order = new_instance
+            new_order_item.save()
+        return redirect(new_instance.get_edit_url())
+
+    context = locals()
+    return render(request, 'dashboard/form.html', context)
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -280,6 +310,14 @@ def delete_costumer_view(request, pk):
         return redirect(reverse('point_of_sale:costumer_list_view'))
     instance.delete()
     return redirect(reverse('point_of_sale:costumer_list_view'))
+
+
+@staff_member_required
+def quick_pay_costumer_view(request, pk):
+    instance = get_object_or_404(Profile, id=pk)
+    instance.value = 0
+    instance.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @method_decorator(staff_member_required, name='dispatch')

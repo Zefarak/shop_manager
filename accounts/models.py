@@ -10,10 +10,14 @@ from site_settings.constants import CURRENCY, ADDRESS_TYPES
 
 from decimal import Decimal
 
+
 class CostumerAccountManager(models.Manager):
 
     def eshop_costumer(self):
         return super(CostumerAccountManager, self).filter(is_eshop=True)
+
+    def have_balance(self):
+        return super().filter(balance__gt=0)
 
 
 class Profile(models.Model):

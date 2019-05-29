@@ -96,10 +96,10 @@ def ajax_costumers_report(request):
 def ajax_search_costumers(request):
     data = dict()
     search_name = request.GET.get('search_name', None)
-    qs = Profile.objects.filter(Q(last_name__contains=search_name)|
-                                Q(first_name__contains=search_name)|
+    qs = Profile.objects.filter(Q(last_name__contains=search_name.capitalize()) |
+                                Q(first_name__contains=search_name.capitalize()) |
                                 Q(notes__contains=search_name)
-                                ).distinct() if search_name else Profile.objects.none()
+                                ).distinct() if search_name else Profile.objects.all()[:10]
     queryset_table = ProfileTable(qs)
     print(qs, search_name, 'works!')
     RequestConfig(request).configure(queryset_table)

@@ -165,10 +165,7 @@ class Order(DefaultOrderModel):
         return mark_safe('<td class="%s">%s</td>' % (back_color, text))
 
     def tag_costumer(self):
-        return self.costumer_account
-
-    def tag_seller_point(self):
-        return self.seller_account.username if self.seller_account else 'No data'
+        return self.profile
 
     def is_printed(self):
         return 'Printed' if self.printed else 'Not Printed'
@@ -230,6 +227,8 @@ def create_unique_number(sender, instance, **kwargs):
         filling_len = MAX_NUMBERS-len_num
         instance.number = filling_len*'0'+ str(instance.id)
         instance.save()
+    if instance.profile:
+        instance.profile.save()
 
 
 class OrderItem(DefaultOrderItemModel):
@@ -350,7 +349,9 @@ def create_destroy_title():
 
 @receiver(post_delete, sender=OrderItem)
 def update_warehouse(sender, instance, **kwargs):
-    instance.title.save()
+    product = instance.product
+    product.order_calculations()
+    instance.order.save()
 
 
 class OrderItemAttribute(models.Model):

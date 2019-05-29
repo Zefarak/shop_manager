@@ -1,7 +1,14 @@
-<div class="row">
+<style>
+    .scrollable {
+  height: 800px;
+  overflow-y: scroll;
+}
+</style>
+
+<div class="row scrollable">
     <!-- Invoice list card start -->
     {% for product in products %}
-        <div class="col-sm-6">
+        <div class="col-sm-6 ">
         <div class="card card-border-primary">
             <div class="card-header">
                 <h5>{{ product }} </h5>
@@ -22,7 +29,10 @@
                     <div class="col-sm-6">
                         <ul class="list list-unstyled text-right">
                             <li>$8,750</li>
-                            <li>Method: <span class="text-semibold">SWIFT</span></li>
+                            <li><a href="{{ product.get_edit_url }}" target="_blank"
+                                   class="btn btn-primary btn-small btn-round">
+                                <i class="fa fa-edit"></i> </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -33,11 +43,10 @@
                 </div>
                 <div class="task-board m-0">
                     {% if product.have_attr %}
-                                    <a href="{% url 'point_of_sale:add_to_order_attr' instance.id product.id %}" class="btn btn-success">Add</a>
-                                {% else %}
-                                <button data-href="{% url 'point_of_sale:ajax_add_product' instance.id product.id %}" class="btn btn-primary add_button">Add</button>
-                                {% endif %}
-
+                        <a href="{% url 'point_of_sale:add_to_order_attr' instance.id product.id %}" class="btn btn-warning">Add</a>
+                    {% else %}
+                        <button data-href="{% url 'point_of_sale:ajax_add_product' instance.id product.id %}" class="btn btn-warning add_button">Add</button>
+                    {% endif %}
                 </div>
             </div>
         </div>

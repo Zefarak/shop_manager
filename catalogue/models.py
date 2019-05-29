@@ -201,7 +201,7 @@ class Product(DefaultBasicModel):
 
         queryset = queryset.filter(category_site__id__in=cate_name) if cate_name else queryset
         queryset = queryset.filter(brand__id__in=brand_name) if brand_name else queryset
-        queryset = queryset.filter(title__icontains=search_name) if search_name else queryset
+        queryset = queryset.filter(title__icontains=search_name.capitalize()) if search_name else queryset
 
         return queryset
 

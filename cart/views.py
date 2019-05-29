@@ -1,17 +1,25 @@
 from django.shortcuts import HttpResponseRedirect, get_object_or_404
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, UpdateView, CreateView
 from django.contrib import messages
+from django.utils.decorators import method_decorator
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.urls import reverse
 from catalogue.models import Product
 from .models import CartItem, Cart
+from .forms import CartForm
+from .tables import CartTable
 from .tools import add_to_cart, add_to_cart_with_attr, remove_from_cart_with_attr
 
+from django_tables2 import RequestConfig
 
+
+@method_decorator(staff_member_required, name='dispatch')
 class CartListView(ListView):
     model = Cart
-    template_name = 'cart/listview.html'
+    template_name = 'dashboard/list_page.html'
 
     def get_queryset(self):
         queryset = Cart.filter_data(self.request)
@@ -19,15 +27,40 @@ class CartListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        status = ["Open", "Merged", "Saved", "Frozen", "Submitted"]
-        total = self.object_list.count()
+        page_title, back_url, create_url = 'Καλάθια', reverse('point_of_sale:home'), reverse('cart:cart_create')
+        queryset_table = CartTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+        # filters
+        search_filter = [True]*1
         context.update(locals())
         return context
 
 
-class CartDetailView(DetailView):
+@method_decorator(staff_member_required, name='dispatch')
+class CreateCartView(CreateView):
+    template_name = 'dashboard/form.html'
     model = Cart
-    template_name = 'cart/detail_view.html'
+    form_class = CartForm
+    success_url = reverse_lazy('cart:cart_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form_title, back_url = 'Νέο Καλάθι', self.success_url
+
+        context.update(locals())
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Νέο Καλάθι Προστέθηκε')
+        return super().form_valid(form)
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class CartUpdateView(UpdateView):
+    model = Cart
+    template_name = 'dashboard/form.html'
+    form_class = CartForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

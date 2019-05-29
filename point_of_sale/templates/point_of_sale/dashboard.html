@@ -1,4 +1,4 @@
-{% extends 'index.html' %} {% load render_table from django_tables2 %}
+{% extends 'point_of_sale/index.html' %} {% load render_table from django_tables2 %}
 
 {% block content %}
     <div class="pcoded-content">
@@ -8,7 +8,7 @@
                     <div class="page-body">
                         <div class="row">
                             <div class="col-6">
-                                <a href="{% url 'point_of_sale:order_create' %}">
+                                <a href="{% url 'point_of_sale:auto_create_order' 'sell' %}">
                                     <div class="card bg-c-green update-card">
                                         <div class="card-block">
                                             <div class="row align-items-end">
@@ -20,7 +20,7 @@
                                 </a>
                             </div>
                             <div class="col-6">
-                                <a href="{% url 'point_of_sale:action_return_order' %}">
+                                <a href="{% url 'point_of_sale:auto_create_order' 'return' %}">
                                     <div class="card bg-c-pink update-card">
                                         <div class="card-block">
                                             <div class="row align-items-end">
@@ -95,17 +95,8 @@
                             </div>
                             <!-- task, page, download counter  end -->
                             <!--  sale analytics start -->
-                            <div class="col-xl-4 col-md-4"></div>
-                            <div class="col-xl-4 col-md-4">
-                                <div class="card user-card2">
-                                    <div class="card-block text-center">
-                                        <h6 class="m-b-15">Συνολικά Έξοδα</h6>
-                                        <button class="btn btn-warning btn-block p-t-15 p-b-15">{{ currency }} {{ total_expenses }}</button>
-                                    </div>
-                                </div>
-                            </div>
-                             <div class="col-xl-4 col-md-4"></div>
-                                            <!--  sale analytics end -->
+                            <div class="col-xl-12 col-md-12"></div>
+
                             <div class="col-xl-12 col-md-12">
                                  <div class="card">
                                      <div class="card-header">Παραστατικά</div>

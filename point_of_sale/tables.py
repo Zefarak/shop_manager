@@ -8,6 +8,8 @@ from .models import Order, OrderItem
 class ProfileTable(tables.Table):
     action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Edit</a>", orderable=False)
     tag_balance = tables.Column(orderable=False, verbose_name='Υπόλοιπο')
+    pay = tables.TemplateColumn("<a href='{% url 'point_of_sale:costumer_pay' record.id %}' class='btn btn-success'>"
+                                "Πληρωμή</a> ", orderable=False)
 
     class Meta:
         model = Profile

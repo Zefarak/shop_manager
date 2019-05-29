@@ -5,7 +5,7 @@
             <h3>{{ instance.title }}</h3>
         </div>
     </div>
-    <div class="content">
+    <div class="card-body">
         <div class="row">
             <div class="col-md-6 text-center">
                 <table class="table table-responsive">
@@ -63,12 +63,12 @@
             </div>
         </div>
         <br>
-        <table class='table'>
+        <table class='table table-responsive'>
             <thead>
             <tr>
                 <th>Sku</th>
                 <th>Προϊόν</th>
-                <th>Ποσότητα</th>
+                <th>Qty</th>
                 <th>Τιμή</th>
                 <th>Σύνολο</th>
                 <th colspan="2">Actions</th>
@@ -104,7 +104,7 @@
     <tr>
         <td>Μεταφορικά</td>
         <td>{{ instance.tag_shipping_cost }}</td>
-        <td>Κόστος Αντικαταβολής</td>
+        <td>Κόστος <br>Αντικ.</td>
         <td>{{ instance.tag_payment_cost }}</td>
         <td>Έκπτωση</td>
         <td>{{ instance.tag_discount }}</td>
@@ -115,10 +115,9 @@
         <td>{{ instance.tag_final_value }}</td>
     </tr>
     <tr>
-        <td colspan="6"><a href="{% url 'point_of_sale:action_order_done' instance.id %}" class="btn btn-success btn-outline-success btn-block"><i class="fa fa-save"></i>Ολοκλήρωση</a></td>
+        <td colspan="6"><a href="{% url 'point_of_sale:action_order_done' instance.id 'not_paid' %}" class="btn btn-success btn-outline-success btn-block"><i class="fa fa-save"></i>Ολοκλήρωση</a></td>
     </tr>
     </tfoot>
-
 </table>
 
 <script>

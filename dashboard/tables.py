@@ -7,6 +7,14 @@ from catalogue.product_details import Brand
 from catalogue.product_attritubes import Characteristics, Attribute, AttributeClass
 
 
+class TruncatedTextColumn(tables.Column):
+    '''A Column to limit to 100 characters and add an ellipsis'''
+    def render(self, value):
+        if len(value) > 30:
+            return value[0:27] + '...'
+        return str(value)
+
+
 class ImageColumn(tables.Column):
 
     def render(self, value):
@@ -20,12 +28,15 @@ class TableProduct(tables.Table):
                                    )
     tag_final_price = tables.Column(orderable=False, verbose_name='Τιμή Πώλησης')
     tag_price_buy = tables.Column(orderable=False, verbose_name='Τιμή Αγοράς')
+    title = TruncatedTextColumn()
+    category = tables.TemplateColumn("<p>{{ record.title|truncatechars_html:25 }}</p>")
+    vendor = tables.TemplateColumn("<p>{{ record.title|truncatechars_html:25 }}</p>")
 
     class Meta:
         model = Product
         template_name = 'django_tables2/bootstrap.html'
-        fields = ['id', 'title', 'vendor', 'tag_price_buy', 'tag_final_price', 'qty', 'category', 'active', 'action']
-
+        attrs = {'class': 'table table-bordered table-responsive'}
+        fields = ['id', 'title', 'vendor', 'qty', 'tag_price_buy', 'tag_final_price', 'category', 'action', 'active']
 
 
 class ProductClassTable(tables.Table):
@@ -48,13 +59,15 @@ class WarehouseCategoryTable(tables.Table):
 
 
 class CategorySiteTable(tables.Table):
-    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Επεξεργασία</a>",
-                                   orderable=False)
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'>"
+                                   "<i class='fa fa-edit'> </i></a>",
+                                   orderable=False
+                                   )
 
     class Meta:
         model = Category
         template_name = 'django_tables2/bootstrap.html'
-        fields = ['id', 'title', 'parent', 'active']
+        fields = ['id', 'name', 'parent', 'active']
 
 
 class BrandTable(tables.Table):

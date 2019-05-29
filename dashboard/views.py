@@ -46,8 +46,6 @@ class DashBoard(TemplateView):
         active_products = Product.objects.all().filter(active=True)[:10]
         queryset_table = ProductTable(active_products)
         RequestConfig(self.request).configure(queryset_table)
-        categories = Category.objects.all()[:10]
-        brands = Brand.objects.all()[:10]
         context.update(locals())
         return context
 
@@ -175,6 +173,7 @@ def copy_product_view(request, pk):
     product = get_object_or_404(Product, id=pk)
     new_product = Product.objects.get(id=pk)
     new_product.pk = None
+    new_product.slug = ''
     new_product.save()
     new_product.refresh_from_db()
     return redirect(new_product.get_edit_url())
@@ -451,3 +450,5 @@ def warehouse_category_delete(request, pk):
     instance = get_object_or_404(WarehouseCategory, id=pk)
     instance.delete()
     return redirect('dashboard:ware_cate_list_view')
+
+
