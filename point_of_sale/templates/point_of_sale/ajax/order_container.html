@@ -115,7 +115,7 @@
         <td>{{ instance.tag_final_value }}</td>
     </tr>
     <tr>
-        <td colspan="6"><a href="{% url 'point_of_sale:action_order_done' instance.id 'not_paid' %}" class="btn btn-success btn-outline-success btn-block"><i class="fa fa-save"></i>Ολοκλήρωση</a></td>
+        <td colspan="6"><a href="{% url 'point_of_sale:action_order_done' instance.id 'paid' %}" class="btn btn-success btn-outline-success btn-block"><i class="fa fa-save"></i>Ολοκλήρωση</a></td>
     </tr>
     </tfoot>
 </table>

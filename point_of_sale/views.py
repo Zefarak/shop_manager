@@ -31,10 +31,11 @@ class DashboardView(TemplateView):
         RequestConfig(self.request).configure(queryset_table)
 
         qs_today = Order.objects.filter(date_expired=datetime.datetime.now())
+        print(qs_today)
         today_sells = qs_today.filter(order_type__in=['r', 'e']).aggregate(Sum('final_value'))['final_value__sum'] \
             if qs_today.filter(order_type__in=['r', 'e']).exists() else 0.00
         today_returns = qs_today.filter(order_type__in=['b', 'c', 'wr']).aggregate(Sum('final_value'))['final_value__sum']\
-            if qs_today.filter(order_type__in=[]).exists() else 0.00
+            if qs_today.filter(order_type__in=['b', 'c', 'wr']).exists() else 0.00
         today_sells, today_returns = f'{today_sells} {CURRENCY}', f'{today_returns} {CURRENCY}'
         costumers_dept = f'0.00 {CURRENCY}'
         billings = OrderTable(Order.objects.all())
@@ -135,6 +136,8 @@ class OrderUpdateView(UpdateView):
         return reverse('point_of_sale:order_detail', kwargs={'pk': self.kwargs['pk']})
 
     def get_context_data(self, **kwargs):
+        homepage_cookie = self.request.COOKIES.get('order_redirect', None)
+        print('homepage cookie', homepage_cookie)
         context = super().get_context_data(**kwargs)
         products = Product.my_query.active()[:12]
         instance = self.object
@@ -159,7 +162,7 @@ def add_to_order_with_attr(request, pk, dk):
     form_title, back_url = f'Add {instance.title}', order.get_edit_url()
     all_attr_class = instance.attr_class.all()
     print(instance, all_attr_class)
-    form = OrderItemCoffeeForm(request.POST or None)
+    form = OrderItem(request.POST or None)
     fields_added = generate_or_remove_queryset(form, ['sugar', 'sugar_lvl', 'milk', 'ingredient'], all_attr_class)
     if form.is_valid():
         order_item, created = OrderItem.objects.get_or_create(title=instance, order=order)
@@ -198,43 +201,6 @@ def delete_order(request, pk):
     instance.delete()
     return redirect(reverse('point_of_sale:order_list'))
 
-
-@staff_member_required
-def done_order_view(request, pk, action):
-    instance = get_object_or_404(Order, id=pk)
-    order_items = instance.order_items.exists()
-    if not order_items:
-        instance.delete()
-        return redirect(reverse('point_of_sale:order_list'))
-    if action == 'paid':
-        instance.is_paid = True
-        instance.status = "8"
-    instance.save()
-    return redirect(reverse('point_of_sale:order_list'))
-
-
-@staff_member_required
-def create_copy_order(request, pk):
-    instance = get_object_or_404(Order, id=pk)
-    form_title, back_url = f'Αντιγραφή {instance.title}', reverse('point_of_sale:order_list')
-    form = OrderCreateCopyForm(request.POST or None)
-    if form.is_valid():
-        order_type = form.cleaned_data.get('order_type', instance.order_type)
-        new_instance = Order.objects.get(id=pk)
-        new_instance.pk = None
-        new_instance.date_expired = datetime.datetime.now()
-        new_instance.order_type = order_type
-        new_instance.save()
-        new_instance.refresh_from_db()
-        for order_item in instance.order_items.all():
-            new_order_item = OrderItem.objects.get(id=order_item.id)
-            new_order_item.pk = None
-            new_order_item.order = new_instance
-            new_order_item.save()
-        return redirect(new_instance.get_edit_url())
-
-    context = locals()
-    return render(request, 'dashboard/form.html', context)
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -312,14 +278,6 @@ def delete_costumer_view(request, pk):
     return redirect(reverse('point_of_sale:costumer_list_view'))
 
 
-@staff_member_required
-def quick_pay_costumer_view(request, pk):
-    instance = get_object_or_404(Profile, id=pk)
-    instance.value = 0
-    instance.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
 @method_decorator(staff_member_required, name='dispatch')
 class CostumerAccountCardView(ListView):
     model = Order
@@ -335,6 +293,6 @@ class CostumerAccountCardView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CostumerAccountCardView, self).get_context_data(**kwargs)
         page_title = f'{self.instance}'
-
+        not_paid_orders = Order.my_query.get_queryset().not_paid_sells()
         context.update(locals())
         return context

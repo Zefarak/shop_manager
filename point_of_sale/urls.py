@@ -1,11 +1,10 @@
 from django.urls import path
 from .views import (DashboardView, OrderListView, SellListView, CreateOrderView, OrderUpdateView, delete_order,
-                    check_product, add_to_order_with_attr, order_item_edit_with_attr, done_order_view,
-                    quick_pay_costumer_view, create_copy_order,
+                    check_product, add_to_order_with_attr, order_item_edit_with_attr,
                     CostumerCreateView, CostumerListView, CostumerUpdateView, delete_costumer_view, CostumerAccountCardView
                     )
 from .ajax_views import ajax_order_item, ajax_search_products, ajax_add_product, ajax_costumers_report, ajax_search_costumers
-from .views_actions import auto_create_retail_order
+from .views_actions import auto_create_retail_order, done_order_view, quick_pay_costumer_view, create_copy_order
 from .autocomplete_widget import ProfileAutoComplete
 
 app_name = 'point_of_sale'

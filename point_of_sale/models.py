@@ -46,7 +46,7 @@ class Order(DefaultOrderModel):
     profile = models.ForeignKey(Profile,
                              blank=True,
                              null=True,
-                             verbose_name='Costumer',
+                             verbose_name='Πελάτης',
                              on_delete=models.SET_NULL,
                              related_name='profile_orders'
                              )

@@ -11,6 +11,9 @@ class RetailQuerySet(models.QuerySet):
                                )
         return self.filter(order_type__in=['r', 'e'])
 
+    def not_paid_sells(self):
+        return self.sells().filter(is_paid=False)
+
     def eshop_orders(self, date_start=None, date_end=None):
         return self.sells(date_start, date_end).filter(order_type='e')
 

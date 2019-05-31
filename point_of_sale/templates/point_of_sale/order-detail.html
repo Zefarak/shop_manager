@@ -33,7 +33,7 @@
                                 <div class="card">
                                     <div class="card-header">Επιλογές</div>
                                     <div class="card-body">
-                                        <a href="{% url 'point_of_sale:action_order_done' instance.id 'deddf' %}" class="btn btn-danger">Κλείσιμο χωρίς Πληρωμή</a>
+                                        <a href="{% url 'point_of_sale:action_order_done' instance.id 'not_paid' %}" class="btn btn-danger">Κλείσιμο χωρίς Πληρωμή</a>
                                         <a href="{% url 'point_of_sale:copy_order' instance.id %}" class="btn btn-info">Αντιγραφή Παραστατικού</a>
                                     </div>
                                 </div>

@@ -10,6 +10,8 @@ class ProfileTable(tables.Table):
     tag_balance = tables.Column(orderable=False, verbose_name='Υπόλοιπο')
     pay = tables.TemplateColumn("<a href='{% url 'point_of_sale:costumer_pay' record.id %}' class='btn btn-success'>"
                                 "Πληρωμή</a> ", orderable=False)
+    card = tables.TemplateColumn("<a href='{{ record.get_card_url }}' class='btn btn-success'>"
+                                "Card</a> ", orderable=False)
 
     class Meta:
         model = Profile
