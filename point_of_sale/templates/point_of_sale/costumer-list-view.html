@@ -1,4 +1,4 @@
-{% extends 'index.html' %} {% load render_table from django_tables2 %}
+{% extends 'point_of_sale/index.html' %} {% load render_table from django_tables2 %}
 
 {% block content %}
     <div class="pcoded-content">
@@ -38,194 +38,84 @@
                                 <!-- Search Box card start -->
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5 class="card-header-text danger">Μη πληρωμένες</h5>
+                                        <a href="{{ back_url }}" class="btn btn-warning btn-round">Επιστροφή</a>
                                     </div>
                                     <div class="card-block p-t-10">
-
                                         <div class="task-right">
+                                            <h6 class="sub-title">Πληροφορίες</h6>
+                                            <ul class="basic-list list-icons">
+                                                <li class="">
+                                                    <i class="icofont icofont-speech-comments text-primary p-absolute text-center d-block f-30"></i>
+                                                    <h6>Συνολικός Τζίρος</h6>
+                                                    <p>{{ total_incomes }} {{ currency }}</p>
+                                                </li>
+                                                 <li>
+                                                    <i class="icofont icofont-speech-comments text-primary p-absolute text-center d-block f-30"></i>
+                                                    <h6>Υπόλοιπο</h6>
+                                                    <p>{{ instance.tag_balance }}</p>
+                                                </li>
+                                                <li>
+                                                    <i class="icofont icofont-speech-comments text-primary p-absolute text-center d-block f-30"></i>
+                                                    <h6>Επιπλέον Χρέωση</h6>
+                                                    <p>{{ instance.tag_value }}</p>
+                                                </li>
+                                                <li>
+                                                    <h6>Επεξεργασία</h6>
+                                                    <a href="{{ instance.get_edit_url }}" target="_blank" class="btn btn-primary btn-round"><i class="fa fa-edit"></i> </a>
+                                                </li>
+
+                                            </ul>
                                             <div class="task-right-header-status">
-                                                <span data-toggle="collapse">Completed Status</span>
+                                                <span data-toggle="collapse">Μη Πληρωμένα</span>
                                                 <i class="icofont icofont-rounded-down f-right"></i>
                                             </div>
                                             <!-- end of sidebar-header completed status-->
                                             <div class="taskboard-right-progress">
-                                                <h6>Highest Priority</h6>
-                                                <div class="faq-progress">
-                                                    <div class="progress">
-                                                        <!-- <span class="faq-text3"></span> -->
-                                                        <div class="faq-bar3" style="width: 80%;"></div>
-                                                    </div>
-                                                </div>
-                                                <h6>High Priority</h6>
-                                                <div class="faq-progress">
-                                                    <div class="progress">
-                                                        <!-- <span class="faq-text1"></span> -->
-                                                        <div class="faq-bar1" style="width: 70%;"></div>
-                                                    </div>
-                                                </div>
-                                                <h6>Normal Priority</h6>
-                                                <div class="faq-progress">
-                                                    <div class="progress">
-                                                        <!-- <span class="faq-text2"></span> -->
-                                                        <div class="faq-bar2" style="width: 50%;"></div>
-                                                    </div>
-                                                </div>
-                                                <h6>Low Priority</h6>
-                                                <div class="faq-progress">
-                                                    <div class="progress">
-                                                        <!-- <span class="faq-text4"></span> -->
-                                                        <div class="faq-bar4" style="width: 60%;"></div>
-                                                    </div>
-                                                </div>
-
                                                 <div class="card-block panels-wells">
-                                                    {% for order in not_paid_orders %}
-                                                    <div class="panel panel-danger">
-                                                        <div class="panel-heading bg-danger">
-                                                            {{ order }}
-                                                        </div>
-                                                        <div class="panel-body">
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan.</p>
-                                                        </div>
-                                                        <div class="panel-footer text-danger">
-                                                            Panel Footer
-                                                        </div>
-                                                    </div>
-                                                    {% endfor %}
-
-                                                    </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-xl-9 col-lg-12 pull-xl-3 filter-bar">
-                                                <!-- Navigation start -->
-                                                <nav class="navbar navbar-light bg-faded m-b-30 p-10">
-                                                    <ul class="nav navbar-nav">
-                                                        <li class="nav-item active">
-                                                            <a class="nav-link" href="#!">Filter: <span class="sr-only">(current)</span></a>
-                                                        </li>
-                                                        <li class="nav-item dropdown">
-                                                            <a class="nav-link dropdown-toggle" href="#!" id="bydate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-clock-time"></i> By Date</a>
-                                                            <div class="dropdown-menu" aria-labelledby="bydate">
-                                                                <a class="dropdown-item" href="#!">Show all</a>
-                                                                <div class="dropdown-divider"></div>
-                                                                <a class="dropdown-item" href="#!">Today</a>
-                                                                <a class="dropdown-item" href="#!">Yesterday</a>
-                                                                <a class="dropdown-item" href="#!">This week</a>
-                                                                <a class="dropdown-item" href="#!">This month</a>
-                                                                <a class="dropdown-item" href="#!">This year</a>
-                                                            </div>
-                                                        </li>
-                                                        <!-- end of by date dropdown -->
-                                                        <li class="nav-item dropdown">
-                                                            <a class="nav-link dropdown-toggle" href="#!" id="bystatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-chart-histogram-alt"></i> By Status</a>
-                                                            <div class="dropdown-menu" aria-labelledby="bystatus">
-                                                                <a class="dropdown-item" href="#!">Show all</a>
-                                                                <div class="dropdown-divider"></div>
-                                                                <a class="dropdown-item" href="#!">Open</a>
-                                                                <a class="dropdown-item" href="#!">On hold</a>
-                                                                <a class="dropdown-item" href="#!">Resolved</a>
-                                                                <a class="dropdown-item" href="#!">Closed</a>
-                                                                <a class="dropdown-item" href="#!">Dublicate</a>
-                                                                <a class="dropdown-item" href="#!">Wontfix</a>
-                                                            </div>
-                                                        </li>
-                                                        <!-- end of by status dropdown -->
-                                                        <li class="nav-item dropdown">
-                                                            <a class="nav-link dropdown-toggle" href="#!" id="bypriority" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-sub-listing"></i> By Priority</a>
-                                                            <div class="dropdown-menu" aria-labelledby="bypriority">
-                                                                <a class="dropdown-item" href="#!">Show all</a>
-                                                                <div class="dropdown-divider"></div>
-                                                                <a class="dropdown-item" href="#!">Highest</a>
-                                                                <a class="dropdown-item" href="#!">High</a>
-                                                                <a class="dropdown-item" href="#!">Normal</a>
-                                                                <a class="dropdown-item" href="#!">Low</a>
-                                                            </div>
-                                                        </li>
-                                                        </ul>
-                                                    <!-- end of by priority dropdown -->
-                                                </nav>
-                                                <!-- Navigation end  -->
-                                                <div class="row">
-                                                    {% for card in object_list %}
-                                                    <div class="col-sm-6">
-                                                        <div class="card card-border-primary">
-                                                            <div class="card-header">
-                                                                <h5>John Doe </h5>
-                                                                <!-- <span class="label label-default f-right"> 28 January, 2015 </span> -->
-                                                                <div class="dropdown-secondary dropdown f-right">
-                                                                    <button class="btn btn-primary btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overdue</button>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdown1" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                                                        <a class="dropdown-item waves-light waves-effect" href="#!"><span class="point-marker bg-danger"></span>Pending</a>
-                                                                        <a class="dropdown-item waves-light waves-effect" href="#!"><span class="point-marker bg-warning"></span>Paid</a>
-                                                                        <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item waves-light waves-effect active" href="#!"><span class="point-marker bg-success"></span>On Hold</a>
-                                                                        <a class="dropdown-item waves-light waves-effect" href="#!"><span class="point-marker bg-info"></span>Canceled</a>
-                                                                    </div>
-                                                                    <!-- end of dropdown menu -->
-                                                                    <span class="f-left m-r-5 text-inverse">Status : </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card-block">
-                                                                <div class="row">
-                                                                    <div class="col-sm-6">
-                                                                        <ul class="list list-unstyled">
-                                                                            <li>Invoice #: &nbsp;0028</li>
-                                                                            <li>Issued on: <span class="text-semibold">2015/01/25</span></li>
-                                                                        </ul>
-                                                                    </div>
-                                                                    <div class="col-sm-6">
-                                                                        <ul class="list list-unstyled text-right">
-                                                                            <li>$8,750</li>
-                                                                            <li>Method: <span class="text-semibold">SWIFT</span></li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card-footer">
-                                                                <div class="task-list-table">
-                                                                    <p class="task-due"><strong> Due : </strong><strong class="label label-primary">23 hours</strong></p>
-                                                                </div>
-                                                                <div class="task-board m-0">
-                                                                    <a href="invoice.html" class="btn btn-info btn-mini b-none"><i class="icofont icofont-eye-alt m-0"></i></a>
-                                                                    <!-- end of dropdown-secondary -->
-                                                                    <div class="dropdown-secondary dropdown">
-                                                                        <button class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown14" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
-                                                                        <div class="dropdown-menu" aria-labelledby="dropdown14" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
-                                                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-attachment"></i> Download invoice</a>
-                                                                            <div class="dropdown-divider"></div>
-                                                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
-                                                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
-                                                                        </div>
-                                                                        <!-- end of dropdown menu -->
-                                                                    </div>
-                                                                    <!-- end of seconadary -->
-                                                                </div>
-                                                                <!-- end of pull-right class -->
-                                                            </div>
-                                                            <!-- end of card-footer -->
-                                                        </div>
-                                                    </div>
-                                                    {% endfor %}
+                                                   {% include 'point_of_sale/ajax/costumer_not_paid_view.html' %}
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Page body end -->
                                 </div>
                             </div>
-                            <!-- Main-body end -->
 
-                            <div id="styleSelector">
+                            <div class="col-xl-9 col-lg-12 pull-xl-3">
+                                <div class="card">
+                                    <div class="card-header">Όλες οι κινήσεις</div>
+                                    <div class="card-body">{% render_table queryset_table %}</div>
 
+                                </div>
                             </div>
                         </div>
                     </div>
+                    </div>
+                    <!-- Page body end -->
+                </div>
+            </div>
+    </div>
 
 
+
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        $('.pay_order').click(function (evt) {
+            evt.preventDefault();
+            console.log('works')
+            const btn = $(this);
+            const endpoint = btn.attr('data-href');
+            $.ajax({
+                method: 'GET',
+                dataType: 'json',
+                url: endpoint,
+                success: function (data) {
+                    $('.panels-wells').html(data.not_paid_section)
+                }
+            })
+        })
+    </script>
 
 {% endblock %}

@@ -60,9 +60,11 @@ def done_order_view(request, pk, action):
         instance.is_paid = True
         instance.status = "8"
     instance.save()
-    homepage_cookie = request.COOKIES.get('order_redirect', None)
-    print('homepage cookie redirect', homepage_cookie)
-    if homepage_cookie == 'homepage':
+    order_redirect = request.COOKIES('order_redirect', None)
+    if order_redirect == 'costumers':
+        del request.COOKIES['order_redirect']
+        return order_redirect(reverse('point_of_sale:costumer_account_card', kwargs={'pk': pk}))
+    if order_redirect == 'homepage':
         del request.COOKIES['order_redirect']
         return redirect('point_of_sale:home')
     return redirect(reverse('point_of_sale:order_list'))
@@ -90,3 +92,5 @@ def create_copy_order(request, pk):
 
     context = locals()
     return render(request, 'dashboard/form.html', context)
+
+

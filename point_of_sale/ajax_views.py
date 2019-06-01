@@ -99,9 +99,8 @@ def ajax_search_costumers(request):
     qs = Profile.objects.filter(Q(last_name__contains=search_name.capitalize()) |
                                 Q(first_name__contains=search_name.capitalize()) |
                                 Q(notes__contains=search_name)
-                                ).distinct() if search_name else Profile.objects.all()[:10]
+                                ).distinct()[:10] if search_name else Profile.objects.all()[:10]
     queryset_table = ProfileTable(qs)
-    print(qs, search_name, 'works!')
     RequestConfig(request).configure(queryset_table)
     data['result_table'] = render_to_string(template_name='point_of_sale/ajax/search_container.html',
                                             request=request,
@@ -110,3 +109,22 @@ def ajax_search_costumers(request):
                                             }
                                             )
     return JsonResponse(data)
+
+
+@staff_member_required
+def ajax_costumer_order_pay_view(request, pk):
+    instance = get_object_or_404(Order, id=pk)
+    instance.is_paid = True
+    instance.status = 8
+    instance.save()
+    not_paid_orders = Order.my_query.get_queryset().not_paid_sells().filter(profile=instance.profile)
+    data = dict()
+    data['not_paid_section'] = render_to_string(template_name='point_of_sale/ajax/costumer_not_paid_view.html',
+                                                request=request,
+                                                context={
+                                                    'not_paid_orders': not_paid_orders
+                                                }
+                                                )
+    return JsonResponse(data)
+
+

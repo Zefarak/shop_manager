@@ -79,6 +79,9 @@ class Profile(models.Model):
     def tag_balance(self):
         return f'{self.balance} {CURRENCY}'
 
+    def tag_value(self):
+        return f'{self.value} {CURRENCY}'
+
     def tag_phones(self):
         return f'{self.phone} - {self.phone1}'
 

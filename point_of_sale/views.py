@@ -202,7 +202,6 @@ def delete_order(request, pk):
     return redirect(reverse('point_of_sale:order_list'))
 
 
-
 @method_decorator(staff_member_required, name='dispatch')
 class CostumerListView(ListView):
     model = Profile
@@ -225,6 +224,8 @@ class CostumerListView(ListView):
         reports, report_url = True, reverse('point_of_sale:ajax_costumer_report')
         ajax_search_url = reverse('point_of_sale:ajax_costumer_search')
 
+        # filters
+        search_filter, balance_filter = [True] * 2
         context.update(locals())
         return context
 
@@ -293,6 +294,18 @@ class CostumerAccountCardView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CostumerAccountCardView, self).get_context_data(**kwargs)
         page_title = f'{self.instance}'
-        not_paid_orders = Order.my_query.get_queryset().not_paid_sells()
+        total_incomes = self.object_list.aggregate(Sum('final_value'))['final_value__sum']\
+            if self.object_list.exists() else 0.00
+        not_paid_orders = Order.my_query.get_queryset().not_paid_sells().filter(profile=self.instance)
+        queryset_table = OrderTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+        # filters
+        search_filter, paid_filter, date_filter = [True]*3
+        currency, instance, back_url = CURRENCY, self.instance, reverse('point_of_sale:costumer_list_view')  # to this to added to local
         context.update(locals())
         return context
+
+    def render_to_response(self, context, **response_kwargs):
+        response = super().render_to_response(context, **response_kwargs)
+        response.set_cookie('order_redirect', 'costumers')
+        return response

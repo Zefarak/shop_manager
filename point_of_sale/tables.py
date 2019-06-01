@@ -6,12 +6,14 @@ from .models import Order, OrderItem
 
 
 class ProfileTable(tables.Table):
-    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Edit</a>", orderable=False)
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'><i class='fa fa-edit'>"
+                                   "</i> </a>", orderable=False, verbose_name='Επεξεργασία'
+                                   )
     tag_balance = tables.Column(orderable=False, verbose_name='Υπόλοιπο')
     pay = tables.TemplateColumn("<a href='{% url 'point_of_sale:costumer_pay' record.id %}' class='btn btn-success'>"
-                                "Πληρωμή</a> ", orderable=False)
-    card = tables.TemplateColumn("<a href='{{ record.get_card_url }}' class='btn btn-success'>"
-                                "Card</a> ", orderable=False)
+                                "Πληρωμή</a> ", orderable=False, verbose_name='Γρήγορη Πληρωμή')
+    card_ = tables.TemplateColumn("<a href='{{ record.get_card_url }}' class='btn btn-info btn-round'>"
+                                "Καρτέλα</a> ", orderable=False, verbose_name='Καρτέλες')
 
     class Meta:
         model = Profile
@@ -26,6 +28,6 @@ class OrderTable(tables.Table):
     class Meta:
         model = Order
         template_name = 'django_tables2/bootstrap.html'
-        fields = ['date_expired', 'title', 'order_type', 'profile', 'status','tag_final_value']
+        fields = ['date_expired', 'title', 'order_type', 'profile', 'status', 'tag_final_value']
 
 
