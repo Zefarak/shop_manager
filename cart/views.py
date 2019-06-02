@@ -10,7 +10,7 @@ from django.urls import reverse
 from catalogue.models import Product
 from .models import CartItem, Cart
 from .forms import CartForm
-from .tables import CartTable
+from .tables import CartTable, ProductCartTable, CartItemTable
 from .tools import add_to_cart, add_to_cart_with_attr, remove_from_cart_with_attr
 
 from django_tables2 import RequestConfig
@@ -59,12 +59,18 @@ class CreateCartView(CreateView):
 @method_decorator(staff_member_required, name='dispatch')
 class CartUpdateView(UpdateView):
     model = Cart
-    template_name = 'dashboard/form.html'
+    template_name = 'cart/detail_view.html'
     form_class = CartForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         back_url = self.request.GET.get('back_url', reverse('cart:cart_list'))
+        products = Product.my_query.active()[:10]
+        cart_items = self.object.cart_items.all()
+        products_table = ProductCartTable(products)
+        cart_items_table = CartItemTable(cart_items)
+        RequestConfig(self.request).configure(products_table)
+        RequestConfig(self.request).configure(cart_items_table)
         context.update(locals())
         return context
 
