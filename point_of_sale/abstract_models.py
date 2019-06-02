@@ -57,18 +57,20 @@ class DefaultOrderModel(models.Model):
 class DefaultOrderItemModel(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
-    qty = models.PositiveIntegerField(default=1, verbose_name='Qty')
-    value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Value')
-    discount_value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Discount %')
-    final_value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Final Value')
+    qty = models.PositiveIntegerField(default=1, verbose_name='Ποσότητα')
+    value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Αξία Προϊόντων')
+    discount_value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Έκπτωση %')
+    final_value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Αξία')
 
     class Meta:
         abstract = True
 
     def tag_final_value(self):
         return f'{self.final_value} {CURRENCY}'
-    tag_final_value.short_description = 'Αξία'
 
     def tag_value(self):
         return f'{self.value} {CURRENCY}'
-    tag_value.short_description = 'Αρχική Αξία'
+
+
+
+

@@ -232,9 +232,14 @@ def create_unique_number(sender, instance, **kwargs):
 
 
 class OrderItem(DefaultOrderItemModel):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items', verbose_name='Παραστατικό')
     cost = models.DecimalField(max_digits=6, decimal_places=2, default=0)
-    title = models.ForeignKey(Product, on_delete=models.PROTECT, null=True, related_name='retail_items')
+    title = models.ForeignKey(Product,
+                              on_delete=models.PROTECT,
+                              null=True,
+                              related_name='retail_items',
+                              verbose_name='Προϊόν'
+                              )
     #  warehouse_management
     is_find = models.BooleanField(default=False)
     is_return = models.BooleanField(default=False)
@@ -317,6 +322,9 @@ class OrderItem(DefaultOrderItemModel):
 
     def absolute_url_vendor_page(self):
         return reverse('retail_order_section', kwargs={'dk': self.order.id})
+
+    def get_date(self):
+        return self.order.date_expired
 
     @staticmethod
     def create_or_edit_item(order, product, qty, transation_type):

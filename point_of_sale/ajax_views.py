@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q, Sum
 
 from catalogue.models import Product
-from .models import OrderItem, Order
+from .models import OrderItem, Order, Cart
 from .tables import ProfileTable
 from accounts.models import Profile
 from site_settings.constants import CURRENCY
@@ -15,6 +15,26 @@ from django_tables2 import RequestConfig
 @staff_member_required
 def ajax_search_products(request, pk):
     instance = get_object_or_404(Order, id=pk)
+    products = Product.my_query.active()
+    search_name = request.GET.get('search_name', None)
+    search_name = search_name.capitalize() if search_name else search_name
+    products = products.filter(Q(title__startswith=search_name) |
+                               Q(sku__startswith=search_name)
+                               ).distinct() if search_name else products
+    products = products[:12]
+    data = dict()
+    data['products_container'] = render_to_string(template_name='point_of_sale/ajax/products_container.html',
+                                                  request=request,
+                                                  context={'products': products,
+                                                           'instance': instance
+                                                           }
+                                                  )
+    return JsonResponse(data)
+
+
+@staff_member_required
+def ajax_search_products_for_cart(request, pk):
+    instance = get_object_or_404(Cart, id=pk)
     products = Product.my_query.active()
     search_name = request.GET.get('search_name', None)
     search_name = search_name.capitalize() if search_name else search_name

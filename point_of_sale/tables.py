@@ -31,3 +31,10 @@ class OrderTable(tables.Table):
         fields = ['date_expired', 'title', 'order_type', 'profile', 'status', 'tag_final_value']
 
 
+class OrderItemListTable(tables.Table):
+    get_date = tables.Column(orderable=False, verbose_name='Ημερομηνία')
+
+    class Meta:
+        model = OrderItem
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['get_date', 'title', 'qty', 'tag_final_value', 'tag_total_value']

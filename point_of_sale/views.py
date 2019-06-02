@@ -14,7 +14,7 @@ from accounts.models import Profile
 from accounts.forms import ProfileForm
 from cart.models import Cart, CartItem
 from .tools import generate_or_remove_queryset
-from .tables import ProfileTable, OrderTable
+from .tables import ProfileTable, OrderTable, OrderItemListTable
 from site_settings.constants import CURRENCY
 from django_tables2 import RequestConfig
 import datetime
@@ -200,6 +200,28 @@ def delete_order(request, pk):
         ele.delete()
     instance.delete()
     return redirect(reverse('point_of_sale:order_list'))
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class OrderItemListView(ListView):
+    model = OrderItem
+    template_name = 'dashboard/list_page.html'
+    paginate_by = 50
+
+    def get_queryset(self):
+        qs = OrderItem.objects.all()
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        back_url = reverse('point_of_sale:home')
+        queryset_table = OrderItemListTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+
+        # filters
+        date_filter, search_filter = [True]*2
+        context.update(locals())
+        return context
 
 
 @method_decorator(staff_member_required, name='dispatch')

@@ -71,6 +71,8 @@ class CartUpdateView(UpdateView):
         cart_items_table = CartItemTable(cart_items)
         RequestConfig(self.request).configure(products_table)
         RequestConfig(self.request).configure(cart_items_table)
+        instance = self.object
+        ajax_search_url = reverse('point_of_sale:ajax_search_for_cart', kwargs={'pk': self.kwargs['pk']})
         context.update(locals())
         return context
 
