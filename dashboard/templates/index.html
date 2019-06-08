@@ -133,12 +133,12 @@
                                         {% if search_filter %}{% include 'filters/search_filter.html' %} {% endif %}
                                         {% if vendor_filter %} {% include 'filters/vendors_filter.html' %} {% endif %}
                                         {% if category_filter %} {% include 'filters/category.html' %} {% endif %}
+                                        {% if brand_filter %} {% include 'filters/brand_filter.html' %} {% endif %}
                                         {% if store_filter %} {% include 'filters/store_filter.html' %} {% endif %}
                                         {% if paid_filter %} {% include 'filters/paid_filter.html' %} {% endif %}
                                         {% if active_filter %} {% include 'filters/active_filter.html' %} {% endif %}
                                         {% if employee_filter %} {% include 'filters/employee_filter.html' %} {% endif %}
                                         {% if date_filter %}{% include 'filters/date_range_filter.html' %} {% endif %}
-
                                         <button class="btn btn-primary btn round" type="submit">Υποβολή</button>
                                         <a href="{{ request.path }}" class="btn btn-warning">Καθαρισμός</a>
                                     </form>
@@ -154,7 +154,7 @@
             <!-- Sidebar inner chat end-->
             <div class="pcoded-main-container">
                 <div class="pcoded-wrapper">
-                    {% include 'include/navbar.html' %}
+                   {% block navbar %} {% include 'include/navbar.html' %} {% endblock %}
                     {% block content %}
                     <div class="pcoded-content">
                         <div class="pcoded-inner-content">

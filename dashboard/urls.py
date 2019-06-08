@@ -3,7 +3,7 @@ from django.urls import path, include, re_path
 
 from .views import (DashBoard, ProductsListView, ProductCreateView,
                     product_detail, CategorySiteManagerView, ProductMultipleImagesView, CharacteristicsManagerView,
-                    delete_product, copy_product_view,
+                    delete_product, copy_product_view, product_report_view, ProductDiscountView, ProductDiscountCreateView, ProductDiscountUpdateView,
                     ProductCharacteristicCreateView, ProductAttributeManagerView, create_attr_product_class,
                     ProductAttriClassManagerView, RelatedProductsView, product_characteristic_delete_view,
                     WarehouseCategoryCreateView, WarehouseCategoryListView, WarehouseCategoryUpdateView, warehouse_category_delete
@@ -35,6 +35,11 @@ urlpatterns = [
     path('product/category-site-manager/<int:pk>/', CategorySiteManagerView.as_view(), name='category_manager_view'),
     path('add-multiply-images/<int:pk>/', ProductMultipleImagesView.as_view(), name='image_manager_view'),
     path('product/create-copy/<int:pk>/', copy_product_view, name='create_copy_product'),
+    path('product/report/<int:pk>/', product_report_view, name='product_report'),
+
+    path('discount-manager/', ProductDiscountView.as_view(), name='discount_manager'),
+    path('discount-manager/create/', ProductDiscountCreateView.as_view(), name='discount_manager_create'),
+    path('discount-manager/update/<int:pk>/', ProductDiscountUpdateView.as_view(), name='discount_manager_update'),
 
     #popups
     path('product/popups/create-category/', popup_category, name='popup_category'),

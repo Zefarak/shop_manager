@@ -1,144 +1,99 @@
 {% extends 'point_of_sale/index.html' %} {% load render_table from django_tables2 %}
 
 {% block content %}
-    <div class="pcoded-content">
-        <div class="pcoded-inner-content">
+     <div class="pcoded-content">
+    <div class="pcoded-inner-content">
             <div class="main-body">
                 <div class="page-wrapper">
                     <div class="page-body">
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5>Λίστα Προϊόντων</h5>
-                                    </div>
-                                    <div id='products_container' class="content">
-                                        {% include 'cart/include/products_container.html' %}
-                                    </div>
-                                </div>
-                            </div>
+                                <div class="col-md-8 col-lg-8">
+                                    <h6>Προϊόντα</h6>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Προϊόν</th>
+                                                <th>Ποσότητα</th>
+                                                <th>Τιμή Μονάδας</th>
+                                                <th>Συνολική Αξία</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for product in object.cart_items.all %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ product.title }}</td>
+                                                    <td>{{ product.qty }}</td>
+                                                    <td>{{ product.tag_value }}</td>
+                                                    <td>{{ product.tag_total_value }}</td>
+                                                </tr>
+                                            {% empty %}
+                                                <tr>
+                                                    <td colspan="5">Δέ έχει Προϊόντα</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
 
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="header my_header">
-                                        <div class="title .my_header"></div>
-                                    </div>
-                                    <div class="content" id="order_items_container">
-                                        {% include 'cart/include/order_container.html' %}
-                                    </div>
-                                </div>
+                                    </table>
 
-                                <div class="card">
-                                    <div class="card-header">Επιλογές</div>
-                                    <div class="card-body">
-                                        <a href="{% url 'point_of_sale:action_order_done' instance.id 'not_paid' %}" class="btn btn-danger">Κλείσιμο χωρίς Πληρωμή</a>
-                                        <a href="{% url 'point_of_sale:copy_order' instance.id %}" class="btn btn-info">Αντιγραφή Παραστατικού</a>
-                                    </div>
                                 </div>
-
-                                <div class="card">
-                                    <div class="card-header text-center">
-                                        <button class="btn btn-primary btn-round"
-                                                type="button"
-                                                data-toggle="collapse"
-                                                data-target="#actions_info"
-                                                aria-expanded="false"
-                                                aria-controls="actions_info"
-                                        >Γενικές Πληροφορίες</button>
-                                    </div>
-                                    <div class="row collapse" id="actions_info">
-                                        <div class="card-body">
-                                            <h4>Επεξεργασία</h4>
-                                            <form class="form" method="post">{% csrf_token %}
-                                                {{ form }}
-                                                <br> <br>
-                                                <button type='submit' name='order_sub' class="btn btn-success btn-outline-success">Save</button>
-                                            </form>
+                                <div class="col-md-4 col-lg-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <a href="{{ back_url }}" class="btn btn-warning">Επιστροφή</a>
                                         </div>
-                                    </div>
-                                </div>
+                                        <div class="card-body">
+                                            <div class="card-block">
+                                                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Πληροφορίες</h6>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <p class="m-b-10 f-w-600">User</p>
+                                                        <h6 class="text-muted f-w-400">{{ object.user }}</h6>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <p class="m-b-10 f-w-600">Ημερομηνία</p>
+                                                        <h6 class="text-muted f-w-400">{{ object.timestamp }}</h6>
+                                                    </div>
 
-                                <div class='card'>
-                                    <div class="header text-center">
-                                       <button class="btn btn-primary"
-                                               type="button"
-                                               data-toggle="collapse"
-                                               data-target="#general_info"
-                                               aria-expanded="false"
-                                               aria-controls="general_info "
-                                       >Actions</button>
-                                    </div>
-                                    <div class="content">
-                                        <div class="row collapse" id="general_info">
-                                            <div class="col-md-12">
-                                                <a onclick="return confirm('Are you sure?')" href="{{ instance.get_delete_url }}" class="btn btn-warning"><i class="fa fa-remove"></i>Delete</a>
-                                                {% if not is_return %}
-                                                    <a href="" class="btn btn-primary">
-                                                        Δημιουργία Παραστατικού Επιστροφής
-                                                    </a>
-                                                {% endif %}
+                                                </div>
+                                                <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Projects</h6>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <p class="m-b-10 f-w-600">Μεταφορικά</p>
+                                                        <h6 class="text-muted f-w-400">{{ object.shipping_method }}</h6>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <p class="m-b-10 f-w-600">Αντικαταβολή</p>
+                                                        <h6 class="text-muted f-w-400">{{ object.payment_method }}</h6>
+                                                    </div>
+                                                </div>
+
+                                                <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Projects</h6>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <p class="m-b-10 f-w-600">Αξία Προϊόντων</p>
+                                                        <h6 class="text-muted f-w-400">{{ object.tag_value }}</h6>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <p class="m-b-10 f-w-600">Έκπτωση</p>
+                                                        <h6 class="text-muted f-w-400">{{ object.tag_discount_value }}</h6>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <a href="{% url 'cart:create_order_from_cart' object.id %}" class="btn btn-success"><i class="fa fa-shopping-cart">
+                                            </i> Δημιουργία Παραγγελίας </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Container ends -->
                     </div>
+                    <!-- Page body end -->
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
-
-{% block extra_js %}
-    <script type="text/javascript">
-        $('#search_ajax').keyup(function (event) {
-            event.preventDefault();
-            const btn = $(this);
-            const url = btn.attr('data-href');
-            const search_name = btn.val();
-            console.log(search_name);
-            $.ajax({
-                method: 'GET',
-                dataType: 'json',
-                url: url + '?search_name='+search_name,
-                success: function (data) {
-                    $('#products_container').html(data.products_container)
-                }
-            })
-        });
-
-        $('.edit_button').click(function (evt) {
-            evt.preventDefault();
-            const btn = $(this);
-            const url = btn.attr('data-href');
-
-            $.ajax({
-                method: 'GET',
-                dataType: 'json',
-                url: url,
-                success: function (data) {
-                    $('#order_items_container').html(data.order_container)
-                }
-            })
-        });
-
-        $('.add_button').click(function (evt) {
-            evt.preventDefault();
-            const btn = $(this);
-            const url = btn.attr('data-href');
-            $.ajax({
-                dataType: 'json',
-                url: url,
-                method: 'GET',
-
-                success: function (data) {
-                    $('#order_items_container').html(data.order_container)
-                }
-            })
-        })
-    </script>
-    {{ form.media }}
-{% endblock %}
-
 

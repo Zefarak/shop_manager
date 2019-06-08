@@ -5,30 +5,42 @@
             <h6 class="mb-0">
                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
                    href="#collapseVendor" aria-expanded="false" aria-controls="collapseVendor">
-                    Choose Vendor
+                    Επιλογή Προμηθευτή
                 </a>
             </h6>
         </div>
         <div id="collapseVendor" class="collapse" role="tabpanel" aria-labelledby="headingVendor">
-            <div class="card-block">
+            <div class="card-block filter_scrollbar" style="height: 300px;max-height: 300px;overflow-y: scroll;">
                 {% for vendor in vendors %}
                     {% if vendor.id|stringformat:"s" in request.GET|get_item:'vendor_name'%}
-                        <div class="checkbox">
-                            <input name="vendor_name" value="{{ vendor.id }}" id="checkbox1" type="checkbox" checked>
-                            <label for="checkbox1">
-                                {{ vendor}}
+                        <div class="form-check">
+                            <input name="vendor_name"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   value="{{ vendor.id }}"
+                                   id="vendor_name_{{ vendor.id }}" checked
+                            >
+                            <label class="form-check-label" for="vendor_name_{{ vendor.id }}">
+                                {{ vendor }}
                             </label>
                         </div>
                     {% else %}
-                        <div class="checkbox">
-                            <input name="vendor_name" value="{{ vendor.id }}" id="checkbox1" type="checkbox">
-                            <label for="checkbox1">
-                                {{ vendor}}
+                        <div class="form-check">
+                            <input name="vendor_name"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   value="{{ vendor.id }}"
+                                   id="vendor_name_{{ vendor.id }}"
+                            >
+                            <label class="form-check-label" for="vendor_name_{{ vendor.id }}">
+                                {{ vendor }}
                             </label>
                         </div>
                     {% endif %}
+
                 {% endfor %}
             </div>
         </div>
     </div>
 </div>
+

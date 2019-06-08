@@ -18,3 +18,10 @@
 .select2-selection {
     margin-bottom: 25px;
 }
+
+.filter_scrollbar {
+    height: 300px;
+    max-height: 300px;
+    overflow-y: scroll;
+    background: ivory;
+}

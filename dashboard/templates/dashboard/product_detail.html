@@ -41,6 +41,8 @@
                             <div class="col-xl-4 col-lg-12 push-xl-8 task-detail-right">
                                 <div class="card">
                                     <div class="card-header">
+                                        <a href="{% url 'dashboard:products' %}" class="btn btn-warning btn-round">Επιστροφή</a>
+                                        <br>
                                         <h5 class="card-header-text"><i class="icofont icofont-clock-time m-r-10"></i>Επιλογές</h5>
                                     </div>
                                     <div class="card-block">
@@ -91,7 +93,7 @@
                                             </tr>
                                             <tr>
                                                 <td><i class="icofont icofont-id-card"></i> Υπόλοιπο</td>
-                                                <td class="text-right">{{ instance.qty }} {{ instance.measure_unit }}</td>
+                                                <td class="text-right">{{ instance.qty }} {{ instance.get_measure_unit_display }}</td>
                                             </tr>
                                             <tr>
                                                 <td><i class="icofont icofont-spinner-alt-5"></i> Τιμή Αγοράς</td>
@@ -146,17 +148,19 @@
                                                 <a href='{% url "dashboard:char_manager_view" instance.id %}' class="btn btn-primary btn-round">Manager</a>
                                             </li>
                                             <br>
+                                            {% if instance.have_attr %}
                                             <li class="">
                                                 <h6>Μεγεθολόγιο</h6>
                                                 <a href='{% url "dashboard:attribute_manager_view" instance.id %}'  class="btn btn-primary btn-round">Manager</a>
                                             </li>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="card">
                                     <div class="header">Επιλογές</div>
                                     <div class="card-body">
-                                        <a href="" class="btn btn-success"><i class="fa fa-database"></i></a>
+                                        <a href="{% url 'dashboard:product_report' instance.id %}" class="btn btn-success"><i class="fa fa-database"></i></a>
                                         <a href="{{ instance.get_copy_url }}" class="btn btn-primary">
                                             <i class="fa fa-copy"></i>
                                         </a>

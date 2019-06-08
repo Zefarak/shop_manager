@@ -18,9 +18,15 @@ User = get_user_model()
 
 
 class Cart(models.Model):
-    cart_id = models.CharField(max_length=50, blank=True, null=True)
+    cart_id = models.CharField(max_length=50, blank=True, null=True, verbose_name='Κωδικός')
     active = models.BooleanField(default=True)
-    user = models.ForeignKey(User, null=True, blank=True, related_name='carts', on_delete=models.CASCADE)
+    user = models.ForeignKey(User,
+                             null=True,
+                             blank=True,
+                             related_name='carts',
+                             on_delete=models.CASCADE,
+                             verbose_name='Χρήστης'
+                             )
     OPEN, MERGED, SAVED, FROZEN, SUBMITTED = (
         "Open", "Merged", "Saved", "Frozen", "Submitted")
     STATUS_CHOICES = (
@@ -44,13 +50,26 @@ class Cart(models.Model):
     my_query = CartManager()
     objects = models.Manager()
 
-    shipping_method = models.ForeignKey(Shipping, blank=True, null=True, on_delete=models.SET_NULL)
-    payment_method = models.ForeignKey(PaymentMethod, blank=True, null=True, on_delete=models.SET_NULL)
+    shipping_method = models.ForeignKey(Shipping,
+                                        blank=True,
+                                        null=True,
+                                        on_delete=models.SET_NULL,
+                                        verbose_name='Τρόπος Μεταφοράς')
+    payment_method = models.ForeignKey(PaymentMethod,
+                                       blank=True,
+                                       null=True,
+                                       on_delete=models.SET_NULL,
+                                       verbose_name='Αντικαταβολή')
     # coupon = models.ManyToManyField(Coupons)
     # coupon_discount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
-    final_value = models.DecimalField(decimal_places=2, max_digits=10, default=0.00)
-    value = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, validators=[validate_positive_decimal, ])
-    discount_value = models.DecimalField(decimal_places=2, max_digits=10, default=0.00)
+    final_value = models.DecimalField(decimal_places=2, max_digits=10, default=0.00, verbose_name='Αξία')
+    value = models.DecimalField(default=0.00,
+                                max_digits=10,
+                                decimal_places=2,
+                                validators=[validate_positive_decimal, ],
+                                verbose_name='Αξία Προϊόντων'
+                                )
+    discount_value = models.DecimalField(decimal_places=2, max_digits=10, default=0.00, verbose_name='Έκπτωση')
 
     class Meta:
         ordering = ['-id', ]

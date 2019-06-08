@@ -7,22 +7,21 @@ from django.db.models import Q, Sum
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from django.forms import formset_factory, inlineformset_factory
 from django.conf import settings
-from django.db import connection, models
-from dateutil.relativedelta import relativedelta
-from datetime import datetime, timedelta
+from django.db import models
 from django_tables2 import RequestConfig
-from catalogue.models import Product, ProductPhotos, ProductClass, WarehouseCategory
+from catalogue.models import Product, ProductPhotos, WarehouseCategory
 from catalogue.categories import Category
 from catalogue.product_details import Brand, Vendor
 from catalogue.forms import CreateProductForm, ProductPhotoUploadForm, ProductCharacteristicForm, WarehouseCategoryForm
 from .product_forms import ProductForm, ProductNoQty
-from .tables import TableProduct, WarehouseCategoryTable, ProductTable
+from .tables import TableProduct, WarehouseCategoryTable, ProductTable, ProductDiscountTable
 from catalogue.product_attritubes import ProductCharacteristics, Characteristics, CharacteristicsValue, Attribute, AttributeTitle, AttributeClass, AttributeProductClass
-
+from .models import ProductDiscount
+from .forms import ProductDiscountForm
 from point_of_sale.models import Order
 from warehouse.models import Invoice, BillInvoice, Payroll
+
 CURRENCY = settings.CURRENCY
 WAREHOUSE_ORDERS_TRANSCATIONS = settings.WAREHOUSE_ORDERS_TRANSCATIONS
 
@@ -64,18 +63,21 @@ class ProductsListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProductsListView, self).get_context_data(**kwargs)
-        ware_cate, vendors, brands = WarehouseCategory.objects.filter(active=True), Vendor.objects.all(), Brand.objects.all()
         back_url, create_url = reverse('dashboard:home'), reverse('dashboard:product_create')
         page_title = 'Προϊόντα'
         queryset_table = TableProduct(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
         # filters
-        search_filter, vendor_filter, category_flter, active_filter = [True] * 4
+        search_filter, vendor_filter, category_filter, active_filter, qty_filter, brand_filter = [True] * 6
+        categories, vendors, brands = WarehouseCategory.objects.filter(
+            active=True), Vendor.objects.all(), Brand.objects.all()
         #  reports
         reports, report_url = True, reverse('dashboard:ajax_product_analysis')
         context.update(locals())
         return context
 
+    #  not use for now
+    '''
     def post(self, *args, **kwargs):
         get_products = self.request.POST.getlist('choice_name', None)
         new_brand = get_object_or_404(Brand, id=self.request.POST.get('change_brand')) \
@@ -113,6 +115,7 @@ class ProductsListView(ListView):
             queryset.update(vendor=new_vendor)
             messages.success(self.request, 'The Vendor Updated!')
         return render(self.request, self.template_name)
+    '''
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -144,7 +147,6 @@ def product_detail(request, pk):
     instance = get_object_or_404(Product, id=pk)
     products, currency, page_title = True, CURRENCY, '%s' % instance.title
     images = instance.get_all_images()
-    sizes = ''
     form = ProductForm(instance=instance)
     if '_save' in request.POST:
         form = ProductNoQty(request.POST, instance=instance) if instance.product_class.have_attribute else ProductForm(request.POST, instance=instance)
@@ -166,6 +168,20 @@ def product_detail(request, pk):
                 print(error)
     context = locals()
     return render(request, 'dashboard/product_detail.html', context)
+
+
+@staff_member_required
+def product_report_view(request, pk):
+    instance = get_object_or_404(Product, id=pk)
+    warehouse_movements = instance.invoice_products.all()
+    retail_movements = instance.retail_items.all()
+    back_url = instance.get_edit_url()
+
+    #  filters
+    date_filter = [True] * 1
+
+    context = locals()
+    return render(request, 'dashboard/product_report_page.html', context)
 
 
 @staff_member_required
@@ -452,3 +468,58 @@ def warehouse_category_delete(request, pk):
     return redirect('dashboard:ware_cate_list_view')
 
 
+@method_decorator(staff_member_required, name='dispatch')
+class ProductDiscountView(ListView):
+    model = ProductDiscount
+    template_name = 'dashboard/list_page.html'
+    paginate_by = 50
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        back_url, create_url, page_title = reverse('dashboard:discount_manager'), \
+                                           reverse('dashboard:discount_manager_create'), 'Διαχειριστής Εκπτώσεων'
+        queryset_table = ProductDiscountTable(self.object_list)
+        RequestConfig(self.request).configure(queryset_table)
+        context.update(locals())
+        return context
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class ProductDiscountCreateView(CreateView):
+    model = ProductDiscount
+    form_class = ProductDiscountForm
+    template_name = 'dashboard/form.html'
+
+    def get_success_url(self):
+        return self.new_instance.get_edit_url()
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductDiscountCreateView, self).get_context_data(**kwargs)
+        form_title, back_url = 'Δημιουργία Έκπτωσης', reverse('dashboard:discount_manager')
+
+        context.update(locals())
+        return context
+
+    def form_valid(self, form):
+        self.new_instance = form.save()
+        return super().form_valid(form)
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class ProductDiscountUpdateView(UpdateView):
+    model = ProductDiscount
+    form_class = ProductDiscountForm
+    template_name = 'dashboard/form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        discount_type = self.object.discount_type
+        filter_for_discount = []
+        if discount_type == 'a':
+            filter_for_discount = Brand.objects.filter(active=True)
+        if discount_type == 'b':
+            filter_for_discount = Category.objects.filter(active=True)
+
+
+        context.update(locals())
+        return context

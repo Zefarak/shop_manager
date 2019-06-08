@@ -1,6 +1,6 @@
-from django.shortcuts import HttpResponseRedirect, get_object_or_404
+from django.shortcuts import HttpResponseRedirect, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView, CreateView
+from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
@@ -12,14 +12,14 @@ from .models import CartItem, Cart
 from .forms import CartForm
 from .tables import CartTable, ProductCartTable, CartItemTable
 from .tools import add_to_cart, add_to_cart_with_attr, remove_from_cart_with_attr
-
+from point_of_sale.models import OrderItem, Order
 from django_tables2 import RequestConfig
 
 
 @method_decorator(staff_member_required, name='dispatch')
 class CartListView(ListView):
     model = Cart
-    template_name = 'dashboard/list_page.html'
+    template_name = 'cart/listview.html'
 
     def get_queryset(self):
         queryset = Cart.filter_data(self.request)
@@ -27,7 +27,7 @@ class CartListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        page_title, back_url, create_url = 'Καλάθια', reverse('point_of_sale:home'), reverse('cart:cart_create')
+        page_title, back_url = 'Καλάθια', reverse('point_of_sale:home')
         queryset_table = CartTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
         # filters
@@ -37,42 +37,13 @@ class CartListView(ListView):
 
 
 @method_decorator(staff_member_required, name='dispatch')
-class CreateCartView(CreateView):
-    template_name = 'dashboard/form.html'
-    model = Cart
-    form_class = CartForm
-    success_url = reverse_lazy('cart:cart_list')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        form_title, back_url = 'Νέο Καλάθι', self.success_url
-
-        context.update(locals())
-        return context
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Νέο Καλάθι Προστέθηκε')
-        return super().form_valid(form)
-
-
-@method_decorator(staff_member_required, name='dispatch')
-class CartUpdateView(UpdateView):
+class CartUpdateView(DetailView):
     model = Cart
     template_name = 'cart/detail_view.html'
-    form_class = CartForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         back_url = self.request.GET.get('back_url', reverse('cart:cart_list'))
-        products = Product.my_query.active()[:10]
-        cart_items = self.object.cart_items.all()
-        products_table = ProductCartTable(products)
-        cart_items_table = CartItemTable(cart_items)
-        RequestConfig(self.request).configure(products_table)
-        RequestConfig(self.request).configure(cart_items_table)
-        instance = self.object
-        ajax_search_url = reverse('point_of_sale:ajax_search_for_cart', kwargs={'pk': self.kwargs['pk']})
         context.update(locals())
         return context
 
@@ -103,3 +74,20 @@ def ajax_cart_change_qty(request, pk):
                                       request=request,
                                       context={'cart': cart})
     return JsonResponse(data)
+
+
+@staff_member_required
+def create_order_from_cart_view(request, pk):
+    cart = get_object_or_404(Cart, id=pk)
+    order, created = Order.objects.get_or_create(cart_related=cart)
+    if created:
+        for ele in cart.cart_items.all():
+            OrderItem.objects.create(title=ele.product,
+                                     order=order,
+                                     qty=ele.qty,
+                                     value=ele.value
+                                     )
+        return redirect(order.get_edit_url())
+    else:
+        messages.warning(request, 'Υπάρχει Παραστατικό σε αυτό το Cart')
+    return redirect(cart.get_edit_url())

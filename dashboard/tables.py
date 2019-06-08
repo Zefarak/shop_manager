@@ -5,6 +5,7 @@ from catalogue.categories import WarehouseCategory, Category
 from catalogue.product_details import VendorPaycheck
 from catalogue.product_details import Brand
 from catalogue.product_attritubes import Characteristics, Attribute, AttributeClass
+from .models import ProductDiscount
 
 
 class TruncatedTextColumn(tables.Column):
@@ -32,10 +33,11 @@ class TableProduct(tables.Table):
     category = tables.TemplateColumn("<p>{{ record.title|truncatechars_html:25 }}</p>")
     vendor = tables.TemplateColumn("<p>{{ record.title|truncatechars_html:25 }}</p>")
 
+
     class Meta:
         model = Product
         template_name = 'django_tables2/bootstrap.html'
-        attrs = {'class': 'table table-bordered table-responsive'}
+        attrs = {'class': 'table  table-hover'}
         fields = ['id', 'title', 'vendor', 'qty', 'tag_price_buy', 'tag_final_price', 'category', 'action', 'active']
 
 
@@ -111,7 +113,7 @@ class AttributeClassTable(tables.Table):
 
 
 class ProductTable(tables.Table):
-    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Επεξεργασία</a>",
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'><i class='fa fa-edit'></i></a>",
                                    orderable=False)
 
     class Meta:
@@ -124,3 +126,14 @@ class CategorySiteAddToProductTable(tables.Table):
     action = tables.TemplateColumn('<button data-href="{% url "dashboard:ajax_category_site" "add" '
                                    'instance.id ele.id %}" class="btn btn-success ajax_button">Add</button>',
                                    orderable=False)
+
+
+class ProductDiscountTable(tables.Table):
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'><i class='fa fa-edit'></i></a>",
+                                   orderable=False)
+    tag_range = tables.Column(orderable=False)
+
+    class Meta:
+        model = ProductDiscount
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'tag_range', 'discount_type', 'choices', 'active']

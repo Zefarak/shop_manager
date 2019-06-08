@@ -5,7 +5,7 @@
             <h6 class="mb-0">
                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
                    href="#collapseBrand" aria-expanded="false" aria-controls="collapseBrand">
-                    Choose Brand
+                    Επιλογή Brand
                 </a>
             </h6>
         </div>
@@ -13,12 +13,28 @@
             <div class="card-block">
                 {% for brand in brands %}
                     {% if brand.id|stringformat:"s" in request.GET|get_item:'brand_name' %}
-                        <div class="form-group">
-                            <label><input name="brand_name" value="{{ brand.id }}" id="checkbox1" type="checkbox" checked>{{ brand }}</label>
+                        <div class="form-check">
+                            <input name="brand_name"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   value="{{ brand.id }}"
+                                   id="brand_name_{{ brand.id }}" checked
+                            >
+                            <label class="form-check-label" for="brand_name_{{ brand.id }}">
+                                {{ brand }}
+                            </label>
                         </div>
                     {% else %}
-                         <div class="form-group">
-                            <label><input name="brand_name" value="{{ brand.id }}" id="checkbox1" type="checkbox">{{ brand }}</label>
+                          <div class="form-check">
+                            <input name="brand_name"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   value="{{ brand.id }}"
+                                   id="brand_name_{{ brand.id }}"
+                            >
+                            <label class="form-check-label" for="brand_name_{{ brand.id }}">
+                                {{ brand }}
+                            </label>
                         </div>
                     {% endif %}
                 {% endfor %}

@@ -6,9 +6,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.db.models import Sum
 
-from .models import Store, BillCategory, BillInvoice, Vendor, Invoice, Employee
+from .models import Store, BillCategory, BillInvoice, Vendor, Invoice, Employee, InvoiceOrderItem
 from .generic_expenses import GenericExpense, GenericExpenseCategory, GenericPerson
-from .tables import InvoiceTable, BillingCategoryTable, BillInvoiceTable, BillCategoryTable, GenericExpenseTable, ExpenseCategoryTable, GenericPersonTable
+from .tables import InvoiceTable, BillingCategoryTable, BillInvoiceTable, BillCategoryTable, GenericExpenseTable, ExpenseCategoryTable, GenericPersonTable, HomepageInvoiceOrderItemTable, HomepageInvoiceTable
 from site_settings.constants import CURRENCY
 from .forms import BillInvoiceEditForm, BillInvoiceCreateForm, BillCategoryForm, CreateCopyForm, GenericExpenseForm, GenericExpenseCategoryForm, GenericPersonForm
 from django_tables2 import RequestConfig
@@ -22,19 +22,11 @@ class WarehouseDashboard(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        currency = CURRENCY
-        invoices = Invoice.broswer.this_month_invoices()
-        last_month_invoices = Invoice.broswer.last_month_invoices()
-        not_paid = Invoice.broswer.not_paid()
-        vendors = Vendor.objects.filter(balance__gt=0)
-        queryset_table = InvoiceTable(invoices[:10])
-        RequestConfig(self.request).configure(queryset_table)
+        invoices = Invoice.objects.all()[:20]
+        invoices_table = HomepageInvoiceTable(invoices)
 
-        # creating strings for frontend
-        this_month_value = invoices.aggregate(Sum('final_value'))['final_value__sum'] if invoices.exists() else 0.00
-        last_month_invoices = last_month_invoices.aggregate(Sum('final_value'))['final_value__sum'] if last_month_invoices.exists() else 0.00
-        not_paid_value = not_paid.aggregate(Sum('final_value'))['final_value__sum'] if not_paid.exists() else 0.00
-
+        invoice_items = InvoiceOrderItem.objects.all()[:20]
+        order_items_table = HomepageInvoiceOrderItemTable(invoice_items)
         context.update(locals())
         return context
 

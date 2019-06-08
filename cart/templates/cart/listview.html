@@ -1,106 +1,91 @@
-{% extends 'point_of_sale/dashboard.html' %}
+{% extends 'index.html' %} {% load render_table from django_tables2 %}
 
 {% block content %}
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-9">
-                    <div class="card">
-                        <div class="header">
-                            <h4 class="title text-center">Cart List</h4>
-                            <p class="category">
-                                <a href="{% url 'point_of_sale:order_create' %}"
-                                   class="btn btn-success">Create Order
-                                </a>
-                                </p>
-                        </div>
-                        <div class="content table-responsive table-full-width">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Date</th>
-                                    <th>Title</th>
-                                    <th>Value</th>
-                                    <th>User</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for order in object_list %}
-                                    <tr>
-                                        <td>{{ order.id }}</td>
-                                        <td>{{ order.timestamp }}</td>
-                                        <td>{{ order|truncatechars:'30'}}</td>
-                                        <td>{{ order.tag }}</td>
-                                        <td>{{ order.user|default_if_none:'Anonymus' }}</td>
-                                        <td>{{ order.get_status_display }}</td>
-                                        <td><a href="{{ order.get_edit_url }}" class="btn btn-primary">Edit</a> </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                                <tfooter>
-                                    <tr>
-                                        <td colspan="2">Total Carts</td>
-                                        <td>{{ total }}</td>
-                                    </tr>
-                                </tfooter>
-                            </table>
+    <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <div class="page-body">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <!-- Zero config.table start -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>{{ page_title }}</h5>
+                                        <br>
+                                    </div>
+                                    <div class="card-block">
+                                        <div class="dt-responsive table-responsive" id="result_table">
+                                            {% render_table queryset_table %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="col-md-2">
+                                 <div class="card">
+                                     <div class="card-header">
+                                         <a href="{{ back_url }}" class="btn btn-warning btn-round" style="float: right;">Επιστροφή</a>
+                                     </div>
+                                     <div class="card-block">
+                                         {% if print_button %}
+                                            <a href="{{ print_url }}" class="btn btn-round btn-info"><i class="fa fa-file"></i> Print </a>
+                                         {% endif %}
+                                     </div>
+                                 </div>
+                                <br>
+                                {% if reports %}
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <button data-href="{{ report_url }}" class="btn btn-success btn-round report_button">Report</button>
+                                        </div>
+                                        <div class="card-body" id="report_result">
+                                            <p>No data</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+{%  endblock %}
 
-                <div class="col-md-3">
-                    <div class="card">
-                       <div class="header">
-                            <h4>Filters</h4>
-                       </div>
-                       <div class="content">
-                           <form method="get">
-                                <div class="pagination">
-                                    <span class="step-links">
-                                        {% if page_obj.has_previous %}
-                                            <a href='{{ request.build_absolute_uri }}&page=1' class="btn btn-primary">First Page</a>
-                                            <a href='{{ request.build_absolute_uri }}&page={{ page_obj.previous_page_number }}' class="btn btn-primary">Previous</a>
-                                        {% endif %}
-                                        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                                        {%  if page_obj.has_next %}
-                                            {% if '?' in request.build_absolute_uri %}
-                                            <a href='{{ request.build_absolute_uri }}&page={{ page_obj.next_page_number }}' class="btn btn-primary">Next</a>
-                                            {% else %}
-                                            <a href='?page={{ page_obj.next_page_number }}' class="btn btn-primary">Next</a>
-                                            {% endif %}
-                                        {% endif %}
-                                    </span>
-                                </div>
+{% block extra_js %}
+    <script>
+        $('#search_ajax').change(function(event){
+            event.preventDefault();
+            const btn = $(this);
+            const url = btn.attr('data-href');
+            const search_name = btn.val();
+            $.ajax({
+                method: 'GET',
+                dataType: 'json',
+                url: url + '?search_name='+ search_name,
 
-                               <div class="form-group">
-                                   <input type="text"
-                                   {% if request.GET.search_name %}
-                                         value="{{ request.GET.search_name }}" placeholder="{{ request.GET.search_name }}"
-                                    {% else %}
-                                          placeholder="Search" {% endif %}
-                                          class="form-control" name="search_name"
-                                   />
-                               </div>
-                                {% for choice in status %}
-                                    <div class="checkbox">
-                                        <input name="status_name" type="checkbox" value="{{ choice }}" >
-                                        <label for="check_active">{{ choice }}</label>
-                                    </div>
-                                {% endfor %}
-                               <button type="submit" class="btn btn-primary">Submit</button>
-                               <a href="{{ request.path }}" class="btn btn-danger">Reset Filters</a>
-                           </form>
-                       </div>
-                    </div>
-               </div>
-           </div>
-       </div>
-   </div>
+                success: function (data) {
+                    $('#result_table').html(data.result_table)
+                }
+            })
+        })
+    </script>
+    {% if reports %}
+        <script type="text/javascript">
+            $('.report_button').click(function (event) {
+                event.preventDefault();
+                const btn = $(this);
+                const url = btn.attr('data-href');
+                $.ajax({
+                    method: 'GET',
+                    dataType: 'json',
+                    url: url,
 
+                    success: function (data) {
+                        $('#report_result').html(data.report_result)
+                    }
+                })
+            })
+        </script>
+    {% endif %}
 {% endblock %}
-
-
-

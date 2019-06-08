@@ -2,9 +2,10 @@ import django_tables2 as tables
 from .models import Cart
 from catalogue.models import Product
 
+
 class CartTable(tables.Table):
-    action = tables.TemplateColumn('<a href="{{ record.get_edit_url }}" class="btn btn-primary">'
-                                   '<i class="fa fa-edit"></> </a>', orderable=False
+    action = tables.TemplateColumn('<a href="{{ record.get_edit_url }}" class="btn btn-info">'
+                                   '<i class="fa fa-info"></> </a>', orderable=False
                                    )
 
     class Meta:

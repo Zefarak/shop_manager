@@ -10,20 +10,30 @@
             </h6>
         </div>
         <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingWareCate">
-            <div class="card-block">
+            <div class="card-block" style="height: 300px;max-height: 300px;overflow-y: scroll;">
                 {% for category in categories %}
                     {% if category.id|stringformat:"s" in request.GET|get_item:'cate_name' %}
-                        <div class="checkbox">
-                            <input name="cate_name" value="{{ category.id }}" id="checkbox1" type="checkbox" checked>
-                            <label for="checkbox1">
-                                {{ category}}
+                       <div class="form-check">
+                            <input name="cate_name"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   value="{{ category.id }}"
+                                   id="cate_name_{{ category.id }}" checked
+                            >
+                            <label class="form-check-label" for="cate_name_{{ category.id }}">
+                                {{ category }}
                             </label>
                         </div>
                     {% else %}
-                        <div class="checkbox">
-                            <input name="cate_name" value="{{ category.id }}" id="checkbox1" type="checkbox">
-                            <label for="checkbox1">
-                                {{ category}}
+                         <div class="form-check">
+                            <input name="cate_name"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   value="{{ category.id }}"
+                                   id="cate_name_{{ category.id }}"
+                            >
+                            <label class="form-check-label" for="cate_name_{{ category.id }}">
+                                {{ category }}
                             </label>
                         </div>
                     {% endif %}
