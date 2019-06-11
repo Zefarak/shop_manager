@@ -161,6 +161,12 @@ class Product(DefaultBasicModel):
     def tag_final_price(self):
         return f'{self.final_price} {CURRENCY}'
 
+    def tag_price(self):
+        return f'{self.price} {CURRENCY}'
+
+    def tag_price_discount(self):
+        return f'{self.price_discount} {CURRENCY}'
+
     def tag_price_buy(self):
         return f'{self.price_buy} {CURRENCY}'
 

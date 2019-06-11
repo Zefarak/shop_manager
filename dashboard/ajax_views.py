@@ -7,8 +7,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from catalogue.categories import Category
 from catalogue.models import Product, ProductPhotos
 from catalogue.product_attritubes import AttributeTitle, AttributeProductClass, Attribute
-
+from .models import ProductDiscount
 from catalogue.forms import CategorySiteForm, BrandForm, VendorForm
+from django.db.models import F
 from site_settings.constants import CURRENCY
 from decimal import Decimal
 
@@ -181,4 +182,34 @@ def ajax_product_calculate_view(request):
             'total_cost_value': total_cost_value,
             'total_value': total_value
         })
+    return JsonResponse(data)
+
+
+@staff_member_required
+def ajax_products_discount_add(request, pk):
+    data = dict()
+    discount_order = get_object_or_404(ProductDiscount, id=pk)
+    products = Product.filters_data(request, Product.objects.all())
+    products = list(products)
+    discount_order.products_related.add(*products)
+    discount_order.save()
+    discount_order.refresh_from_db()
+    data['result'] = render_to_string(template_name='dashboard/ajax_calls/discount_result.html',
+                                               request=request,
+                                               context={'object': discount_order})
+    return JsonResponse(data)
+
+
+@staff_member_required
+def ajax_product_discount_delete(request, pk, dk):
+    instance = get_object_or_404(ProductDiscount, id=pk)
+    product = get_object_or_404(Product, id=dk)
+    product.price_discount = 0
+    product.save()
+    instance.products_related.remove(product)
+    instance.refresh_from_db()
+    data = dict()
+    data['result'] = render_to_string(template_name='dashboard/ajax_calls/discount_result.html',
+                                      request=request,
+                                      context={'object': instance})
     return JsonResponse(data)

@@ -9,7 +9,7 @@ class ProductDiscountForm(BaseForm, forms.ModelForm):
 
     class Meta:
         model = ProductDiscount
-        fields = ['title', 'date_start', 'date_end', 'active', 'discount_type', 'my_choices', 'value']
+        fields = ['title', 'date_start', 'date_end', 'active', 'discount_type', 'value']
 
     def clean_date_end(self):
         date_start = self.cleaned_data.get('date_start', None)

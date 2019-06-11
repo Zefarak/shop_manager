@@ -64,6 +64,4 @@ def ajax_warehouse_analysis(request):
 @staff_member_required
 def vendor_analysis_view(request):
     vendors = Vendor.objects.filter(active=True)
-
-
     return render(request, 'reports/vendor_report.html', context=locals())

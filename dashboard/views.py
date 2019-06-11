@@ -1,6 +1,6 @@
-from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, TemplateView, CreateView, UpdateView, View
+from django.views.generic import ListView, TemplateView, CreateView, UpdateView, View, DeleteView
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Q, Sum
@@ -509,17 +509,23 @@ class ProductDiscountCreateView(CreateView):
 class ProductDiscountUpdateView(UpdateView):
     model = ProductDiscount
     form_class = ProductDiscountForm
-    template_name = 'dashboard/form.html'
+    template_name = 'dashboard/discount_manager.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        discount_type = self.object.discount_type
-        filter_for_discount = []
-        if discount_type == 'a':
-            filter_for_discount = Brand.objects.filter(active=True)
-        if discount_type == 'b':
-            filter_for_discount = Category.objects.filter(active=True)
+        products = Product.objects.none()
+        if 'search_button' in self.request.GET:
+            products = Product.filters_data(self.request, Product.objects.all())
+        back_url = reverse('dashboard:discount_manager')
+        # filters
+        brand_filter, category_filter, search_filter, vendor_filter = [True]*4
+        vendors, categories, brands = Vendor.objects.filter(active=True), Category.objects.filter(active=True), Brand.objects.filter(active=True)
 
-
+        # ajax filter url
+        get_params = self.request.get_full_path().split('?', 1)[1] if '?' in self.request.get_full_path() else ''
+        ajax_add_url = reverse('dashboard:ajax_products_discount_add', kwargs={'pk': self.object.id}) + '?' + get_params
+        print(ajax_add_url)
         context.update(locals())
         return context
+
+

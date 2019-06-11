@@ -215,7 +215,6 @@
             const name = triggeringLink.id.replace(/^add_/, '');
             const btn = $(triggeringLink);
             href = btn.attr('data-href');
-            console.log(href);
             var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
             win.focus();
             return false
