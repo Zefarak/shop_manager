@@ -8,7 +8,7 @@
     <tbody>
     {% for photo in photos %}
         <tr>
-            <td><img src='{{ photo.image.url }}' style='max-height: 50px;max-width: 50px;' class="img img-rounded img-thumbnail"></td>
+            <td {% if photo.is_primary %} style="background-color: #0af9d7" {% endif %}><img src='{{ photo.image.url }}' style='max-height: 50px;max-width: 50px;' class="img img-rounded img-thumbnail"></td>
             <td><a data-href="{% url 'dashboard:ajax_image' 'is_primary' instance.id photo.id %}"  class="btn btn-success photo-button">{{ photo.tag_primary }}</a></td>
             <td><a data-href="{% url 'dashboard:ajax_image' 'delete' instance.id photo.id %}" class="btn btn-warning photo-button">Διαγραφή</a></td>
         </tr>

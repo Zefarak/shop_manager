@@ -11,7 +11,6 @@ from .models import ProductDiscount
 from catalogue.forms import CategorySiteForm, BrandForm, VendorForm
 from django.db.models import F
 from site_settings.constants import CURRENCY
-from decimal import Decimal
 
 
 @staff_member_required
@@ -118,15 +117,14 @@ def ajax_add_or_delete_related_item(request, pk, dk):
 def ajax_change_qty_on_attribute(request, pk):
     attr_data = get_object_or_404(Attribute, id=pk)
     qty = request.GET.get('qty', 1)
+    print(qty)
     try:
-        qty = float(qty)
+        qty = int(qty)
     except:
-        qty = qty
-    if isinstance(qty, (int, float, )):
+        qty = 1
+    if isinstance(qty, int):
         attr_data.qty = qty
         attr_data.save()
-    selected_data = attr_data.product_related.attributes.all()
-    attr_class = attr_data.class_related
     data = dict()
     return JsonResponse(data)
 
@@ -177,7 +175,7 @@ def ajax_product_calculate_view(request):
         request=request,
         context={
             'currency': CURRENCY,
-            'qs_vendor': qs_vendor,
+            'qs_vendor': qs_vendor[:10],
             'total_qty': total_qty,
             'total_cost_value': total_cost_value,
             'total_value': total_value

@@ -106,6 +106,11 @@
                                           </a>
                                         </li>
                                         <li>
+                                            <a href="{% url 'site_settings:shipping' %}">
+                                                <i class="feather icon-log-out"></i> Τρόποι Μεταφοράς
+                                            </a>
+                                        </li>
+                                        <li>
                                             <a href="auth-normal-sign-in.html">
                                                 <i class="feather icon-log-out"></i> Logout
                                             </a>
@@ -238,7 +243,7 @@
                                             <!-- task, page, download counter  end -->
 
                                             <!--  sale analytics start -->
-                                            <div class="col-xl-9 col-md-12">
+                                            <div class="col-xl-8 col-md-8">
                                                 <div class="card table-card">
                                                     <div class="card-header">
                                                         <h5>Τελευταίες Καταχωρίσεις</h5>
@@ -253,24 +258,30 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-md-12">
-                                                <div class="card user-card2">
-                                                    <div class="card-block text-center">
-                                                        <h6 class="m-b-15">Ονομασία Επιχείρησης</h6>
-                                                        <h6 class="m-b-10 m-t-10">ΑΦΜ</h6>
-                                                        <a href="#!" class="text-c-yellow b-b-warning">Reports</a>
-                                                        <div class="row justify-content-center m-t-10 b-t-default m-l-0 m-r-0">
-                                                            <div class="col m-t-15 b-r-default">
-                                                                <h6 class="text-muted">Έσοδα</h6>
-                                                                <h6>0.00 €</h6>
-                                                            </div>
-                                                            <div class="col m-t-15">
-                                                                <h6 class="text-muted">Έξοδα</h6>
-                                                                <h6>0.00 €</h6>
-                                                            </div>
+                                            <div class="col-xl-4 col-md-4">
+                                                <div class="card">
+                                                    <div class="card-header">Τελευταίες Κινήσεις</div>
+                                                    <div class="card-body">
+                                                        <div class="card-body">
+                                                            <table class="table table-bordered ">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Προϊόν</th>
+                                                                        <th>Ποσότητα</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                 {% for product in last_ten_sells %}
+                                                                     <tr>
+                                                                        <td>{{ product }}</td>
+                                                                        <td>{{ product.qty }}</td>
+                                                                     </tr>
+
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
                                                         </div>
                                                     </div>
-                                                    <a href="" class="btn btn-warning btn-block p-t-15 p-b-15">Ισολογισμός</a>
                                                 </div>
                                             </div>
                                             <!--  sale analytics end -->

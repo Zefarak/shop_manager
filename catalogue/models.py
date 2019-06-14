@@ -47,11 +47,11 @@ class Product(DefaultBasicModel):
     category = models.ForeignKey(WarehouseCategory, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='Κατηγορία Αποθήκης')
     vendor = models.ForeignKey(Vendor, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='Προμηθευτής')
 
-    qty_measure = models.DecimalField(max_digits=5, decimal_places=3, default=1, verbose_name='Ποσότητα Ανά Τεμάχιο')
+    qty_measure = models.DecimalField(max_digits=10, decimal_places=2, default=1, verbose_name='Ποσότητα Ανά Τεμάχιο', blank=True, null=True)
     qty = models.DecimalField(default=0, max_digits=10, decimal_places=2, verbose_name='Ποσότητα')
-    qty_add = models.DecimalField(default=0, verbose_name="Qty Add", max_digits=10, decimal_places=2,
-                                  help_text='System use it only if warehouse transations')
-    qty_remove = models.DecimalField(default=0, verbose_name="Qty Remove", max_digits=10, decimal_places=2,
+    qty_add = models.DecimalField(default=0.00, verbose_name="Υπόλοιπο", max_digits=10, decimal_places=2,
+                                  help_text='we use this for manual add.')
+    qty_remove = models.DecimalField(default=0.00, verbose_name="Qty Remove", max_digits=10, decimal_places=2,
                                      help_text='System use it only if warehouse transations')
     barcode = models.CharField(max_length=100, null=True, blank=True)
     notes = models.TextField(null=True, blank=True, verbose_name='Περιγραφή')
@@ -65,7 +65,7 @@ class Product(DefaultBasicModel):
     sku = models.CharField(max_length=150, blank=True, null=True)
     site_text = HTMLField(blank=True, null=True)
     category_site = models.ManyToManyField(Category, blank=True, null=True, verbose_name='Κατηγορία Site')
-    brand = models.ForeignKey(Brand, blank=True, null=True, verbose_name='Brand Name', on_delete=models.SET_NULL)
+    brand = models.ForeignKey(Brand, blank=True, null=True, verbose_name='Brand', on_delete=models.SET_NULL)
     slug = models.SlugField(blank=True, null=True, allow_unicode=True)
 
     # price sell and discount sells
@@ -73,7 +73,6 @@ class Product(DefaultBasicModel):
     price_discount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Εκπτωτική Τιμή')
     final_price = models.DecimalField(default=0, decimal_places=2, max_digits=10, blank=True, verbose_name='Τιμή Πώλησης')
 
-    #size and color
     related_products = models.ManyToManyField('self', blank=True, verbose_name='Related Products')
 
     class Meta:
@@ -83,30 +82,31 @@ class Product(DefaultBasicModel):
     def save(self, *args, **kwargs):
         self.final_price = self.price_discount if self.price_discount > 0 else self.price
         self.is_offer = True if self.price_discount > 0 else False
-
+        if self.have_attr:
+            self.qty_add = self.calculate_qty_if_attributes()
         self.qty = self.qty_add - self.qty_remove
         super(Product, self).save(*args, **kwargs)
 
     def calculate_qty_if_attributes(self):
-        attributes = self.attr_class.all()
-        qty = 0
-        for ele in attributes:
-            if ele.class_related.have_transcations:
-                qty = ele.my_attributes.aggregate(Sum('qty'))['qty__sum'] if ele.my_attributes else 0
+        attributes = self.attr_class.all().filter(class_related__have_transcations=True)
+        attribute = attributes.first() if attributes.exists() else None
+        if attribute is None:
+            return 0
+        qs = attribute.my_attributes.all()
+        qty = qs.aggregate(Sum('qty'))['qty__sum'] if qs.exists() else 0
         return qty
 
     def warehouse_calculations(self):
-        if not WAREHOUSE_ORDERS_TRANSCATIONS:
-            # if our program don't support warehouse transcations, we pass
-            pass
-        warehouse_order_items = self.invoice_products.all()
-        # we will calculate two different values, the incomes and outcomes
-        warehouse_in_items = warehouse_order_items.filter(order__order_type__in=['1', '2', '4'])
-        warehouse_out_items = warehouse_order_items.filter(order__order_type='5')
-        warehouse_in_qty = warehouse_in_items.aggregate(Sum('qty'))['qty__sum'] if warehouse_in_items else 0
-        warehouse_out_qty = warehouse_out_items.aggregate(Sum('qty'))['qty__sum'] if warehouse_out_items else 0
-        self.qty_add = warehouse_in_qty - warehouse_out_qty
-        self.save()
+        if WAREHOUSE_ORDERS_TRANSCATIONS:
+            print('i am here?')
+            warehouse_order_items = self.invoice_products.all()
+            # we will calculate two different values, the incomes and outcomes
+            warehouse_in_items = warehouse_order_items.filter(order__order_type__in=['1', '2', '4'])
+            warehouse_out_items = warehouse_order_items.filter(order__order_type='5')
+            warehouse_in_qty = warehouse_in_items.aggregate(Sum('qty'))['qty__sum'] if warehouse_in_items else 0
+            warehouse_out_qty = warehouse_out_items.aggregate(Sum('qty'))['qty__sum'] if warehouse_out_items else 0
+            self.qty_add = warehouse_in_qty - warehouse_out_qty
+            self.save()
 
     def order_calculations(self):
         if not RETAIL_TRANSCATIONS:
@@ -138,6 +138,14 @@ class Product(DefaultBasicModel):
     @property
     def have_attr(self):
         return self.product_class.have_attribute if self.product_class else False
+
+    @property
+    def support_transcations(self):
+        product_class = self.product_class
+        if product_class.is_service or not product_class.have_transcations:
+            return False
+        return True
+
 
     def get_copy_url(self):
         return reverse('dashboard:create_copy_product', kwargs={'pk': self.id})
@@ -260,7 +268,7 @@ class ProductPhotos(models.Model):
         return 'First Picture' if self.is_primary else 'Back Picture' if self.is_back else 'Picture'
 
     def tag_primary(self):
-        return 'Primary' if self.is_primary else 'No Primary'
+        return 'Αρχική Εικόνα' if self.is_primary else 'Εικόνα'
 
     def tag_secondary(self):
         return 'Secondary' if self.is_back else "No Back Image"

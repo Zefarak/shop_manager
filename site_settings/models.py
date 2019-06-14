@@ -29,25 +29,25 @@ class Country(models.Model):
 
 
 class Shipping(models.Model):
-    active = models.BooleanField(default=True, verbose_name='Status')
+    active = models.BooleanField(default=True, verbose_name='Κατάσταση')
     title = models.CharField(unique=True,
                              max_length=100,
-                             verbose_name='Title'
+                             verbose_name='Τίτλος'
                              )
     additional_cost = models.DecimalField(max_digits=6,
                                           default=0,
                                           decimal_places=2,
                                           validators=[validate_positive_decimal, ],
-                                          verbose_name='Cost'
+                                          verbose_name='Επιπλέον κόστος'
                                           )
     limit_value = models.DecimalField(default=40,
                                       max_digits=6,
                                       decimal_places=2,
                                       validators=[validate_positive_decimal, ],
-                                      verbose_name='Limit'
+                                      verbose_name='Μέγιστη Αξία Κόστους'
                                       )
     country = models.ForeignKey(Country, blank=True, null=True, on_delete=models.SET_NULL)
-    first_choice = models.BooleanField(default=False, verbose_name='First Choice')
+    first_choice = models.BooleanField(default=False, verbose_name='Πρώτη Επιλογή')
     ordering_by = models.IntegerField(default=1, verbose_name='Priority Order')
 
     class Meta:
@@ -68,7 +68,7 @@ class Shipping(models.Model):
     def tag_active_cost(self):
         return f'{self.additional_cost} {CURRENCY}'
 
-    def tag_active_minimum_cost(self):
+    def tag_limit_value(self):
         return f'{self.limit_value} {CURRENCY}'
 
     def tag_additional_cost(self):
@@ -76,10 +76,6 @@ class Shipping(models.Model):
 
     tag_additional_cost.short_description = 'Επιπλέον Κόστος'
 
-    def tag_limit_value(self):
-        return f'{self.limit_value} {CURRENCY}'
-
-    tag_limit_value.short_description = 'Όριο'
 
     def tag_active(self):
         return 'Active' if self.active else 'No Active'
@@ -164,7 +160,7 @@ class Banner(models.Model):
     title = models.CharField(unique=True, max_length=100)
     text = models.CharField(max_length=200)
     image = models.ImageField(upload_to=upload_banner, validators=[validate_size, ])
-
+    url = models.URLField(blank=True, null=True)
     browser = BannerManager()
 
     def __str__(self):
@@ -172,5 +168,9 @@ class Banner(models.Model):
 
     def get_edit_url(self):
         return reverse('site_settings:banner_edit', kwargs={'pk': self.id})
+
+    def get_delete_url(self):
+        return reverse('site_settings:banner_delete', kwargs={'pk': self.id})
+
 
 

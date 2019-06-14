@@ -8,7 +8,7 @@ from .managers import AttributeManager
 
 
 class Characteristics(DefaultBasicModel):
-    title = models.CharField(max_length=120, unique=True)
+    title = models.CharField(max_length=120, unique=True, verbose_name='Τίτλος')
 
     class Meta:
         app_label = 'catalogue'
@@ -52,7 +52,7 @@ class ProductCharacteristics(models.Model):
 
 class AttributeClass(models.Model):
     title = models.CharField(unique=True, max_length=150)
-    have_transcations = models.BooleanField(default=True)
+    have_transcations = models.BooleanField(default=True, verbose_name='Υποστηρίζει Συναλλαγές')
 
     class Meta:
         verbose_name_plural = 'Attribute Class Title'
@@ -97,7 +97,7 @@ class AttributeProductClass(models.Model):
 class Attribute(models.Model):
     title = models.ForeignKey(AttributeTitle, on_delete=models.CASCADE, related_name='sizes')
     class_related = models.ForeignKey(AttributeProductClass, on_delete=models.CASCADE, related_name='my_attributes')
-    qty = models.DecimalField(default=0, decimal_places=2, max_digits=6, verbose_name='Ποσότητα')
+    qty = models.PositiveIntegerField(default=0, verbose_name='Ποσότητα')
     order_discount = models.IntegerField(null=True, blank=True, default=0, verbose_name="'Εκπτωση Τιμολογίου σε %")
     price_buy = models.DecimalField(decimal_places=2, max_digits=6, default=0, verbose_name="Τιμή Αγοράς")
     my_query = AttributeManager()
@@ -111,7 +111,7 @@ class Attribute(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        #  self.product_related.save()
+        self.class_related.product_related.save()
 
     def __str__(self):
         return f'{self.title}'

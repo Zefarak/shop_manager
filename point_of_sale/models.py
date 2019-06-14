@@ -1,22 +1,21 @@
 from django.db import models
 from django.urls import reverse
-from django.db.models.signals import post_save, post_delete, pre_delete
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from django.contrib.contenttypes.fields import GenericRelation
-from django.db.models import F, Sum, Q
-from django.contrib import messages
+
+from django.db.models import Sum, Q
+
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
-from django.shortcuts import get_object_or_404
 
-import datetime
+
 from decimal import Decimal
 
 
-from site_settings.constants import CURRENCY, TAXES_CHOICES
+from site_settings.constants import TAXES_CHOICES
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute, AttributeClass
 from .abstract_models import DefaultOrderModel, DefaultOrderItemModel
@@ -26,6 +25,7 @@ from cart.models import Cart, CartItem
 from .managers import OrderManager, OrderItemManager
 from .address_models import ShippingAddress, BillingAddress
 from accounts.models import Profile
+
 RETAIL_TRANSCATIONS, PRODUCT_ATTRIBUTE_TRANSCATIONS = settings.RETAIL_TRANSCATIONS, settings.PRODUCT_ATTRIBUTE_TRANSCATIONS
 User = get_user_model()
 
@@ -44,12 +44,13 @@ class Order(DefaultOrderModel):
                              related_name='orders'
                              )
     profile = models.ForeignKey(Profile,
-                             blank=True,
-                             null=True,
-                             verbose_name='Πελάτης',
-                             on_delete=models.SET_NULL,
-                             related_name='profile_orders'
-                             )
+                                blank=True,
+                                null=True,
+                                verbose_name='Πελάτης',
+                                on_delete=models.SET_NULL,
+                                related_name='profile_orders'
+                                )
+
     #  eshop info only
     shipping = models.ForeignKey(Shipping, null=True, blank=True, on_delete=models.SET_NULL,
                                  verbose_name='Τρόπος Μεταφοράς')
@@ -218,6 +219,14 @@ class Order(DefaultOrderModel):
         queryset = queryset.filter(seller_account__id__in=sell_point_name) if sell_point_name else queryset
         return queryset
 
+    @staticmethod
+    def order_income_type():
+        return ['b', 'c', 'wr']
+
+    @staticmethod
+    def order_outcome_type():
+        return ['r', 'e', 'wa']
+
 
 @receiver(post_save, sender=Order)
 def create_unique_number(sender, instance, **kwargs):
@@ -270,12 +279,15 @@ class OrderItem(DefaultOrderItemModel):
         super().save(*args, **kwargs)
         self.title.order_calculations()
         self.order.save()
+        self.update_warehouse()
 
-    def update_warehouse(self, transcation_type, qty):
-        update_warehouse(self, transcation_type, qty)
-
-    def update_order(self):
-        self.order.save()
+    def update_warehouse(self):
+        product = self.title
+        order = self.order
+        if not product.support_transcations:
+            pass
+        if not RETAIL_TRANSCATIONS:
+            pass
 
     def get_clean_value(self):
         return self.final_value * (100 - self.order.taxes / 100)

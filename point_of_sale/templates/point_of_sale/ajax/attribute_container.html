@@ -1,0 +1,19 @@
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Τίτλος</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ele in order_item.attributes.all %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ ele }}</td>
+            <td><a data-href="" class="btn btn-primary btn-round add_button"><i class="fa fa-plus"></i> </a> </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

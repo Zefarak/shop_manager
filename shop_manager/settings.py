@@ -104,7 +104,7 @@ WSGI_APPLICATION = 'shop_manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3'),
     }
 }
 
@@ -154,7 +154,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CURRENCY = '€'
 USE_WAREHOUSE = True
-WAREHOUSE_ORDERS_TRANSCATIONS = True
+WAREHOUSE_ORDERS_TRANSCATIONS = False
 RETAIL_TRANSCATIONS = True
 PRODUCT_ATTRIBUTE_TRANSCATIONS = True
 

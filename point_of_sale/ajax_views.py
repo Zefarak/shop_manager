@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q, Sum
 
 from catalogue.models import Product
-from .models import OrderItem, Order, Cart
+from .models import OrderItem, Order, Cart, OrderItemAttribute, Attribute
 from .tables import ProfileTable
 from accounts.models import Profile
 from site_settings.constants import CURRENCY
@@ -148,3 +148,24 @@ def ajax_costumer_order_pay_view(request, pk):
     return JsonResponse(data)
 
 
+@staff_member_required()
+def ajax_add_product_with_attribute(request, pk, dk, ak):
+    order = get_object_or_404(Order, id=pk)
+    product = get_object_or_404(Product, id=dk)
+    order_item, created = OrderItem.objects.get_or_create(order=order, title=product)
+    if created:
+        order_item.value = product.price
+        order_item.cost = product.price_buy
+        order_item.discount_value = product.price_discount
+        order_item.save()
+    attribute_title = get_object_or_404(Attribute, id=ak)
+    attribute_order_item, created = OrderItemAttribute.objects.get_or_create(order_item=order_item, attribute=attribute_title)
+    attribute_order_item.qty = 1 if created else attribute_order_item.qty+1
+    data = dict()
+    data['result'] = render_to_string(template_name='point_of_sale/ajax/attribute_container.html',
+                                      request=request,
+                                      context={
+                                        'order_item': order_item
+                                      }
+                                      )
+    return JsonResponse(data)

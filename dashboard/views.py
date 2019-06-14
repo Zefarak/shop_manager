@@ -19,7 +19,7 @@ from .tables import TableProduct, WarehouseCategoryTable, ProductTable, ProductD
 from catalogue.product_attritubes import ProductCharacteristics, Characteristics, CharacteristicsValue, Attribute, AttributeTitle, AttributeClass, AttributeProductClass
 from .models import ProductDiscount
 from .forms import ProductDiscountForm
-from point_of_sale.models import Order
+from point_of_sale.models import Order, OrderItem
 from warehouse.models import Invoice, BillInvoice, Payroll
 
 CURRENCY = settings.CURRENCY
@@ -33,6 +33,7 @@ class DashBoard(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DashBoard, self).get_context_data(**kwargs)
         orders = Order.my_query.get_queryset().current_month_sells()
+        last_ten_sells = OrderItem.objects.all()[:10]
         invoices = Invoice.broswer.this_month_invoices()
         billings = BillInvoice.broswer.get_queryset().until_today_not_paid()
         payroll = Payroll.browser.get_queryset().until_today_not_paid()
@@ -225,7 +226,7 @@ class CategorySiteManagerView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CategorySiteManagerView, self).get_context_data(**kwargs)
         instance = get_object_or_404(Product, id=self.kwargs['pk'])
-        page_title, back_url = 'Category Site', instance.get_edit_url()
+        page_title, back_url = 'Category Site Manager', instance.get_edit_url()
         selected_data = instance.category_site.all()
         context.update(locals())
         return context
@@ -279,8 +280,8 @@ class CharacteristicsManagerView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        instance = self.instance
-        page_title, chars = 'Characteristics', True
+        instance = get_object_or_404(Product, id=self.kwargs['pk'])
+        page_title, chars, back_url = 'Manager Χαρακτηριστικών', True, instance.get_edit_url()
         selected_data = instance.characteristics.all()
         context.update(locals())
         return context

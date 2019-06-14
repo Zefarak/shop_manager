@@ -8,7 +8,7 @@ from django.contrib import messages
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute
 from .models import Order, OrderItem, OrderItemAttribute
-from .forms import OrderCreateForm, OrderCreateCopyForm, OrderUpdateForm, forms
+from .forms import OrderCreateForm, OrderCreateCopyForm, OrderUpdateForm, forms, OrderAttributeCreateForm
 from site_settings.models import PaymentMethod
 from accounts.models import Profile
 from accounts.forms import ProfileForm
@@ -160,29 +160,19 @@ def add_to_order_with_attr(request, pk, dk):
     instance = get_object_or_404(Product, id=dk)
     order = get_object_or_404(Order, id=pk)
     form_title, back_url = f'Add {instance.title}', order.get_edit_url()
-    all_attr_class = instance.attr_class.all()
-    print(instance, all_attr_class)
-    form = OrderItem(request.POST or None)
-    fields_added = generate_or_remove_queryset(form, ['sugar', 'sugar_lvl', 'milk', 'ingredient'], all_attr_class)
-    if form.is_valid():
-        order_item, created = OrderItem.objects.get_or_create(title=instance, order=order)
-        if created:
-            order_item.value = instance.price
-            order_item.discount_value = instance.price_discount
-            order_item.qty = form.cleaned_data.get('qty', 1)
-            order_item.cost = instance.price_buy
-            order_item.save()
+    order_item, created = OrderItem.objects.get_or_create(title=instance, order=order)
+    if created:
+        order_item.value = instance.price
+        order_item.discount_value  = instance.price_discount
+        order_item.cost = instance.price_buy
+        order_item.save()
 
-        for field in fields_added:
-            attribute_selected = form.cleaned_data.get(field)
-            OrderItemAttribute.objects.create(
-                attribute=attribute_selected,
-                order_item=order_item,
-                qty=1
-            )
-        messages.success(request, f'{instance.title} Added')
+    qs = instance.attr_class.all().filter(class_related__have_transcations=True)
+    attri_class = qs.first() if qs.exists() else None
+    if attri_class is None:
+        messages.warning(request, 'Δε έχετε επλέξει μεγεθολόγιο')
         return redirect(order.get_edit_url())
-    return render(request, 'point_of_sale/form.html', context=locals())
+    return render(request, 'point_of_sale/add_to_order_with_attr.html', context=locals())
 
 
 @staff_member_required

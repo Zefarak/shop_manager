@@ -129,22 +129,26 @@
                                         <ul class="basic-list">
                                             <li class="">
                                                 <h6>Φωτογραφίες</h6>
+                                                <p>Περιέχει {{ instance.images.all.count }} φωτογραφίες.</p>
                                                 <a href='{% url "dashboard:image_manager_view" instance.id %}'  class="btn btn-primary btn-round">Manager</a>
                                             </li>
                                             <br>
                                             <li class="">
                                                 <h6>Σχετικά Προϊόντα</h6>
+                                                <p>Περιέχει {{ instance.related_products.all.count }} Προϊόντα.</p>
                                                 <a href='{% url "dashboard:related_products_manager_view" instance.id %}' class="btn btn-primary btn-round">Manager</a>
                                             </li>
                                             <br>
                                             <li class="">
                                                 <h6>Κατηγορίες Site</h6>
+                                                <p>Περιέχει {{ instance.category_site.all.count }} Κατηγορίες.</p>
                                                 <a href='{% url "dashboard:category_manager_view" instance.id %}' class="btn btn-primary btn-round">Manager</a>
                                             </li>
 
                                             <br>
                                             <li class="">
                                                 <h6>Χαρακτηριστικά</h6>
+                                                <p>Περιέχει {{ instance.characteristics.all.count }} Χαρακτηριστικά.</p>
                                                 <a href='{% url "dashboard:char_manager_view" instance.id %}' class="btn btn-primary btn-round">Manager</a>
                                             </li>
                                             <br>

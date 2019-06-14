@@ -1,14 +1,14 @@
 <div class="card">
-    <div class="header">
-        <div class="title">Selected</div>
+    <div class="card-header">
+        <div class="title">Επιλεγμένα</div>
     </div>
     <div class="content">
         <table class="table">
             <thead>
             <tr>
                 <th>#</th>
-                <th>Title</th>
-                <th>qty</th>
+                <th>Τίτλος</th>
+                <th>Ποσότητα</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -17,8 +17,7 @@
                 <tr>
                     <td>{{ ele.id }}</td>
                     <td>{{ ele }}</td>
-                    <td>{{ ele.class_related }}</td>
-                    <td><input class="form-control edit_button" data-href="{% url 'dashboard:ajax_manage_qty_attribute' ele.id %}" type="number" value="{{ ele.qty }}"></td>
+                    <td><input class="form-control edit_button" data-href="{% url 'dashboard:ajax_manage_qty_attribute' ele.id %}" type="number" step='1' value="{{ ele.qty }}"></td>
                     {% if related_product %}
                      <td><button data-href="{% url 'dashboard:ajax_related_product' 'delete' attr_class.id ele.title.id  %}" class="btn btn-warning delete_button">Delete</button></td>
                     {% else %}
@@ -38,11 +37,11 @@
 
 <script>
     $('.edit_button').keyup(function(event){
-        console.log('hey edit this shit!');
         event.preventDefault();
         const btn = $(this);
         const href = btn.attr('data-href');
-        const data = '';
+        const data = btn.val();
+        console.log('edit', href, data)
         $.ajax({
             method: 'GET',
             dataType: 'json',
