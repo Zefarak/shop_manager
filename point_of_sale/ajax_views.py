@@ -157,15 +157,40 @@ def ajax_add_product_with_attribute(request, pk, dk, ak):
         order_item.value = product.price
         order_item.cost = product.price_buy
         order_item.discount_value = product.price_discount
-        order_item.save()
+    order_item.save()
     attribute_title = get_object_or_404(Attribute, id=ak)
-    attribute_order_item, created = OrderItemAttribute.objects.get_or_create(order_item=order_item, attribute=attribute_title)
-    attribute_order_item.qty = 1 if created else attribute_order_item.qty+1
+    attribute_order_item, created_ = OrderItemAttribute.objects.get_or_create(order_item=order_item, attribute=attribute_title)
+    attribute_order_item.qty = 1 if created_ else attribute_order_item.qty+1
+    attribute_order_item.save()
+    order_item.refresh_from_db()
     data = dict()
     data['result'] = render_to_string(template_name='point_of_sale/ajax/attribute_container.html',
                                       request=request,
                                       context={
                                         'order_item': order_item
+                                      }
+                                      )
+    return JsonResponse(data)
+
+
+@staff_member_required()
+def ajax_edit_product_with_attr_view(request, action, pk):
+    order_item = get_object_or_404(OrderItemAttribute, id=pk)
+    if action == 'add':
+        print('here')
+        order_item.qty += 1
+    if action == 'remove' and order_item.qty > 1:
+        order_item.qty -= 1
+    order_item.save()
+    if action == 'delete':
+        order_item.delete()
+    data = dict()
+    order_item = order_item.order_item
+    order_item.refresh_from_db()
+    data['result'] = render_to_string(template_name='point_of_sale/ajax/attribute_container.html',
+                                      request=request,
+                                      context={
+                                          'order_item': order_item
                                       }
                                       )
     return JsonResponse(data)

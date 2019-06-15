@@ -82,9 +82,10 @@
             <td>{{ order_item.qty }} {% for item in order_item.attributes.all %} {{ item.title.title }} {% endfor %}</td>
             <td>{{ order_item.tag_final_value }}</td>
             <td>{{ order_item.tag_total_value  }}</td>
-            {% if order_item.attribute %}
+            {% if order_item.have_attr %}
                 <td>
-                    <a href="{% url 'point_of_sale:edit_order_item_attr' order_item.id %}" class="btn btn-info">Edit</a>
+                    <a href="{% url 'point_of_sale:add_to_order_attr' order_item.order.id order_item.title.id  %}" class="btn btn-info"><i class="fa fa-edit"></i> </a>
+                    <button data-href="{% url 'point_of_sale:ajax_order_item_edit' 'delete' order_item.id %}" class="btn btn-danger edit_button"><i class="fa fa-trash"></i></button>
                 </td>
             {% else %}
                 <td colspan="2">

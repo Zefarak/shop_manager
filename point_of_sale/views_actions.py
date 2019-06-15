@@ -60,7 +60,7 @@ def done_order_view(request, pk, action):
         instance.is_paid = True
         instance.status = "8"
     instance.save()
-    order_redirect = request.COOKIES('order_redirect', None)
+    order_redirect = request.COOKIES.get('order_redirect', None)
     if order_redirect == 'costumers':
         del request.COOKIES['order_redirect']
         return order_redirect(reverse('point_of_sale:costumer_account_card', kwargs={'pk': pk}))

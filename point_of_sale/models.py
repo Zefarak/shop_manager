@@ -273,6 +273,7 @@ class OrderItem(DefaultOrderItemModel):
         self.final_value = self.discount_value if self.discount_value > 0 else self.value
         self.total_value = self.final_value * self.qty
         self.total_cost_value = self.cost * self.qty
+        self.attribute = self.have_attr()
         if self.attribute:
             attributes = self.attributes.all()
             self.qty = attributes.aggregate(Sum('qty'))['qty__sum'] if attributes.exists() else 0
@@ -288,6 +289,11 @@ class OrderItem(DefaultOrderItemModel):
             pass
         if not RETAIL_TRANSCATIONS:
             pass
+
+    def have_attr(self):
+        if self.title.have_attr:
+            return True
+        return False
 
     def get_clean_value(self):
         return self.final_value * (100 - self.order.taxes / 100)
@@ -369,8 +375,10 @@ def create_destroy_title():
 
 @receiver(post_delete, sender=OrderItem)
 def update_warehouse(sender, instance, **kwargs):
-    product = instance.product
+    product = instance.title
     product.order_calculations()
+    for ele in instance.attributes.all():
+        ele.delete()
     instance.order.save()
 
 
@@ -380,7 +388,7 @@ class OrderItemAttribute(models.Model):
     qty = models.DecimalField(default=1, decimal_places=2, max_digits=10)
 
     def __str__(self):
-        return f'{self.title} - {self.order_item}'
+        return f'{self.order_item} - {self.attribute}'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

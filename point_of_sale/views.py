@@ -136,9 +136,10 @@ class OrderUpdateView(UpdateView):
         return reverse('point_of_sale:order_detail', kwargs={'pk': self.kwargs['pk']})
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         homepage_cookie = self.request.COOKIES.get('order_redirect', None)
         print('homepage cookie', homepage_cookie)
-        context = super().get_context_data(**kwargs)
+
         products = Product.my_query.active()[:12]
         instance = self.object
         is_return = True if self.object.order_type in ['b', 'wr'] else False
@@ -160,13 +161,8 @@ def add_to_order_with_attr(request, pk, dk):
     instance = get_object_or_404(Product, id=dk)
     order = get_object_or_404(Order, id=pk)
     form_title, back_url = f'Add {instance.title}', order.get_edit_url()
-    order_item, created = OrderItem.objects.get_or_create(title=instance, order=order)
-    if created:
-        order_item.value = instance.price
-        order_item.discount_value  = instance.price_discount
-        order_item.cost = instance.price_buy
-        order_item.save()
-
+    order_item_qs = OrderItem.objects.filter(title=instance, order=order)
+    order_item = order_item_qs.first() if order_item_qs.exists() else None
     qs = instance.attr_class.all().filter(class_related__have_transcations=True)
     attri_class = qs.first() if qs.exists() else None
     if attri_class is None:

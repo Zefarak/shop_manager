@@ -123,7 +123,7 @@ class Product(DefaultBasicModel):
         for qty_data in qty_analysis:
             qty_remove = qty_data['total_qty'] if qty_data['order__order_type'] in ['r', 'e', 'wa'] else 0
             qty = qty_remove - qty_data['total_qty'] if qty_data['order__order_type'] in ['b', 'wr'] else qty_remove
-        self.qty_remove = qty_remove
+        self.qty_remove = 0
         self.save()
 
     def __str__(self):

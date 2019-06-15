@@ -25,7 +25,8 @@
                                                   <tr>
                                                       <th scope="row">{{ forloop.counter }}</th>
                                                       <td>{{ ele }}</td>
-                                                      <td><a data-href="" class="btn btn-primary btn-round add_button"><i class="fa fa-plus"></i> </a> </td>
+
+                                                      <td><a data-href="{% url 'point_of_sale:ajax_add_product_with_attr' order.id instance.id ele.id %}" class="btn btn-primary btn-round add_button"><i class="fa fa-plus"></i> </a> </td>
                                                   </tr>
                                               {% endfor %}
                                           </tbody>
@@ -69,5 +70,22 @@
         })
     })
 </script>
+
+    <script>
+        $('.edit_button').click(function (evt) {
+            evt.preventDefault();
+            const btn = $(this);
+            const url = btn.attr('data-href');
+            $.ajax({
+                method: 'GET',
+                dataType: 'json',
+                url: url,
+
+                success: function (data) {
+                    $('#result_container').html(data.result)
+                }
+            })
+        })
+    </script>
 
 {% endblock %}
