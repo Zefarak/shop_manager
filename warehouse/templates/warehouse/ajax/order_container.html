@@ -5,23 +5,23 @@
             <thead></thead>
             <tbody>
             <tr>
-                <td>Date</td>
+                <td>Ημερομηνία</td>
                 <th>{{ instance.date_expired }}</th>
             </tr>
             <tr>
-                <td>Order Type</td>
+                <td>Τύπος Παραστατικού/td>
                 <th>{{ instance.get_order_type_display }}</th>
             </tr>
             <tr>
-                <td>Vendor</td>
+                <td>Προμηθευτής</td>
                 <th>{{ instance.vendor }}</th>
             </tr>
             <tr>
-                <td>Clean Value</td>
+                <td>Καθαρή Αξία</td>
                 <th>{{ instance.tag_clean_value }}</th>
             </tr>
             <tr>
-                <td>Taxes modifier</td>
+                <td>Φπα</td>
                 <th>{{ instance.get_taxes_modifier_display }} %</th>
             </tr>
             </tbody>
@@ -32,23 +32,23 @@
             <thead></thead>
             <tbody>
             <tr>
-                <td>Title</td>
+                <td>Τίτλος</td>
                 <th>{{ instance.title }}</th>
             </tr>
             <tr>
-                <td>Value</td>
+                <td>Αξία</td>
                 <th>{{ instance.tag_final_value }}</th>
             </tr>
             <tr>
-                <td>Additional Value</td>
+                <td>Επιπλέον Κόστος</td>
                 <th>{{ instance.tag_additional_value }}</th>
             </tr>
             <tr>
-                <td>Taxes</td>
+                <td>Συνολική Αξία Φόρων</td>
                 <th>{{ instance.tag_taxes }}</th>
             </tr>
             <tr>
-                <td>Paid Value</td>
+                <td>Πληρωτέο Ποσό</td>
                 <th>{{ instance.tag_paid_value }}</th>
             </tr>
             </tbody>
@@ -60,11 +60,11 @@
 <table class='table'>
     <thead>
     <tr>
-        <th>Sku</th>
-        <th>Product</th>
+        <th>Κωδικός</th>
+        <th>Προϊόν</th>
         <th>Qty</th>
-        <th colspan="2">Price - Discount - Final</th>
-        <th>Total</th>
+        <th colspan="2">Αξία - Έκπτωση - Τελική</th>
+        <th>Συνολική Αξία</th>
         <th colspan="2">Actions</th>
     </tr>
     </thead>

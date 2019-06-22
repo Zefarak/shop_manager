@@ -78,8 +78,13 @@ class UpdateWarehouseOrderView(UpdateView):
 
 
 @staff_member_required
-def create_or_add_order_item(request, pk, dk):
+def check_if_product_have_attr_view(request, pk, dk):
     product = get_object_or_404(Product, id=dk)
+    instance = get_object_or_404(Invoice, id=pk)
+    qs = InvoiceOrderItem.objects.filter(order=instance, product=product)
+    if qs.exists():
+        messages.warning(request, 'Η καταχώρηση υπάρχει ήδη.')
+        return redirect(instance.get_edit_url())
     if product.have_attr:
         return redirect(reverse('warehouse:create_order_item_with_attr', kwargs={'pk': pk, 'dk': dk}))
     return redirect(reverse('warehouse:create-order-item', kwargs={'pk': pk, 'dk': dk}))

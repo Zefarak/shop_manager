@@ -222,6 +222,8 @@ class InvoiceAttributeItem(models.Model):
         return f'{self.order_item} - {self.attribute_related}'
 
 
+@receiver(post_delete, sender=Invoice)
+
 @receiver(post_save, sender=InvoiceAttributeItem)
 def update_warehouse(sender, instance, **kwargs):
     if WAREHOUSE_ORDERS_TRANSCATIONS:

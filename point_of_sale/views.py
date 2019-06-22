@@ -31,7 +31,6 @@ class DashboardView(TemplateView):
         RequestConfig(self.request).configure(queryset_table)
 
         qs_today = Order.objects.filter(date_expired=datetime.datetime.now())
-        print(qs_today)
         today_sells = qs_today.filter(order_type__in=['r', 'e']).aggregate(Sum('final_value'))['final_value__sum'] \
             if qs_today.filter(order_type__in=['r', 'e']).exists() else 0.00
         today_returns = qs_today.filter(order_type__in=['b', 'c', 'wr']).aggregate(Sum('final_value'))['final_value__sum']\

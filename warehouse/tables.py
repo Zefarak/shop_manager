@@ -77,7 +77,7 @@ class VendorTable(tables.Table):
 
 class ProductAddTable(tables.Table):
     action = tables.TemplateColumn('<a href="{% url "warehouse:order_item_check" instance.id record.id %}" '
-                                   'class="btn btn-primary">Add</a>', orderable=False)
+                                   'class="btn btn-success"><i class="fa fa-plus"></i></a>', orderable=False)
 
     class Meta:
         model = Invoice
