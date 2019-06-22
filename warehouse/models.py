@@ -123,6 +123,7 @@ class InvoiceOrderItem(DefaultOrderItemModel):
                                 null=True,
                                 related_name='invoice_products'
                                 )
+    attribute = models.BooleanField(default=False)
     unit = models.CharField(max_length=1, choices=UNIT, default='1', verbose_name='Μονάδα Μέτρησης')
     total_clean_value = models.DecimalField(default=0, max_digits=15, decimal_places=2, verbose_name='Συνολική Καθαρή Αξία')
     total_final_value = models.DecimalField(default=0, max_digits=14, decimal_places=2, verbose_name='Συνολίκή Αξία')
@@ -131,14 +132,17 @@ class InvoiceOrderItem(DefaultOrderItemModel):
         return f'{self.product}'
 
     def save(self, *args, **kwargs):
+        if self.product.have_attr:
+            self.attribute = True
+            self.qty = self.my_attributes.all().aggregate(Sum('qty'))['qty__sum'] if self.my_attributes.all().exists() else 0
         self.final_value = Decimal(self.value) * (100 - self.discount_value) / 100
-        print(self.value, self.final_value)
         self.total_clean_value = Decimal(self.final_value) * Decimal(self.qty)
         self.total_final_value = Decimal(self.total_clean_value) * Decimal((100 + self.order.get_taxes_modifier_display()) / 100)
         super().save(*args, **kwargs)
         self.product.price_buy = self.value
         self.product.order_discount = self.discount_value
         self.product.order_code = self.sku
+
         self.order.save()
 
         if WAREHOUSE_ORDERS_TRANSCATIONS:
@@ -211,8 +215,14 @@ def update_qty_on_delete(sender, instance, *args, **kwargs):
 
 class InvoiceAttributeItem(models.Model):
     order_item = models.ForeignKey(InvoiceOrderItem, on_delete=models.CASCADE, related_name='my_attributes')
-    attribute_related = models.ForeignKey(Attribute, on_delete=models.PROTECT)
+    attribute_related = models.ForeignKey(Attribute, on_delete=models.PROTECT, related_name='invoice_attributes')
     qty = models.IntegerField(default=1)
 
     def __str__(self):
         return f'{self.order_item} - {self.attribute_related}'
+
+
+@receiver(post_save, sender=InvoiceAttributeItem)
+def update_warehouse(sender, instance, **kwargs):
+    if WAREHOUSE_ORDERS_TRANSCATIONS:
+        instance.attribute_related.save()

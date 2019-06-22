@@ -61,7 +61,7 @@ class Product(DefaultBasicModel):
     objects = models.Manager()
     my_query = ProductManager()
 
-    #site attritubes
+    #  site attritubes
     sku = models.CharField(max_length=150, blank=True, null=True)
     site_text = HTMLField(blank=True, null=True)
     category_site = models.ManyToManyField(Category, blank=True, null=True, verbose_name='Κατηγορία Site')

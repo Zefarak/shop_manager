@@ -3,15 +3,15 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Sum, F, Q
-from .models import Invoice
+from .models import Invoice, InvoiceOrderItem, InvoiceAttributeItem
 from catalogue.product_details import VendorPaycheck
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute, AttributeProductClass, AttributeTitle
 from site_settings.constants import CURRENCY
-from .tables import ProductAddTable
+from .tables import ProductAddTable, InvoiceAttributeItemTable
 from django_tables2 import RequestConfig
 from .forms import BillCategoryForm, EmployeeForm, OccupationForm, GenericExpenseCategoryForm, GenericPersonForm
-
+from decimal import Decimal
 
 @staff_member_required
 def ajax_paycheck_actions(request, question):
@@ -102,22 +102,83 @@ def ajax_search_products(request, pk):
 
 
 @staff_member_required
-def ajax_form_with_attr_view(request, pk, dk, at):
-    qty = request.GET.get('qty', 1)
+def ajax_add_attr_to_invoice_view(request, pk, dk):
+    print(request.POST)
+    # getting the values
     invoice = get_object_or_404(Invoice, id=pk)
     product = get_object_or_404(Product, id=dk)
-    product_attribute_class = get_object_or_404(AttributeProductClass, id=pk)
-    attribute_title = get_object_or_404(AttributeTitle, id=pk)
-    attibrute, created = Attribute.objects.get_or_create(class_related=product_attribute_class.class_related,
-                                                         title=attribute_title,
-                                                         )
-    attibrute.qty = qty if created else attibrute.qty + qty
-    attibrute.save()
+    value = request.POST.get('value', None)
+    discount = request.POST.get('discount', None)
+
+    # create the order item
+    order_item, created = InvoiceOrderItem.objects.get_or_create(order=invoice, product=product)
+
+    # get the attribute class
+    attr_product_class = product.attr_class.filter(class_related__have_transcations=True).first()
+
+    for ele in request.POST:
+        if ele.startswith('qty_'):
+            get_id = ele.split('_')[1]
+            qty = request.POST.get(ele, None)
+            if qty:
+                qty = Decimal(qty)
+                if qty > 0:
+                    attr_title = get_object_or_404(AttributeTitle, id=get_id)
+                    product_attribute, created = Attribute.objects.get_or_create(title=attr_title,
+                                                                                 class_related=attr_product_class
+                                                                                 )
+                    product_attribute.price_buy = value
+                    product_attribute.order_discount = discount
+                    product_attribute.qty = qty
+                    product_attribute.save()
+                    attr_invoice, created = InvoiceAttributeItem.objects.get_or_create(order_item=order_item,
+                                                                                       attribute_related=product_attribute
+                                                                                       )
+                    if created:
+                        attr_invoice.qty = qty
+                    else:
+                        attr_invoice.qty = attr_invoice.qty + qty
+                    attr_invoice.save()
     data = dict()
-    data['result'] = render_to_string(template_name='',
+
+    order_item.value = Decimal(value) if value else 0
+    order_item.discount_value = Decimal(discount) if discount else 0
+    product.price_buy = Decimal(value) if value else product.price_buy
+    product.order_discount = Decimal(discount) if discount else product.order_discount
+    product.order_code = request.POST.get('order_code', product.order_code)
+    product.save()
+    order_item.save()
+    order_item.refresh_from_db()
+    selected_data = order_item.my_attributes.all()
+    data['result'] = render_to_string(template_name='warehouse/ajax/invoice_result_data.html',
                                       request=request,
-                                      context=locals()
-                                      )
+                                      context={
+                                          'selected_data': selected_data
+                                      })
+    return JsonResponse(data)
+
+
+@staff_member_required
+def ajax_edit_invoice_attr_view(request, pk):
+    data = dict()
+    attr_order_item = get_object_or_404(InvoiceAttributeItem, id=pk)
+    qty = request.GET.get('qty', None)
+    if qty:
+        qty = Decimal(qty)
+        if qty > 0:
+            attr_order_item.qty = qty
+            attr_order_item.save()
+        else:
+            attr_order_item.delete()
+    order_item = attr_order_item.order_item
+    order_item.save()
+    order_item.refresh_from_db()
+    selected_data = order_item.my_attributes.all()
+    data['result'] = render_to_string(template_name='warehouse/ajax/invoice_result_data.html',
+                                      request=request,
+                                      context={
+                                          'selected_data': selected_data
+                                      })
     return JsonResponse(data)
 
 

@@ -51,6 +51,13 @@ class CategorySiteForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
 
 
+class WarehouseCategoryForm(BaseForm, forms.ModelForm):
+
+    class Meta:
+        model = WarehouseCategory
+        fields = '__all__'
+
+
 class BrandForm(forms.ModelForm):
 
     class Meta:

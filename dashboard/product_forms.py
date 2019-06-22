@@ -9,7 +9,7 @@ WAREHOUSE_ORDERS_TRANSCATIONS = settings.WAREHOUSE_ORDERS_TRANSCATIONS
 RETAIL_TRANSCATIONS = settings.RETAIL_TRANSCATIONS
 
 
-class ProductForm(BaseForm, forms.ModelForm):
+class ProductFormWarehouseTranscations(BaseForm, forms.ModelForm):
     class Meta:
         model = Product
         fields = ['active', 'featured_product',
@@ -30,51 +30,24 @@ class ProductForm(BaseForm, forms.ModelForm):
         }
 
 
-if not WAREHOUSE_ORDERS_TRANSCATIONS:
-    class ProductForm(BaseForm, forms.ModelForm):
-        class Meta:
-            model = Product
-            fields = ['active', 'featured_product',
-                      'title', 'sku',
-                      'vendor', 'price_buy',
-                      'brand', 'category',
-                      'price', 'price_discount',
-                      'measure_unit',
-                      'site_text', 'slug',
-                      'qty_add'
-
-
-                      ]
-            widgets = {
-                'vendor': autocomplete.ModelSelect2(url='vendors_auto', attrs={'class': 'form-control'}),
-                'category': autocomplete.ModelSelect2(url='warehouse_category_auto',
-                                                      attrs={'class': 'form-control', 'data-html': True}),
-            }
-
-
-
-
-'''
-class ProductForm(BaseForm, forms.ModelForm):
-
+class ProductFormNoWarehouseNoTranscations(BaseForm, forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['title', 'sku',
-                  'vendor', 'order_code',
-                  'price_buy', 'order_discount',
+        fields = ['active', 'featured_product',
+                  'title', 'sku',
+                  'vendor', 'price_buy',
                   'brand', 'category',
                   'price', 'price_discount',
-                  'qty', 'qty_measure',
                   'measure_unit',
                   'site_text', 'slug',
-                  'active', 'featured_product'
+                  'qty_add'
                 ]
         widgets = {
             'vendor': autocomplete.ModelSelect2(url='vendors_auto', attrs={'class': 'form-control'}),
-            'category': autocomplete.ModelSelect2(url='warehouse_category_auto', attrs={'class': 'form-control', 'data-html': True}),
-        }
+            'category': autocomplete.ModelSelect2(url='warehouse_category_auto',
+                                                  attrs={'class': 'form-control', 'data-html': True}),
+            }
 
-'''
 
 class ProductNoQty(BaseForm, forms.ModelForm):
     class Meta:
@@ -92,3 +65,8 @@ class ProductNoQty(BaseForm, forms.ModelForm):
             'vendor': autocomplete.ModelSelect2(url='vendors_auto', attrs={'class': 'form-control'}),
             'category': autocomplete.ModelSelect2(url='warehouse_category_auto', attrs={'class': 'form-control'}),
         }
+
+
+ProductForm = ProductFormNoWarehouseNoTranscations
+if WAREHOUSE_ORDERS_TRANSCATIONS:
+    ProductForm = ProductFormWarehouseTranscations

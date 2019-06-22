@@ -14,7 +14,7 @@ from catalogue.models import Product, ProductPhotos, WarehouseCategory
 from catalogue.categories import Category
 from catalogue.product_details import Brand, Vendor
 from catalogue.forms import CreateProductForm, ProductPhotoUploadForm, ProductCharacteristicForm, WarehouseCategoryForm
-from .product_forms import ProductForm, ProductNoQty
+from .product_forms import ProductForm
 from .tables import TableProduct, WarehouseCategoryTable, ProductTable, ProductDiscountTable
 from catalogue.product_attritubes import ProductCharacteristics, Characteristics, CharacteristicsValue, Attribute, AttributeTitle, AttributeClass, AttributeProductClass
 from .models import ProductDiscount
@@ -150,7 +150,7 @@ def product_detail(request, pk):
     images = instance.get_all_images()
     form = ProductForm(instance=instance)
     if '_save' in request.POST:
-        form = ProductNoQty(request.POST, instance=instance) if instance.product_class.have_attribute else ProductForm(request.POST, instance=instance)
+        form = ProductForm(request.POST, instance=instance) if instance.product_class.have_attribute else ProductForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             messages.success(request, 'The products %s is saves!')
@@ -159,7 +159,7 @@ def product_detail(request, pk):
             print('form_invalid', form.errors)
 
     if '_update' in request.POST:
-        form = ProductNoQty(request.POST, instance=instance) if instance.product_class.have_attribute else ProductForm(request.POST, instance=instance)
+        form = ProductForm(request.POST, instance=instance) if instance.product_class.have_attribute else ProductForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             messages.success(request, 'The products %s is edited!')
@@ -290,7 +290,7 @@ class CharacteristicsManagerView(ListView):
 @method_decorator(staff_member_required, name='dispatch')
 class ProductCharacteristicCreateView(CreateView):
     model = ProductCharacteristics
-    template_name = 'dashboard/settings/form.html'
+    template_name = 'dashboard/form.html'
     form_class = ProductCharacteristicForm
 
     def get_initial(self):
@@ -327,7 +327,6 @@ class ProductCharacteristicCreateView(CreateView):
 def product_characteristic_delete_view(request, pk):
     instance = get_object_or_404(ProductCharacteristics, id=pk)
     instance.delete()
-
     return HttpResponseRedirect(reverse('dashboard:char_manager_view', kwargs={'pk': instance.product_related.id}))
 
 

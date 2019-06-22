@@ -5,7 +5,7 @@ from site_settings.abstract_models import DefaultBasicModel
 from site_settings.constants import CURRENCY
 from .models import Product
 from .managers import AttributeManager
-
+from site_settings.constants import WAREHOUSE_ORDERS_TRANSCATIONS
 
 class Characteristics(DefaultBasicModel):
     title = models.CharField(max_length=120, unique=True, verbose_name='Τίτλος')
@@ -97,7 +97,9 @@ class AttributeProductClass(models.Model):
 class Attribute(models.Model):
     title = models.ForeignKey(AttributeTitle, on_delete=models.CASCADE, related_name='sizes')
     class_related = models.ForeignKey(AttributeProductClass, on_delete=models.CASCADE, related_name='my_attributes')
-    qty = models.PositiveIntegerField(default=0, verbose_name='Ποσότητα')
+    qty = models.IntegerField(default=0, verbose_name='Ποσότητα')
+    qty_add = models.IntegerField(default=0.00, verbose_name="Υπόλοιπο", help_text='we use this for manual add.')
+    qty_remove = models.IntegerField(default=0.00, verbose_name="Qty Remove", help_text='System use it only if warehouse transations')
     order_discount = models.IntegerField(null=True, blank=True, default=0, verbose_name="'Εκπτωση Τιμολογίου σε %")
     price_buy = models.DecimalField(decimal_places=2, max_digits=6, default=0, verbose_name="Τιμή Αγοράς")
     my_query = AttributeManager()
@@ -111,10 +113,21 @@ class Attribute(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+        if WAREHOUSE_ORDERS_TRANSCATIONS:
+            self.qty_add = self.calculate_warehouse()
+
+            self.qty = self.qty_add
+
         self.class_related.product_related.save()
 
     def __str__(self):
         return f'{self.title}'
+
+    def calculate_warehouse(self):
+        invoices_items = self.invoice_attributes.all()
+        items_added = invoices_items.filter(order_item__order__order_type__in=[['1', '2', '4']])
+        item_removed = invoices_items.filter(order_item__order__order_type='5')
+        return items_added - item_removed
 
     def check_product_in_order(self):
         return str(self.product_related + '. Χρώμα : ' + self.title.title + ', Μέγεθος : ' + self.title.title)

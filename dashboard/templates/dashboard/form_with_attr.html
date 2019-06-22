@@ -11,42 +11,43 @@
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>Μεγαθολόγιο</h4>
+                                        <h4>Μεγεθολόγιο</h4>
                                     </div>
                                     <div class="card-body">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th>Τίτλος</th>
-                                                <th>Ποσότητα</th>
-                                                <th>Action</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for ele in chart_size %}
+                                        <form class="form add_form" method="post">{% csrf_token %}
+                                            {{ form }}
+                                            <table class="table">
+                                                <thead>
                                                     <tr>
-                                                        <td>{{ ele }}</td>
-                                                        <td>
-                                                            <input id='qty__{{ ele.id }}' type="number" placeholder="1" class="form-control">
-                                                        </td>
-                                                        <td>
-                                                            <button class="btn btn-info btn-round" data-href="{% url '' %}" data-id="{{ ele.id }}">Προσθήκη</button>
-                                                        </td>
+                                                        <th>Τίτλος</th>
+                                                        <th>Ποσότητα</th>
                                                     </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {% for ele in class_items %}
+                                                        <tr>
+                                                            <td>{{ ele }}</td>
+                                                            <td><input class="form-control" type="number" step="1" placeholder="0" name="qty_{{ ele.id }}"></td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                            <button data-href="{% url 'warehouse:add_attr_to_invoice' instance.id product.id %}"
+                                                    type="submit" class="btn btn-round btn-success add_button">
+                                                <i class="fa fa-save"> Αποθήκευση</i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-header">
-                                        <a href="{{ back_url }}" class="btn btn-warning">Επιστροφή</a>
+                                        <a href="{% url 'warehouse:update_order' pk %}" class="btn btn-warning btn-round">Επιστροφή</a>
                                     </div>
-                                    <div class="card-body">
-                                        <h4>Είναι στο Τιμολόγιο</h4>
-                                        {% render_table selected_data_table %}
+                                    <div class="card-body" id="result_container">
+                                       {% include 'warehouse/ajax/invoice_result_data.html' %}
+
                                     </div>
                                 </div>
                             </div>
@@ -67,19 +68,33 @@
         event.preventDefault();
         const btn = $(this);
         const url = btn.attr('data-href');
-        const edit_id = btn.attr('data-id');
-        const qty_id = '.qty_'+ edit_id;
-        const value = $(qty_id).val();
-        console.log('did anything fucking worked?', url, qty_id, value);
+        const data = $('.add_form').serialize();
+        $.ajax({
+            method: 'POST',
+            url: url,
+            data: data,
+            dataType: 'json',
+
+            success : function (data) {
+                $('#result_container').html(data.result)
+            }
+        })
+    });
+
+    $('.edit_button').change(function (evt) {
+        evt.preventDefault();
+        const input_field = $(this);
+        const url = input_field.attr('data-href');
+        const value = input_field.val();
         $.ajax({
             method: 'GET',
             dataType: 'json',
-            url: url+ '?qty='+value,
+            url: url + '?qty=' + value,
 
             success: function (data) {
-                $('.somthething here').html(data.result)
+                $('#result_container').html(data.result)
             }
-        })
+        });
     })
 </script>
 {% endblock %}

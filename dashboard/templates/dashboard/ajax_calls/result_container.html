@@ -13,7 +13,7 @@
             <td>{{ ele.id }}</td>
             <td>{{ ele }}</td>
             {% if chars %}
-                <td><a href="{% url 'dashboard:product_char_delete_view' ele.id %}" class="btn btn-warning">Διαγραφή</a></td>
+                <td><a href="{% url 'dashboard:product_char_delete_view' ele.id %}" class="btn btn-warning btn-round"><i class="fa fa-trash"></i> </a></td>
             {% else %}
                 <td><button data-href="{% url 'dashboard:ajax_category_site' 'delete' instance.id ele.id  %}" class="btn btn-warning delete_button">Διαγραφή</button></td>
             {% endif %}

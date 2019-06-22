@@ -15,7 +15,7 @@ from .invoice_views import (WarehouseOrderList, create_warehouse_order_view, Upd
                             VendorListView, VendorCreateView, VendorUpdateView, delete_vendor,
                             CreateInvoiceImageView, UpdateInvoiceImageView, delete_invoice_image_view,
                             PaycheckCreateView, PayCheckListView, PaycheckDetailView, delete_paycheck,
-                            create_payment_from_order_view, create_order_item_with_attrribute_view,
+                            create_payment_from_order_view, create_order_item_with_attribute_view,
                             create_copy_invoice_view, delete_warehouse_order_view
                             )
 
@@ -23,7 +23,9 @@ from .payroll_views import (PayrollListView, EmployeeListView, EmployeeCreateVie
                             OccupationCreateView, OccupationListView, OccupationUpdateView, delete_occupation,
                             PayrollCreateView, payroll_quick_pay, PayrollUpdateView, delete_payroll
                             )
-from .ajax_calls import ajax_paycheck_actions, ajax_calculate_value, ajax_search_products, popup_new_bill, popup_employee, popup_occupation, popup_generic_category, popup_generic_person
+from .ajax_calls import (ajax_paycheck_actions, ajax_calculate_value, ajax_search_products, popup_new_bill,
+                         popup_employee, popup_occupation, popup_generic_category, popup_generic_person,
+                         ajax_add_attr_to_invoice_view, ajax_edit_invoice_attr_view )
 
 from .report_views import report_generic_expenses_view, report_billing_view
 from .pdf_views import download_cv_pdf
@@ -40,7 +42,7 @@ urlpatterns = [
     path('create-invoice/', create_warehouse_order_view, name='create_invoice'),
     path('invoices/update/<int:pk>/', UpdateWarehouseOrderView.as_view(), name='update_order'),
     path('invoice/order-item/check/<int:pk>/<int:dk>/', create_or_add_order_item, name='order_item_check'),
-    path('invoice/order-item-with_attr/<int:pk>/<int:dk>/', create_order_item_with_attrribute_view, name='create_order_item_with_attr'),
+    path('invoice/order-item-with_attr/<int:pk>/<int:dk>/', create_order_item_with_attribute_view, name='create_order_item_with_attr'),
     path('invoice/order-item/create/<int:pk>/<int:dk>/', CreateOrderItem.as_view(), name='create-order-item'),
     path('invoices/order-item/update/<int:pk>/', UpdateInvoiceOrderItem.as_view(), name='order-item-update'),
     path('invoices/order-item/delete/<int:pk>/', delete_warehouse_order_item_view, name='order-item-delete'),
@@ -57,6 +59,8 @@ urlpatterns = [
     path('auto-complete-employee/', EmployeeAutocomplete.as_view(), name='auto-employee'),
     path('popup/new-generic-category/', popup_generic_category, name='popup-generic-category'),
     path('popup/new-generic-person/', popup_generic_person, name='popup-generic-person'),
+    path('add-attr-to-invoice/<int:pk>/<int:dk>', ajax_add_attr_to_invoice_view, name='add_attr_to_invoice'),
+    path('ajax/edit-order-item-with-attr/<int:pk>/', ajax_edit_invoice_attr_view, name='ajax_edit_attr_invoice'),
 
     #  reports
     path('report/generic-expenses/', report_generic_expenses_view, name='report_generic_expenses'),

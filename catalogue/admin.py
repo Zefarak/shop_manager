@@ -18,6 +18,17 @@ from import_export.admin import ImportExportModelAdmin
 WAREHOUSE_ORDERS_TRANSCATIONS = settings.WAREHOUSE_ORDERS_TRANSCATIONS
 
 
+@admin.register(Category)
+class CategorySiteAdmin(DraggableMPTTAdmin):
+    list_display = ['tree_actions', 'indented_title', 'active', ]
+    search_fields = ['name', ]
+    list_filter = ['active']
+    list_display_links = ['indented_title', ]
+    list_per_page = 30
+    readonly_fields = ['parent', ]
+
+
+'''
 @admin.register(VendorPaycheck)
 class VendorPaycheckAdmin(admin.ModelAdmin):
     pass
@@ -163,3 +174,4 @@ if not WAREHOUSE_ORDERS_TRANSCATIONS:
     admin.site.unregister(WarehouseCategory)
     admin.site.unregister(Vendor)
 
+'''

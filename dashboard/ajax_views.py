@@ -8,7 +8,7 @@ from catalogue.categories import Category
 from catalogue.models import Product, ProductPhotos
 from catalogue.product_attritubes import AttributeTitle, AttributeProductClass, Attribute
 from .models import ProductDiscount
-from catalogue.forms import CategorySiteForm, BrandForm, VendorForm
+from catalogue.forms import WarehouseCategoryForm, BrandForm, VendorForm
 from django.db.models import F
 from site_settings.constants import CURRENCY
 
@@ -130,7 +130,7 @@ def ajax_change_qty_on_attribute(request, pk):
 
 
 def popup_category(request):
-    form = CategorySiteForm(request.POST or None)
+    form = WarehouseCategoryForm(request.POST or None)
     form_title = 'Create category'
     if form.is_valid():
         instance = form.save()

@@ -77,7 +77,14 @@
             <td colspan="2">{{ order_item.tag_value }} - {{ order_item.tag_discount }} - {{ order_item.tag_final_value }}</td>
             <td>{{ order_item.tag_total_clean_value }}</td>
             <td>
-                <a href="{{ order_item.get_edit_url }}" class="btn btn-sm btn-info edit_button"><i class="fa fa-edit"></i></a>
+                {% if order_item.attribute %}
+                    <a href="{% url 'warehouse:create_order_item_with_attr' instance.id order_item.product.id %}"
+                       class="btn btn-sm btn-info edit_button">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                {% else %}
+                    <a href="{{ order_item.get_edit_url }}" class="btn btn-sm btn-info edit_button"><i class="fa fa-edit"></i></a>
+                {% endif %}
             </td>
         </tr>
     {% empty %}
@@ -88,4 +95,7 @@
     </tbody>
     
 </table>
+
+<br />
+<a href="{{ order_item.get_delete_url }}" class="btn btn-danger edit_button"><i class="fa fa-trash"></i> </a>
 

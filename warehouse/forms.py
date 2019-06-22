@@ -5,7 +5,7 @@ from .models import Invoice, InvoiceOrderItem, InvoiceImage
 from site_settings.models import Store
 from catalogue.models import Product
 from .generic_expenses import GenericExpense, GenericExpenseCategory, GenericPerson
-from site_settings.constants import WAREHOUSE_ORDER_TYPE
+from site_settings.constants import WAREHOUSE_ORDER_TYPE, UNIT
 from dal import autocomplete
 
 
@@ -143,3 +143,10 @@ class GenericPersonForm(BaseForm, forms.ModelForm):
 class CopyInvoiceForm(BaseForm):
     date_expired = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}), label='Νέα Ημερομηνία')
     order_type = forms.ChoiceField(choices=WAREHOUSE_ORDER_TYPE, required=True, label='Είδος Παραστατικού')
+
+
+class InvoiceAttributeCreateOrEditForm(BaseForm):
+    order_code = forms.CharField(required=True, label='Κωδικός Τιμολογίου')
+    measure_unit = forms.ChoiceField(choices=UNIT, label='Μοναδα Μέτρησης')
+    value = forms.DecimalField(required=True, label='Αξία Μονάδας')
+    discount = forms.IntegerField(required=True, label='Έκπτωση Τιμολογίου')

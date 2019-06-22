@@ -5,13 +5,13 @@ from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Sum
 from django.contrib import messages
-from .models import Invoice, InvoiceOrderItem, InvoiceImage, InvoiceAttributeItem
+from .models import Invoice, InvoiceOrderItem, InvoiceImage
 from catalogue.models import Product
 from catalogue.product_details import Vendor, VendorPaycheck
 from catalogue.forms import VendorForm, PaycheckVendorForm
 from site_settings.constants import CURRENCY
-from .forms import CreateInvoiceForm, UpdateInvoiceForm, CreateOrderItemForm, InvoiceImageForm, CopyInvoiceForm
-from .tables import InvoiceImageTable, PaycheckTable, InvoiceTable, VendorTable, ProductAddTable, InvoiceAttributeItemTable
+from .forms import CreateInvoiceForm, UpdateInvoiceForm, CreateOrderItemForm, InvoiceImageForm, CopyInvoiceForm, InvoiceAttributeCreateOrEditForm
+from .tables import InvoiceImageTable, PaycheckTable, InvoiceTable, VendorTable, ProductAddTable
 
 from django_tables2 import RequestConfig
 
@@ -68,7 +68,6 @@ class UpdateWarehouseOrderView(UpdateView):
         else:
             qs = Product.my_query.active().filter(vendor=self.object.vendor)
         products_table = ProductAddTable(qs)
-        print(qs)
         instance = self.object
         images = InvoiceImage.objects.filter(order_related=self.object)
         images_table = InvoiceImageTable(images)
@@ -80,26 +79,34 @@ class UpdateWarehouseOrderView(UpdateView):
 
 @staff_member_required
 def create_or_add_order_item(request, pk, dk):
-    instance = get_object_or_404(Invoice, id=pk)
     product = get_object_or_404(Product, id=dk)
     if product.have_attr:
-        print('works mother fucker')
         return redirect(reverse('warehouse:create_order_item_with_attr', kwargs={'pk': pk, 'dk': dk}))
-    print('did continue?')
     return redirect(reverse('warehouse:create-order-item', kwargs={'pk': pk, 'dk': dk}))
 
 
 @staff_member_required
-def create_order_item_with_attrribute_view(request, pk, dk):
+def create_order_item_with_attribute_view(request, pk, dk):
     instance = get_object_or_404(Invoice, id=pk)
     product = get_object_or_404(Product, id=dk)
+
     attr_qs = product.attr_class.filter(class_related__have_transcations=True)
-    class_attribute = attr_qs.first() if attr_qs.exists() else None
+    attr_class = attr_qs.first() if attr_qs.exists() else None
+    class_attribute = attr_qs.first().class_related if attr_qs.exists() else None
+    class_items = class_attribute.my_values.all()
 
     qs_order_item = InvoiceOrderItem.objects.filter(order=instance, product=product)
-    selected_data = qs_order_item.first().my_attributes.all() if qs_order_item.exists() else InvoiceAttributeItem.objects.none()
-    selected_data_table = InvoiceAttributeItemTable(selected_data)
-    RequestConfig(request).configure(selected_data_table)
+
+    order_item_qs = InvoiceOrderItem.objects.filter(product=product, order=instance)
+    order_item = order_item_qs.first() if order_item_qs.exists() else None
+    selected_data = order_item.my_attributes.all() if order_item else []
+    #  form data
+    form = InvoiceAttributeCreateOrEditForm(initial={'value': product.price_buy,
+                                                     'discount': product.order_discount,
+                                                     'measure_unit': product.measure_unit,
+                                                     'order_code': product.order_code
+                                                     })
+    form_data = (order_item.value, order_item.discount_value) if order_item else (0, 0)
     return render(request, 'dashboard/form_with_attr.html', context=locals())
 
 

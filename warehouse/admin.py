@@ -1,11 +1,16 @@
 from django.contrib import admin
 from .billing import BillInvoice, BillCategory
 from .payroll import Payroll, Employee, Occupation
-from .models import Invoice
+from .models import Invoice, InvoiceAttributeItem
 
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(InvoiceAttributeItem)
+class Onth(admin.ModelAdmin):
     pass
 
 

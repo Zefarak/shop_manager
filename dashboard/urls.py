@@ -70,7 +70,7 @@ urlpatterns = [
 
 
     path('product/characteristic-manager/<int:pk>/', CharacteristicsManagerView.as_view(), name='char_manager_view'),
-    path('product/delete/<int:pk>/', product_characteristic_delete_view, name='product_char_delete_view'),
+    path('product/char/delete/<int:pk>/', product_characteristic_delete_view, name='product_char_delete_view'),
 
     path('product-class-list/', ProductClassView.as_view(), name='product_class_view'),
     path('products-class-create/', ProductClassCreateView.as_view(), name='product_class_create_view'),
