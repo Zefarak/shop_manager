@@ -27,11 +27,11 @@
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="card-header">
+                                            <a href="{{ instance.image.file.url }}" target="_blank"><img src='{{ instance.image.file.url }}' width="200px" height="200px" class='img img-thumbnail rounded float-right' /></a>
                                         <a href="{{ back_url }}" class="btn btn-warning btn-round clone-btn-right">Επιστροφή</a>
                                         <br><br>
-
-                                        <a onclick="confirm('Are you sure?')" href="{{ instance.get_payment_url }}" class="btn btn-info">Δημιουργία Παραστατικού Πληρωμής</a>
-                                        <a href="{% url 'warehouse:invoice_create_copy' instance.id %}" class="btn btn-info">Αντιγραφή Παραστατικού</a>
+                                        <a href="{{ instance.get_payment_url }}" class="btn btn-success"><i class="fa fa-credit-card"></i></a>
+                                        <a href="{% url 'warehouse:invoice_create_copy' instance.id %}" class="btn btn-info"><i class="fa fa-copy"></i></a>
                                         <br><br>
                                         <h3>Πληροφορίες</h3>
                                     </div>
@@ -59,9 +59,11 @@
                                                     <br>
                                                     <button type='submit' name='order_sub' class="btn btn-primary">Save</button>
                                                 </form>
+                                                <br />
+                                                <a onclick="return confirm('Είσαι σίγουρος;')" href="{{ instance.get_delete_url }}" class="btn btn-danger"><i class="fa fa-trash"></i> </a>
                                             </div>
                                         </div>
-                                        <a href="{{ instance.get_delete_url }}" class="btn btn-delete"> Διαγραφή</a>
+                                        
                                     </div>
                                 </div>
 

@@ -1,12 +1,13 @@
 from django import forms
 from .billing import BillInvoice, BillCategory
 from .payroll import Employee, Occupation, Payroll
-from .models import Invoice, InvoiceOrderItem, InvoiceImage
+from .models import Invoice, InvoiceOrderItem, InvoiceImage, VendorPaycheck
 from site_settings.models import Store
-from catalogue.models import Product
+from catalogue.models import Product, Vendor
 from .generic_expenses import GenericExpense, GenericExpenseCategory, GenericPerson
 from site_settings.constants import WAREHOUSE_ORDER_TYPE, UNIT
 from dal import autocomplete
+import datetime
 
 
 class BaseForm(forms.Form):
@@ -150,3 +151,23 @@ class InvoiceAttributeCreateOrEditForm(BaseForm):
     measure_unit = forms.ChoiceField(choices=UNIT, label='Μοναδα Μέτρησης')
     value = forms.DecimalField(required=True, label='Αξία Μονάδας')
     discount = forms.IntegerField(required=True, label='Έκπτωση Τιμολογίου')
+
+
+class VendorPaycheckInvoiceForm(BaseForm, forms.ModelForm):
+    date_expired = forms.DateField(required=True,
+                                   widget=forms.DateInput(attrs={'type': 'date'}),
+                                   label='Ημερομηνία',
+                                   initial=datetime.date.today())
+    vendor = forms.ModelChoiceField(queryset=Vendor.objects.all(), widget=forms.HiddenInput())
+    order_related = forms.ModelChoiceField(queryset=Invoice.objects.all(), widget=forms.HiddenInput())
+
+    class Meta:
+        model = VendorPaycheck
+        fields = ['is_paid', 'title', 'date_expired', 'value', 'payment_method', 'order_related', 'vendor']
+
+
+class PaycheckVendorForm(BaseForm, forms.ModelForm):
+
+    class Meta:
+        model = VendorPaycheck
+        fields = '__all__'

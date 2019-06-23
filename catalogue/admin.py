@@ -7,7 +7,7 @@ from .product_attritubes import (Characteristics, CharacteristicsValue,
                                  ProductCharacteristics, AttributeTitle, Attribute,
                                  AttributeClass, AttributeProductClass
                                  )
-from .product_details import VendorPaycheck, Vendor
+from .product_details import Vendor
 from .models import WarehouseCategory
 from .inlines import ProductCharacteristicsInline, ProductPhotosInline
 

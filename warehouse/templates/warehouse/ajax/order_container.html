@@ -9,7 +9,7 @@
                 <th>{{ instance.date_expired }}</th>
             </tr>
             <tr>
-                <td>Τύπος Παραστατικού/td>
+                <td>Τύπος Παραστατικού</td>
                 <th>{{ instance.get_order_type_display }}</th>
             </tr>
             <tr>
@@ -37,7 +37,7 @@
             </tr>
             <tr>
                 <td>Αξία</td>
-                <th>{{ instance.tag_final_value }}</th>
+                <th style="background-color: thistle ">{{ instance.tag_final_value }}</th>
             </tr>
             <tr>
                 <td>Επιπλέον Κόστος</td>
@@ -97,5 +97,5 @@
 </table>
 
 <br />
-<a href="{{ order_item.get_delete_url }}" class="btn btn-danger edit_button"><i class="fa fa-trash"></i> </a>
+
 

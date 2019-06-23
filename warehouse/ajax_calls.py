@@ -3,8 +3,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Sum, F, Q
-from .models import Invoice, InvoiceOrderItem, InvoiceAttributeItem
-from catalogue.product_details import VendorPaycheck
+from .models import Invoice, InvoiceOrderItem, InvoiceAttributeItem, VendorPaycheck
+
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute, AttributeProductClass, AttributeTitle
 from site_settings.constants import CURRENCY
@@ -12,6 +12,7 @@ from .tables import ProductAddTable, InvoiceAttributeItemTable
 from django_tables2 import RequestConfig
 from .forms import BillCategoryForm, EmployeeForm, OccupationForm, GenericExpenseCategoryForm, GenericPersonForm
 from decimal import Decimal
+
 
 @staff_member_required
 def ajax_paycheck_actions(request, question):

@@ -2,7 +2,7 @@ from django.utils.html import format_html
 import django_tables2 as tables
 from catalogue.models import Product, ProductClass
 from catalogue.categories import WarehouseCategory, Category
-from catalogue.product_details import VendorPaycheck
+
 from catalogue.product_details import Brand
 from catalogue.product_attritubes import Characteristics, Attribute, AttributeClass
 from .models import ProductDiscount

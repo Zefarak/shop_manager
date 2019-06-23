@@ -1,8 +1,8 @@
 import django_tables2 as tables
 from django.utils.html import format_html
 from .models import InvoiceImage
-from catalogue.product_details import VendorPaycheck
-from .models import Invoice, Vendor, InvoiceAttributeItem, InvoiceOrderItem
+
+from .models import Invoice, Vendor, InvoiceAttributeItem, InvoiceOrderItem, VendorPaycheck
 from .billing import BillCategory, BillInvoice
 from .payroll import Employee, Payroll, Occupation
 from .billing import BillCategory
@@ -22,18 +22,6 @@ class InvoiceImageTable(tables.Table):
     class Meta:
         model = InvoiceImage
         fields = ['id', 'file']
-        template_name = 'django_tables2/bootstrap.html'
-
-
-class PaycheckTable(tables.Table):
-    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'><i class='far fa-edit'>"
-                                   "</i></a>",
-                                    orderable=False,
-                                    )
-
-    class Meta:
-        model = VendorPaycheck
-        fields = ['date_expired', 'vendor', 'payment_method', 'value', 'is_paid']
         template_name = 'django_tables2/bootstrap.html'
 
 
@@ -64,15 +52,18 @@ class InvoiceTable(tables.Table):
 
 
 class VendorTable(tables.Table):
-    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'>Επεξεργασία</a>",
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></i></a>",
                                    orderable=False,
                                    )
-    tag_balance = tables.Column(orderable=False)
+    report = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-success btn-round'>Καρτέλα</a>",
+                                   orderable=False,
+                                   )
+    tag_balance = tables.Column(orderable=False, verbose_name='Υπόλοιπο')
 
     class Meta:
         model = Vendor
         template_name = 'django_tables2/bootstrap.html'
-        fields = ['id', 'title', 'phone', 'tag_balance']
+        fields = ['id', 'title', 'phone', 'tag_balance', 'report']
 
 
 class ProductAddTable(tables.Table):
@@ -234,3 +225,27 @@ class HomepageInvoiceTable(tables.Table):
         model = Invoice
         template_name = 'django_tables2/bootstrap.html'
         fields = ['date_expired', 'vendor', 'title', 'tag_final_value']
+
+
+class VendorPaycheckInvoiceTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_invoice_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+
+    class Meta:
+        model = VendorPaycheck
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['date_expired', 'title', 'payment_method', 'tag_value', 'is_paid']
+
+
+class VendorPaycheckTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+
+    class Meta:
+        model = VendorPaycheck
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['date_expired', 'title', 'payment_type', 'tag_final_value', 'is_paid']

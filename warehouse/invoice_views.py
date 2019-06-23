@@ -5,13 +5,13 @@ from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Sum
 from django.contrib import messages
-from .models import Invoice, InvoiceOrderItem, InvoiceImage
+from .models import Invoice, InvoiceOrderItem, InvoiceImage, VendorPaycheck
 from catalogue.models import Product
-from catalogue.product_details import Vendor, VendorPaycheck
-from catalogue.forms import VendorForm, PaycheckVendorForm
+from catalogue.product_details import Vendor
+from catalogue.forms import VendorForm
 from site_settings.constants import CURRENCY
 from .forms import CreateInvoiceForm, UpdateInvoiceForm, CreateOrderItemForm, InvoiceImageForm, CopyInvoiceForm, InvoiceAttributeCreateOrEditForm
-from .tables import InvoiceImageTable, PaycheckTable, InvoiceTable, VendorTable, ProductAddTable
+from .tables import InvoiceImageTable, InvoiceTable, VendorTable, ProductAddTable
 
 from django_tables2 import RequestConfig
 
@@ -209,23 +209,6 @@ def create_copy_invoice_view(request, pk):
     return render(request, 'dashboard/form.html', context=context)
 
 
-@staff_member_required
-def create_payment_from_order_view(request, pk):
-    instance = get_object_or_404(Invoice, id=pk)
-    total = instance.paycheck.all().aggregate(Sum('value'))['value__sum'] if instance.paycheck.all().exists() else 0
-    if instance.final_value > total:
-        new_payment = VendorPaycheck.objects.create(
-            title=instance.title,
-            date_expired=instance.date_expired,
-            value=instance.final_value-total,
-            vendor=instance.vendor,
-            is_paid=instance.is_paid,
-            payment_method=instance.payment_method
-        )
-        instance.paycheck.add(new_payment)
-    return redirect(instance.get_edit_url())
-
-
 @method_decorator(staff_member_required, name='dispatch')
 class VendorListView(ListView):
     model = Vendor
@@ -283,74 +266,11 @@ def delete_vendor(request, pk):
     return redirect(reverse('warehouse:vendors'))
 
 
-@method_decorator(staff_member_required, name='dispatch')
-class PayCheckListView(ListView):
-    model = VendorPaycheck
-    template_name = 'dashboard/list_page.html'
-    paginate_by = 50
-
-    def get_queryset(self):
-        queryset = VendorPaycheck.filters_data(self.request, VendorPaycheck.objects.all())
-        return queryset
-
-    def get_context_data(self,  **kwargs):
-        context = super().get_context_data(**kwargs)
-        vendors = Vendor.objects.filter(active=True)
-        page_title, back_url, create_url = 'Επιταγές', reverse('warehouse:dashboard'), reverse('warehouse:paycheck_create')
-        queryset_table = PaycheckTable(self.object_list)
-        RequestConfig(self.request).configure(queryset_table)
-        search_filter, vendor_filter, paid_filter = [True]*3
-        vendors = Vendor.objects.filter(active=True)
-        context.update(locals())
-        return context
-
-
-@method_decorator(staff_member_required, name='dispatch')
-class PaycheckDetailView(UpdateView):
-    model = VendorPaycheck
-    form_class = PaycheckVendorForm
-    template_name = 'dashboard/form.html'
-    success_url = reverse_lazy('warehouse:paychecks')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        form_title = f'Επεξεργασία {self.object}'
-        back_url, delete_url = self.success_url, self.object.get_delete_url
-        context.update(locals())
-        return context
-
-    def form_valid(self, form):
-        form.save()
-
-        return super().form_valid(form)
-
-
-@method_decorator(staff_member_required, name='dispatch')
-class PaycheckCreateView(CreateView):
-    model = VendorPaycheck
-    form_class = PaycheckVendorForm
-    template_name = 'dashboard/form.html'
-    success_url = reverse_lazy('warehouse:paychecks')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        form_title = 'Δημιουργία Νέας Πληρωμής'
-        back_url, delete_url = self.success_url, None
-        context.update(locals())
-        return context
-
-    def form_valid(self, form):
-        form.save()
-
-        return super().form_valid(form)
-
-
 @staff_member_required
-def delete_paycheck(request, pk):
-    instance = get_object_or_404(VendorPaycheck, id=pk)
-    instance.delete()
+def vendor_report_view(request, pk):
+    vendor = get_object_or_404(Vendor, id=pk)
 
-    return redirect('warehouse:paychecks')
+    return render(request, 'warehouse/vendor_report_page.html')
 
 
 @method_decorator(staff_member_required, name='dispatch')

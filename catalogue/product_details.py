@@ -164,49 +164,6 @@ def create_slug(sender, instance, **kwargs):
         instance.save()
 
 
-class VendorPaycheck(models.Model):
-    timestamp = models.DateField(auto_now_add=True)
-    title = models.CharField(max_length=150)
-    date_expired = models.DateField()
-    payment_method = models.ForeignKey(PaymentMethod, null=True, on_delete=models.SET_NULL)
-    value = models.DecimalField(default=0.00, decimal_places=2, max_digits=20)
-    paid_value = models.DecimalField(default=0.00, decimal_places=2, max_digits=20)
-    is_paid = models.BooleanField(default=False)
-    vendor = models.ForeignKey(Vendor, on_delete=models.PROTECT, related_name='vendor_paychecks')
 
-    def __str__(self):
-        return f'{self.title} - {self.vendor}'
-
-    def save(self, *args, **kwargs):
-        if self.is_paid:
-            self.paid_value = self.value
-        super().save(*args, **kwargs)
-        self.vendor.update_input_value()
-
-    def get_edit_url(self):
-        return reverse('warehouse:paycheck_detail', kwargs={'pk': self.id})
-
-    def get_delete_url(self):
-        return reverse('warehouse:paycheck_delete', kwargs={'pk': self.id})
-
-    @staticmethod
-    def filters_data(request, queryset):
-        sorted_name = request.GET.get('sort', None)
-        date_start, date_end, date_range, months_list = estimate_date_start_end_and_months(request)
-        paid_name = request.GET.get('paid_name', None)
-        search_name = request.GET.get('search_name', None)
-        vendor_name = request.GET.get('vendor_name')
-        try:
-            queryset = queryset.order_by(sorted_name)
-        except:
-            queryset = queryset
-        queryset = queryset.filter(is_paid=True) if paid_name == '1' else \
-            queryset.filter(is_paid=False) if queryset == '2' else queryset
-        queryset = queryset.filter(date_expired__range=[date_start, date_end])
-        queryset = queryset.filter(Q(title__contains=search_name) |
-                                   Q(vendor__title__contains=search_name)
-                                   ).distinct() if search_name else queryset
-        queryset = queryset.filter(vendor__id__in=vendor_name) if vendor_name else queryset
-        return queryset
 
 

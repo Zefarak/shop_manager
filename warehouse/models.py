@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib import messages
-from catalogue.product_details import Vendor, VendorPaycheck
+from catalogue.product_details import Vendor
 from .payroll import *
 from .billing import *
 from .generic_expenses import *
@@ -29,7 +29,7 @@ class Invoice(DefaultOrderModel):
     taxes_modifier = models.CharField(max_length=1, choices=TAXES_CHOICES, default='3', verbose_name='ΦΠΑ')
     taxes = models.DecimalField(default=0.00, max_digits=15, decimal_places=2, verbose_name='Φόρος')
     order_type = models.CharField(default=1, max_length=1, choices=WAREHOUSE_ORDER_TYPE, verbose_name='Είδος')
-    paycheck = models.ManyToManyField(VendorPaycheck, verbose_name='Πληρωμές')
+
     objects = models.Manager()
     broswer = InvoiceManager()
 
@@ -46,7 +46,7 @@ class Invoice(DefaultOrderModel):
             self.clean_value, self.taxes, self.final_value = 0, 0, 0
 
         self.final_value = self.clean_value + self.taxes + self.additional_value
-        self.paid_value = self.final_value if self.is_paid else self.paid_value
+        self.paid_value = self.update_paid_value()
 
         super().save(*args, **kwargs)
         self.vendor.update_output_value()
@@ -54,8 +54,18 @@ class Invoice(DefaultOrderModel):
     def __str__(self):
         return self.title
 
+    def update_paid_value(self):
+        qs = self.payments.filter(is_paid=True)
+        paid_value = qs.aggregate(Sum('value'))['value__sum'] if qs.exists() else 0.00
+        return paid_value
+
+
     def tag_discount(self):
         return f'{self.discount} %'
+
+    def tag_not_paid_value(self):
+        value = self.final_value - self.paid_value
+        return f'{value} {CURRENCY}'
 
     def tag_clean_value(self):
         return f'{self.clean_value} {CURRENCY}'
@@ -72,10 +82,14 @@ class Invoice(DefaultOrderModel):
         return reverse('warehouse:update_order', kwargs={'pk': self.id})
 
     def get_payment_url(self):
-        return reverse('warehouse:create-payment-order', kwargs={'pk': self.id})
+        return reverse('warehouse:invoice_paycheck_list', kwargs={'pk': self.id})
 
     def get_delete_url(self):
         return reverse('warehouse:invoice_delete', kwargs={'pk': self.id})
+
+    def image(self):
+        qs = self.images.all().filter(is_first=True)
+        return qs.first() if qs.exists() else None
 
     @staticmethod
     def filter_data(request, queryset):
@@ -222,7 +236,71 @@ class InvoiceAttributeItem(models.Model):
         return f'{self.order_item} - {self.attribute_related}'
 
 
+class VendorPaycheck(models.Model):
+    timestamp = models.DateField(auto_now_add=True)
+    title = models.CharField(max_length=150, verbose_name='Τίτλος')
+    date_expired = models.DateField(verbose_name='Ημερμηνία λήξης')
+    payment_method = models.ForeignKey(PaymentMethod, null=True, on_delete=models.SET_NULL, verbose_name='Τρόπος Πληρωμής')
+    value = models.DecimalField(default=0.00, decimal_places=2, max_digits=20, verbose_name='Αξία')
+    paid_value = models.DecimalField(default=0.00, decimal_places=2, max_digits=20, verbose_name='Πληρωμένη Αξία')
+    order_related = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='payments', verbose_name='Τιμολόγιο')
+    is_paid = models.BooleanField(default=False, verbose_name='Πληρωμένο')
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='vendor_paychecks', verbose_name='Προμηθευτής')
+
+    def __str__(self):
+        return f'{self.title} - {self.vendor}'
+
+    def save(self, *args, **kwargs):
+        if self.is_paid:
+            self.paid_value = self.value
+        super().save(*args, **kwargs)
+        self.order_related.save() if self.order_related else self.vendor.update_input_value()
+
+    def get_edit_url(self):
+        return reverse('warehouse:paycheck_detail', kwargs={'pk': self.id})
+
+    def get_invoice_edit_url(self):
+        return reverse('warehouse:invoice_paycheck_update', kwargs={'pk': self.id})
+
+    def get_delete_url(self):
+        return reverse('warehouse:paycheck_delete', kwargs={'pk': self.id})
+
+    def tag_value(self):
+        return f'{self.value} {CURRENCY}'
+
+    @staticmethod
+    def filters_data(request, queryset):
+        sorted_name = request.GET.get('sort', None)
+        date_start, date_end, date_range, months_list = estimate_date_start_end_and_months(request)
+        paid_name = request.GET.get('paid_name', None)
+        search_name = request.GET.get('search_name', None)
+        vendor_name = request.GET.get('vendor_name')
+        try:
+            queryset = queryset.order_by(sorted_name)
+        except:
+            queryset = queryset
+        queryset = queryset.filter(is_paid=True) if paid_name == '1' else \
+            queryset.filter(is_paid=False) if queryset == '2' else queryset
+        queryset = queryset.filter(date_expired__range=[date_start, date_end])
+        queryset = queryset.filter(Q(title__contains=search_name) |
+                                   Q(vendor__title__contains=search_name)
+                                   ).distinct() if search_name else queryset
+        queryset = queryset.filter(vendor__id__in=vendor_name) if vendor_name else queryset
+        return queryset
+
+
 @receiver(post_delete, sender=Invoice)
+def update_warehouse_on_invoice_delete(sender, instance, **kwargs):
+    if WAREHOUSE_ORDERS_TRANSCATIONS:
+        instance.vendor.update_balance() if instance.vendor else ''
+
+
+@receiver(post_delete, sender=InvoiceOrderItem)
+def update_warehouse_on_invoice_item_delete(sender, instance, **kwargs):
+    if WAREHOUSE_ORDERS_TRANSCATIONS:
+        instance.product.warehouse_calculations() if not instance.product.have_attr else ''
+    instance.order.save()
+
 
 @receiver(post_save, sender=InvoiceAttributeItem)
 def update_warehouse(sender, instance, **kwargs):

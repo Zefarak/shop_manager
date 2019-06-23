@@ -14,8 +14,8 @@ from .invoice_views import (WarehouseOrderList, create_warehouse_order_view, Upd
                             delete_warehouse_order_item_view,
                             VendorListView, VendorCreateView, VendorUpdateView, delete_vendor,
                             CreateInvoiceImageView, UpdateInvoiceImageView, delete_invoice_image_view,
-                            PaycheckCreateView, PayCheckListView, PaycheckDetailView, delete_paycheck,
-                            create_payment_from_order_view, create_order_item_with_attribute_view,
+
+                            create_order_item_with_attribute_view,
                             create_copy_invoice_view, delete_warehouse_order_view
                             )
 
@@ -28,6 +28,9 @@ from .ajax_calls import (ajax_paycheck_actions, ajax_calculate_value, ajax_searc
                          ajax_add_attr_to_invoice_view, ajax_edit_invoice_attr_view )
 
 from .report_views import report_generic_expenses_view, report_billing_view
+from .invoice_payments_views import (PayCheckListView, PaycheckDetailView, PaycheckCreateView, delete_paycheck,
+                                     InvoicePaymentListView, InvoicePaymentCreateView, InvoicePaymentUpdateView
+                                     )
 from .pdf_views import download_cv_pdf
 from .autocomplete_widgets import EmployeeAutocomplete
 
@@ -46,7 +49,7 @@ urlpatterns = [
     path('invoice/order-item/create/<int:pk>/<int:dk>/', CreateOrderItem.as_view(), name='create-order-item'),
     path('invoices/order-item/update/<int:pk>/', UpdateInvoiceOrderItem.as_view(), name='order-item-update'),
     path('invoices/order-item/delete/<int:pk>/', delete_warehouse_order_item_view, name='order-item-delete'),
-    path('invoices/create-payment-order/<int:pk>/', create_payment_from_order_view, name='create-payment-order'),
+    
     path('invoice/<int:pk>/', create_copy_invoice_view, name='invoice_create_copy'),
 
     # ajax urls
@@ -75,6 +78,10 @@ urlpatterns = [
     path('paychecks/<int:pk>/', PaycheckDetailView.as_view(), name='paycheck_detail'),
     path('paychecks/create/', PaycheckCreateView.as_view(), name='paycheck_create'),
     path('paychecks/delete/<int:pk>/', delete_paycheck, name='paycheck_delete'),
+
+    path('paychecks/invoice/list/<int:pk>/', InvoicePaymentListView.as_view(), name='invoice_paycheck_list'),
+    path('paycheck/invoice/create/<int:pk>/', InvoicePaymentCreateView.as_view(), name='invoice_paycheck_create'),
+    path('paycheck/invoice/edit/<int:pk>/', InvoicePaymentUpdateView.as_view(), name='invoice_paycheck_update'),
 
 
     path('vendors/', VendorListView.as_view(), name='vendors'),
