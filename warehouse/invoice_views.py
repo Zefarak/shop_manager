@@ -11,7 +11,7 @@ from catalogue.product_details import Vendor
 from catalogue.forms import VendorForm
 from site_settings.constants import CURRENCY
 from .forms import CreateInvoiceForm, UpdateInvoiceForm, CreateOrderItemForm, InvoiceImageForm, CopyInvoiceForm, InvoiceAttributeCreateOrEditForm
-from .tables import InvoiceImageTable, InvoiceTable, VendorTable, ProductAddTable
+from .tables import InvoiceImageTable, InvoiceTable, VendorTable, ProductAddTable, VendorOrderTable, VendorProductReportTable, VendorWarehouseMovementTable
 
 from django_tables2 import RequestConfig
 
@@ -269,8 +269,17 @@ def delete_vendor(request, pk):
 @staff_member_required
 def vendor_report_view(request, pk):
     vendor = get_object_or_404(Vendor, id=pk)
-
-    return render(request, 'warehouse/vendor_report_page.html')
+    invoices = vendor.vendor_orders.all()
+    products = vendor.product_set.all()
+    warehouse_movements = InvoiceOrderItem.objects.filter(product__in=products)
+    products_table = VendorProductReportTable(products)
+    invoices_table = VendorOrderTable(invoices)
+    warehouse_movements_table = VendorWarehouseMovementTable(warehouse_movements)
+    RequestConfig(request, paginate={'per_page': 10}).configure(invoices_table)
+    RequestConfig(request, paginate={'per_page': 10}).configure(products_table)
+    RequestConfig(request, paginate={'per_page': 10}).configure(warehouse_movements_table)
+    context = locals()
+    return render(request, 'warehouse/vendor_report_page.html', context)
 
 
 @method_decorator(staff_member_required, name='dispatch')

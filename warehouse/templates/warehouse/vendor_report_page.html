@@ -1,4 +1,4 @@
-{% extends 'index.html' %} 
+{% extends 'index.html' %} {% load render_table from django_tables2 %}
 
 
 {% block content %}
@@ -8,6 +8,44 @@
                 <div class="page-wrapper">
                     <div class="page-body">
                         <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">{{ vendor }}  <a href="{{ back_url }}" class="btn btn-round btn-danger float-lg-right">Επιστροφή</a></div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Τιμολόγια
+                                    </div>
+                                    <div class="card-body">
+                                        {% render_table invoices_table %}
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Προϊόντα
+                                    </div>
+                                    <div class="card-body">
+                                        {% render_table products_table %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Κίνήσεις Αποθήκης
+                                    </div>
+                                    <div class="card-body">
+                                        {% render_table warehouse_movements_table %}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

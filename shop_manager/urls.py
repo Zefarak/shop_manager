@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-
+from frontend.demo_views import RestaurantHomepageView
 
 
 urlpatterns = [
@@ -18,6 +18,9 @@ urlpatterns = [
 
     path('api/', include('shop_manager.api_urls')),
 
+
+    #  demo urls
+    path('demo/', RestaurantHomepageView.as_view(), name='demo_homeage')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

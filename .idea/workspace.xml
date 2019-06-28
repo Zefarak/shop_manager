@@ -5,20 +5,292 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43fbf8ee-1fb1-49d6-a9d7-9f55d2e65bb5" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/warehouse/invoice_payments_views.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/demo_views.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/css/font-awesome.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/css/main.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/css/normalize.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/fonts/FontAwesome.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/fonts/fontawesome-webfont.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/fonts/fontawesome-webfont.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/fonts/fontawesome-webfont.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/fonts/fontawesome-webfont.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/img/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/js/custom.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/js/jquery-1.11.0.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/js/jquery.nav.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shAutoloader.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushAS3.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushAppleScript.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushBash.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushCSharp.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushColdFusion.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushCpp.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushCss.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushDelphi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushDiff.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushErlang.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushGroovy.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushJScript.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushJava.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushJavaFX.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushPerl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushPhp.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushPlain.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushPowerShell.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushPython.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushRuby.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushSass.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushScala.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushSql.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushVb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shBrushXml.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shCore.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/scripts/shLegacy.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shCore.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shCoreDefault.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shCoreDjango.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shCoreEclipse.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shCoreEmacs.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shCoreFadeToGrey.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shCoreMDUltra.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shCoreMidnight.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shCoreRDark.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shThemeDefault.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shThemeDjango.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shThemeEclipse.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shThemeEmacs.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shThemeFadeToGrey.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shThemeMDUltra.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shThemeMidnight.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/Marco - Doc/syntax-highlighter/styles/shThemeRDark.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/animate.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/bootstrap.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/bootstrap.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/bootstrap/bootstrap-grid.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/bootstrap/bootstrap-reboot.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/bootstrap/bootstrap.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/font-awesome.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/jquery-ui.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/linearicons.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/magnific-popup.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/main.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/main.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/nice-select.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/css/owl.carousel.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/FontAwesome.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/Linearicons-Free.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/Linearicons-Free.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/Linearicons-Free.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/Linearicons-Free.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/Linearicons-Free.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/fontawesome-webfont.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/fontawesome-webfont.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/fontawesome-webfont.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/fontawesome-webfont.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/fonts/fontawesome-webfont.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/about-img.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/about/s1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/about/s2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/about/s3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/b1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/b2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/b3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/b4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/ads-banner.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/blog-home-banner.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/c1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/c2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/c3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/c4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/c5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/c6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/cat-widget1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/cat-widget2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/cat-widget3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/feature-img1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/feature-img2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/feature-img3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/feature-img4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/feature-img5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/next.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/post-img1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/post-img2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/pp1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/pp2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/pp3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/pp4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/prev.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/s-img.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/blog/user-info.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/a.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/a2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/d.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/disabled-check.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/disabled-radio.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/f1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/f2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/f3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/f4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/f5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/f6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/f7.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/f8.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/g1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/g2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/g3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/g4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/g5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/g6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/g7.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/g8.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/primary-check.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/primary-radio.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/success-check.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/success-radio.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/user1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/elements/user2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/g1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/g2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/g3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/g4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/g5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/g6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/hero-bg.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/reservation-bg.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/review-bg.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/top-banner.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/img/user.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/easing.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/hoverIntent.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/isotope.pkgd.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/jquery-ui.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/jquery.ajaxchimp.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/jquery.magnific-popup.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/jquery.nice-select.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/mail-script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/main.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/owl.carousel.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/popper.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/superfish.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/vendor/bootstrap.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/js/vendor/jquery-2.2.4.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_alert.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_badge.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_breadcrumb.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_button-group.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_buttons.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_card.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_carousel.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_close.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_code.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_custom-forms.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_dropdown.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_forms.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_functions.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_grid.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_images.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_input-group.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_jumbotron.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_list-group.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_media.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_mixins.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_modal.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_nav.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_navbar.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_pagination.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_popover.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_print.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_progress.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_reboot.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_root.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_tables.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_tooltip.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_transitions.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_type.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_utilities.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/_variables.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/bootstrap-grid.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/bootstrap-reboot.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/bootstrap.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_alert.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_background-variant.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_badge.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_border-radius.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_box-shadow.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_breakpoints.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_buttons.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_caret.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_clearfix.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_float.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_forms.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_gradients.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_grid-framework.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_grid.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_hover.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_image.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_list-group.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_lists.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_nav-divider.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_navbar-align.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_pagination.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_reset-text.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_resize.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_screen-reader.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_size.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_table-row.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_text-emphasis.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_text-hide.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_text-truncate.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_transition.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/mixins/_visibility.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_align.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_background.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_borders.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_clearfix.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_display.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_embed.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_flex.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_float.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_position.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_screenreaders.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_sizing.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_spacing.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_text.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/bootstrap/utilities/_visibility.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/main.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_about.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_blog.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_contact.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_elements.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_flexbox.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_footer.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_header.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_home.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_mixins.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_reset.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/static/demo/scss/theme/_variables.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/templates/demo/about.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/templates/demo/blog-home.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/templates/demo/blog-single.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/templates/demo/contact.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/templates/demo/elements.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/templates/demo/gallery.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/templates/demo/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/templates/demo/mail.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/templates/demo/menu.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalogue/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/catalogue/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catalogue/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/catalogue/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/catalogue/product_details.py" beforeDir="false" afterPath="$PROJECT_DIR$/catalogue/product_details.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/tables.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/tables.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db_test.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db_test.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ajax_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/ajax_calls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_manager/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop_manager/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/invoice_payments_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/invoice_payments_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/invoice_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/invoice_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/tables.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/tables.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/templates/warehouse/ajax/order_container.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/templates/warehouse/ajax/order_container.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/templates/warehouse/order_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/templates/warehouse/order_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/templates/warehouse/vendor_report_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/templates/warehouse/vendor_report_page.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/urls.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,86 +318,58 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="invoice_payments_views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/warehouse/invoice_payments_views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="463">
-              <caret line="84" lean-forward="true" selection-start-line="84" selection-end-line="84" />
-              <folding>
-                <element signature="e#0#78#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/warehouse/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="548">
-              <caret line="259" selection-start-line="259" selection-end-line="260" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/warehouse/forms.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="446">
-              <caret line="165" column="105" selection-start-line="165" selection-start-column="105" selection-end-line="165" selection-end-column="105" />
-              <folding>
-                <element signature="e#0#24#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tables.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/warehouse/tables.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="231" column="48" selection-start-line="231" selection-start-column="48" selection-end-line="231" selection-end-column="48" />
-              <folding>
-                <element signature="e#0#31#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="invoice_views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/warehouse/invoice_views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="157">
-              <caret line="271" selection-start-line="271" selection-end-line="271" />
-              <folding>
-                <element signature="e#0#73#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="order_detail.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/warehouse/templates/warehouse/order_detail.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="32" column="76" selection-start-line="32" selection-start-column="61" selection-end-line="32" selection-end-column="76" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/warehouse/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="83" column="109" selection-start-line="83" selection-start-column="109" selection-end-line="83" selection-end-column="109" />
-              <folding>
-                <element signature="e#0#28#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="invoice_views.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/warehouse/invoice_views.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="211">
+                  <caret line="279" column="90" lean-forward="true" selection-start-line="279" selection-start-column="90" selection-end-line="279" selection-end-column="90" />
+                  <folding>
+                    <element signature="e#0#73#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="tables.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/warehouse/tables.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="483">
+                  <caret line="291" column="32" lean-forward="true" selection-start-line="291" selection-start-column="32" selection-end-line="291" selection-end-column="32" />
+                  <folding>
+                    <element signature="e#0#31#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="vendor_report_page.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/warehouse/templates/warehouse/vendor_report_page.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="310">
+                  <caret line="31" column="59" lean-forward="true" selection-start-line="31" selection-start-column="59" selection-end-line="31" selection-end-column="59" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/warehouse/models.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="68">
+                  <caret line="187" column="39" selection-start-line="187" selection-start-column="39" selection-end-line="187" selection-end-column="39" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -137,7 +381,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>class=&quot;badge bg-c-green&quot;</find>
       <find>copy</find>
       <find>catego</find>
       <find>include</find>
@@ -167,6 +410,7 @@
       <find>pop</find>
       <find>product_char_delete_view</find>
       <find>VendorPaycheck</find>
+      <find>vendorTa</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -175,10 +419,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/frontend/templates/frontend/include/navbar.html" />
-        <option value="$PROJECT_DIR$/dashboard/templates/dashboard/list_page.html" />
-        <option value="$PROJECT_DIR$/dashboard/templates/dashboard/ajax_calls/product_result.html" />
-        <option value="$PROJECT_DIR$/site_settings/templates/site_settings/list_view.html" />
         <option value="$PROJECT_DIR$/dashboard/templates/include/navbar.html" />
         <option value="$PROJECT_DIR$/site_settings/models.py" />
         <option value="$PROJECT_DIR$/site_settings/views.py" />
@@ -214,18 +454,22 @@
         <option value="$PROJECT_DIR$/dashboard/templates/dashboard/ajax_calls/result_container.html" />
         <option value="$PROJECT_DIR$/dashboard/urls.py" />
         <option value="$PROJECT_DIR$/dashboard/views.py" />
-        <option value="$PROJECT_DIR$/catalogue/product_details.py" />
         <option value="$PROJECT_DIR$/catalogue/admin.py" />
         <option value="$PROJECT_DIR$/catalogue/forms.py" />
         <option value="$PROJECT_DIR$/dashboard/tables.py" />
         <option value="$PROJECT_DIR$/warehouse/ajax_calls.py" />
-        <option value="$PROJECT_DIR$/warehouse/templates/warehouse/order_detail.html" />
         <option value="$PROJECT_DIR$/warehouse/forms.py" />
-        <option value="$PROJECT_DIR$/warehouse/invoice_views.py" />
+        <option value="$PROJECT_DIR$/frontend/demo_views.py" />
+        <option value="$PROJECT_DIR$/shop_manager/urls.py" />
+        <option value="$PROJECT_DIR$/frontend/templates/demo/index.html" />
         <option value="$PROJECT_DIR$/warehouse/invoice_payments_views.py" />
+        <option value="$PROJECT_DIR$/warehouse/templates/warehouse/order_detail.html" />
         <option value="$PROJECT_DIR$/warehouse/urls.py" />
-        <option value="$PROJECT_DIR$/warehouse/tables.py" />
+        <option value="$PROJECT_DIR$/catalogue/product_details.py" />
+        <option value="$PROJECT_DIR$/warehouse/invoice_views.py" />
+        <option value="$PROJECT_DIR$/warehouse/templates/warehouse/vendor_report_page.html" />
         <option value="$PROJECT_DIR$/warehouse/models.py" />
+        <option value="$PROJECT_DIR$/warehouse/tables.py" />
       </list>
     </option>
   </component>
@@ -241,10 +485,10 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="387" />
-    <option name="y" value="96" />
-    <option name="width" value="1382" />
-    <option name="height" value="744" />
+    <option name="x" value="62" />
+    <option name="y" value="308" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -252,6 +496,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -268,7 +513,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -281,13 +525,14 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\frontend\templates\demo" />
       <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\dashboard\static\my_static" />
       <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\cart\templates\cart\include" />
       <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\dashboard\templates\dashboard" />
       <recent name="C:\Users\Zefarak\Desktop\shop_manager\point_of_sale\templates\point_of_sale\ajax" />
-      <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\site_settings\templates\filters" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\frontend\static\demo" />
       <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\warehouse" />
       <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\dashboard\templates\dashboard" />
       <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\dashboard" />
@@ -344,6 +589,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="9" />
       <window_info anchor="bottom" id="Event Log" order="19" sideWeight="0.50989586" side_tool="true" weight="0.36131775" />
@@ -351,8 +597,8 @@
       <window_info anchor="bottom" id="Version Control" order="16" />
       <window_info anchor="bottom" id="Python Console" order="21" />
       <window_info anchor="bottom" id="Run" order="3" />
-      <window_info active="true" anchor="bottom" x="696" y="188" width="628" height="474" id="Terminal" order="20" sideWeight="0.49010417" visible="true" weight="0.24017003" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1328125" />
+      <window_info anchor="bottom" x="696" y="188" width="628" height="474" id="Terminal" order="20" sideWeight="0.49010417" visible="true" weight="0.24017003" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1328125" />
       <window_info anchor="bottom" id="Docker" order="15" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="6" weight="0.3296875" />
       <window_info anchor="right" id="SciView" order="5" />
@@ -371,8 +617,7 @@
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="manage.py@shop_manager" order="9" sideWeight="0.49114582" visible="true" weight="0.34856537" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1328125" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -380,17 +625,18 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Python Console" order="13" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" id="Database" order="4" weight="0.3296875" />
       <window_info anchor="bottom" x="696" y="188" width="628" height="474" id="Terminal" order="12" sideWeight="0.49010417" visible="true" weight="0.24017003" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50989586" side_tool="true" weight="0.36131775" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="SciView" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="right" id="Database" order="4" weight="0.3296875" />
-      <window_info anchor="bottom" id="Python Console" order="13" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -475,6 +721,11 @@
           <url>file://$PROJECT_DIR$/warehouse/tables.py</url>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/warehouse/invoice_views.py</url>
+          <line>55</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="django-line">
           <url>file://$PROJECT_DIR$/point_of_sale/templates/point_of_sale/costumer-list-view.html</url>
           <line>75</line>
@@ -486,55 +737,10 @@
           <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="19" />
+      <option name="time" value="20" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/point_of_sale/templates/point_of_sale/ajax/attribute_container.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="19" column="102" selection-start-line="19" selection-start-column="102" selection-end-line="19" selection-end-column="102" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="9" lean-forward="true" selection-start-column="9" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/point_of_sale/templates/point_of_sale/ajax/products_container.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="45" column="72" selection-start-line="45" selection-start-column="55" selection-end-line="45" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/point_of_sale/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="40" selection-start-line="6" selection-start-column="25" selection-end-line="6" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/point_of_sale/ajax_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="63" column="27" lean-forward="true" selection-start-line="63" selection-start-column="27" selection-end-line="63" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#71#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/point_of_sale/templates/point_of_sale/add_to_order_with_attr.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="73" column="4" selection-start-line="73" selection-start-column="4" selection-end-line="88" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/point_of_sale/templates/point_of_sale/order-detail.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-102" />
@@ -744,13 +950,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/catalogue/product_details.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="514">
-          <caret line="166" selection-start-line="166" selection-end-line="166" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/catalogue/admin.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -784,7 +983,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/warehouse/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
+        <state relative-caret-position="2652">
           <caret line="165" column="105" selection-start-line="165" selection-start-column="105" selection-end-line="165" selection-end-column="105" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
@@ -792,57 +991,112 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/warehouse/invoice_views.py">
+    <entry file="file://$PROJECT_DIR$/shop_manager/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="271" selection-start-line="271" selection-end-line="271" />
+        <state relative-caret-position="391">
+          <caret line="27" column="68" selection-start-line="27" selection-start-column="68" selection-end-line="27" selection-end-column="68" />
           <folding>
-            <element signature="e#0#73#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/frontend/templates/demo/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="26" column="80" selection-start-line="26" selection-start-column="80" selection-end-line="26" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/frontend/demo_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="37" selection-start-line="4" selection-start-column="37" selection-end-line="4" selection-end-column="37" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/warehouse/templates/warehouse/order_detail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="32" column="76" selection-start-line="32" selection-start-column="61" selection-end-line="32" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/warehouse/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="83" column="109" selection-start-line="83" selection-start-column="109" selection-end-line="83" selection-end-column="109" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/warehouse/tables.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="231" column="48" selection-start-line="231" selection-start-column="48" selection-end-line="231" selection-end-column="48" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="255">
+          <caret line="15" column="154" selection-start-line="15" selection-start-column="154" selection-end-line="15" selection-end-column="154" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/warehouse/invoice_payments_views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
-          <caret line="84" lean-forward="true" selection-start-line="84" selection-end-line="84" />
+        <state relative-caret-position="503">
+          <caret line="114" column="89" selection-start-line="114" selection-start-column="89" selection-end-line="114" selection-end-column="89" />
           <folding>
             <element signature="e#0#78#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dashboard/templates/dashboard/list_page.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="27" lean-forward="true" selection-start-column="27" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/warehouse/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="69" column="72" lean-forward="true" selection-start-line="69" selection-start-column="72" selection-end-line="69" selection-end-column="72" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/catalogue/product_details.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="95" lean-forward="true" selection-start-line="95" selection-end-line="95" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/catalogue/tables.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="38" lean-forward="true" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/warehouse/templates/warehouse/vendor_report_page.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="310">
+          <caret line="31" column="59" lean-forward="true" selection-start-line="31" selection-start-column="59" selection-end-line="31" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/warehouse/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="548">
-          <caret line="259" selection-start-line="259" selection-end-line="260" />
+        <state relative-caret-position="68">
+          <caret line="187" column="39" selection-start-line="187" selection-start-column="39" selection-end-line="187" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/warehouse/tables.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="483">
+          <caret line="291" column="32" lean-forward="true" selection-start-line="291" selection-start-column="32" selection-end-line="291" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/warehouse/invoice_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="279" column="90" lean-forward="true" selection-start-line="279" selection-start-column="90" selection-end-line="279" selection-end-column="90" />
+          <folding>
+            <element signature="e#0#73#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

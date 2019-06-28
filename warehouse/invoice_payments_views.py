@@ -95,6 +95,7 @@ class InvoicePaymentUpdateView(UpdateView):
         context.update(locals())
         return context
 
+
 @method_decorator(staff_member_required, name='dispatch')
 class PayCheckListView(ListView):
     model = VendorPaycheck
@@ -111,7 +112,7 @@ class PayCheckListView(ListView):
         page_title, back_url, create_url = 'Επιταγές', reverse('warehouse:dashboard'), reverse('warehouse:paycheck_create')
         queryset_table = VendorPaycheckTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
-        search_filter, vendor_filter, paid_filter = [True]*3
+        search_filter, vendor_filter, paid_filter, date_filter, payment_filter = [True]*5
         vendors = Vendor.objects.filter(active=True)
         context.update(locals())
         return context

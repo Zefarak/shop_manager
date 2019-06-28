@@ -14,7 +14,7 @@ from .invoice_views import (WarehouseOrderList, create_warehouse_order_view, Upd
                             delete_warehouse_order_item_view,
                             VendorListView, VendorCreateView, VendorUpdateView, delete_vendor,
                             CreateInvoiceImageView, UpdateInvoiceImageView, delete_invoice_image_view,
-
+                            vendor_report_view,
                             create_order_item_with_attribute_view,
                             create_copy_invoice_view, delete_warehouse_order_view
                             )
@@ -68,6 +68,7 @@ urlpatterns = [
     #  reports
     path('report/generic-expenses/', report_generic_expenses_view, name='report_generic_expenses'),
     path('report/billing/', report_billing_view, name='report_billing'),
+    path('report/vendor/<int:pk>/', vendor_report_view, name='vendor_report'),
 
 
     path('invoice/order-image/create/<int:pk>/', CreateInvoiceImageView.as_view(), name='create-order-image'),

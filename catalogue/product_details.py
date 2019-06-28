@@ -60,6 +60,9 @@ class Vendor(models.Model):
     def get_edit_url(self):
         return reverse('warehouse:vendor_detail', kwargs={'pk': self.id})
 
+    def get_report_url(self):
+        return reverse('warehouse:vendor_report', kwargs={'pk': self.id})
+
     def get_phones(self):
         cellphone = self.phone if self.phone else 'No Data'
         phone = self.phone1 if self.phone1 else 'No Data'
@@ -90,9 +93,6 @@ class Vendor(models.Model):
 
     def __str__(self):
         return self.title
-
-    def get_report_url(self):
-        return reverse('reports:vendor_detail', kwargs={'pk': self.id})
 
     def template_tag_remaining_deposit(self):
         return ("{0:.2f}".format(round(self.remaining_deposit, 2))) + ' %s' % (CURRENCY)

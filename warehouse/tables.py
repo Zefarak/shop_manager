@@ -55,7 +55,7 @@ class VendorTable(tables.Table):
     action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></i></a>",
                                    orderable=False,
                                    )
-    report = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-success btn-round'>Καρτέλα</a>",
+    report = tables.TemplateColumn("<a href='{{ record.get_report_url }}' class='btn btn-success btn-round'>Καρτέλα</a>",
                                    orderable=False,
                                    )
     tag_balance = tables.Column(orderable=False, verbose_name='Υπόλοιπο')
@@ -244,8 +244,54 @@ class VendorPaycheckTable(tables.Table):
         "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
         orderable=False,
     )
+    tag_value = tables.Column(verbose_name='Αξία')
 
     class Meta:
         model = VendorPaycheck
         template_name = 'django_tables2/bootstrap.html'
-        fields = ['date_expired', 'title', 'payment_type', 'tag_final_value', 'is_paid']
+        fields = ['date_expired', 'title', 'payment_method', 'vendor', 'tag_value', 'is_paid']
+
+
+class VendorOrderTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+
+    class Meta:
+        model = Invoice
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['date_expired', 'title', 'order_type', 'tag_value', 'tag_final_value']
+
+
+class VendorProductReportTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+
+    class Meta:
+        model = Product
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['title', 'category', 'qty', 'tag_final_price', 'tag_price_buy']
+
+
+class VendorWarehouseMovementTable(tables.Table):
+    action = tables.TemplateColumn(
+        "<a href='{{ record.get_edit_url }}' class='btn btn-primary btn-round'><i class='fa fa-edit'></a>",
+        orderable=False,
+    )
+    tag_order_type = tables.Column(verbose_name='Είδος Παραστατικού')
+    tag_clean_value = tables.Column(verbose_name='Καθαρή Αξία')
+    tag_discount = tables.Column(verbose_name='Έκπτωση')
+    tag_total_clean_value = tables.Column(verbose_name='Συνολική Καθαρή Αξία')
+    tag_total_taxes = tables.Column(verbose_name='Συνολικοί Φόροι')
+    tag_final_value = tables.Column(verbose_name='Αξία Μονάδας')
+
+    class Meta:
+        model = InvoiceOrderItem
+        template_name = 'django_tables2/bootstrap.html'
+        fields = ['sku', 'product', 'order', 'tag_order_type', 'qty',
+                  'tag_clean_value', 'tag_discount', 'tag_final_value',
+                  'tag_total_clean_value', 'tag_total_taxes'
+                  ]

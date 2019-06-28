@@ -59,7 +59,6 @@ class Invoice(DefaultOrderModel):
         paid_value = qs.aggregate(Sum('value'))['value__sum'] if qs.exists() else 0.00
         return paid_value
 
-
     def tag_discount(self):
         return f'{self.discount} %'
 
@@ -185,6 +184,12 @@ class InvoiceOrderItem(DefaultOrderItemModel):
             product.qty += qty
             product.save()
 
+    def tag_clean_value(self):
+        return f'{self.value} {CURRENCY}'
+
+    def tag_order_type(self):
+        return self.order.get_order_type_display()
+
     def tag_discount(self):
         return f'{self.discount_value} %'
 
@@ -253,6 +258,8 @@ class VendorPaycheck(models.Model):
     def save(self, *args, **kwargs):
         if self.is_paid:
             self.paid_value = self.value
+        if self.order_related:
+            self.vendor = self.order_related.vendor
         super().save(*args, **kwargs)
         self.order_related.save() if self.order_related else self.vendor.update_input_value()
 
