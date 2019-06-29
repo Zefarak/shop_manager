@@ -5,12 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43fbf8ee-1fb1-49d6-a9d7-9f55d2e65bb5" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/voucher/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/voucher/signals.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/voucher/tables.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/voucher/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shop_manager.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shop_manager.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_test.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db_test.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/point_of_sale/templates/point_of_sale/include/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/point_of_sale/templates/point_of_sale/include/navbar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop_manager/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop_manager/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_manager/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop_manager/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voucher/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/voucher/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voucher/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/voucher/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voucher/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/voucher/apps.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/voucher/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/voucher/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/voucher/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/voucher/views.py" afterDir="false" />
     </list>
@@ -40,41 +49,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="navbar.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/point_of_sale/templates/point_of_sale/include/navbar.html">
+      <file leaf-file-name="signals.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/voucher/signals.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1275">
-              <caret line="75" column="55" selection-start-line="75" selection-start-column="55" selection-end-line="75" selection-end-column="55" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/voucher/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" selection-start-line="4" selection-end-line="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/voucher/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="107" column="32" selection-start-line="107" selection-start-column="32" selection-end-line="107" selection-end-column="32" />
+            <state relative-caret-position="187">
+              <caret line="11" column="71" selection-start-line="11" selection-start-column="71" selection-end-line="11" selection-end-column="71" />
               <folding>
-                <element signature="e#0#28#0" expanded="true" />
+                <element signature="e#0#46#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/shop_manager/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="51" column="14" selection-start-line="51" selection-start-column="14" selection-end-line="51" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -84,8 +66,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -129,13 +111,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/site_settings/tables.py" />
-        <option value="$PROJECT_DIR$/dashboard/templates/dashboard/product_manager_view.html" />
-        <option value="$PROJECT_DIR$/dashboard/templates/dashboard/ajax_calls/images.html" />
-        <option value="$PROJECT_DIR$/point_of_sale/templates/point_of_sale/index.html" />
-        <option value="$PROJECT_DIR$/dashboard/templates/dashboard/ajax_calls/result_container_attr.html" />
-        <option value="$PROJECT_DIR$/dashboard/templates/dashboard/ProductAttriClassManager.html" />
-        <option value="$PROJECT_DIR$/point_of_sale/forms.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/point_of_sale/templates/point_of_sale/add_to_order_with_attr.html" />
         <option value="$PROJECT_DIR$/point_of_sale/urls.py" />
@@ -170,16 +145,23 @@
         <option value="$PROJECT_DIR$/warehouse/urls.py" />
         <option value="$PROJECT_DIR$/warehouse/tables.py" />
         <option value="$PROJECT_DIR$/frontend/coffeshop_views.py" />
-        <option value="$PROJECT_DIR$/shop_manager/urls.py" />
         <option value="$PROJECT_DIR$/frontend/urls.py" />
         <option value="$PROJECT_DIR$/frontend/templates/frontend/coffee/homepage.html" />
         <option value="$PROJECT_DIR$/frontend/templates/frontend/coffee/navbar.html" />
         <option value="$PROJECT_DIR$/warehouse/invoice_payments_views.py" />
         <option value="$PROJECT_DIR$/warehouse/models.py" />
-        <option value="$PROJECT_DIR$/point_of_sale/templates/point_of_sale/include/navbar.html" />
-        <option value="$PROJECT_DIR$/voucher/views.py" />
         <option value="$PROJECT_DIR$/shop_manager/settings.py" />
+        <option value="$PROJECT_DIR$/voucher/tables.py" />
+        <option value="$PROJECT_DIR$/voucher/urls.py" />
+        <option value="$PROJECT_DIR$/shop_manager/urls.py" />
+        <option value="$PROJECT_DIR$/point_of_sale/templates/point_of_sale/include/navbar.html" />
+        <option value="$PROJECT_DIR$/voucher/forms.py" />
+        <option value="$PROJECT_DIR$/voucher/apps.py" />
+        <option value="$PROJECT_DIR$/voucher/__init__.py" />
+        <option value="$PROJECT_DIR$/voucher/views.py" />
+        <option value="$PROJECT_DIR$/voucher/admin.py" />
         <option value="$PROJECT_DIR$/voucher/models.py" />
+        <option value="$PROJECT_DIR$/voucher/signals.py" />
       </list>
     </option>
   </component>
@@ -215,7 +197,7 @@
             <path>
               <item name="shop_manager" type="b2602c69:ProjectViewProjectNode" />
               <item name="shop_manager" type="462c0819:PsiDirectoryNode" />
-              <item name="shop_manager" type="462c0819:PsiDirectoryNode" />
+              <item name="voucher" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -233,17 +215,17 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\warehouse" />
+      <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\dashboard\templates\dashboard" />
+      <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\dashboard" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Zefarak\Desktop\shop_manager\frontend\templates\frontend\coffee" />
       <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\dashboard\static\my_static" />
       <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\cart\templates\cart\include" />
       <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\dashboard\templates\dashboard" />
       <recent name="C:\Users\Zefarak\Desktop\shop_manager\point_of_sale\templates\point_of_sale\ajax" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\warehouse" />
-      <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\dashboard\templates\dashboard" />
-      <recent name="C:\Users\Zefarak\Desktop\projects\shop_manager\dashboard" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -296,10 +278,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="9" />
-      <window_info anchor="bottom" id="manage.py@shop_manager" order="17" sideWeight="0.49114582" weight="0.3480315" />
       <window_info anchor="bottom" id="Event Log" order="19" sideWeight="0.50989586" side_tool="true" weight="0.36131775" />
       <window_info anchor="bottom" id="Database Changes" order="18" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="16" />
@@ -315,6 +296,7 @@
       <window_info anchor="bottom" id="Debug" order="5" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
+      <window_info anchor="bottom" id="manage.py@shop_manager" order="17" sideWeight="0.49114582" weight="0.3480315" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -325,25 +307,25 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="manage.py@shop_manager" order="9" sideWeight="0.49114582" visible="true" weight="0.34856537" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1328125" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Python Console" order="13" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" id="Database" order="4" weight="0.3296875" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" x="696" y="188" width="628" height="474" id="Terminal" order="12" sideWeight="0.49010417" visible="true" weight="0.24017003" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50989586" side_tool="true" weight="0.36131775" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="SciView" order="3" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Python Console" order="13" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info id="Favorites" order="2" side_tool="true" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -443,52 +425,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/dashboard/templates/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="57" column="55" selection-start-line="57" selection-start-column="55" selection-end-line="57" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/warehouse/templates/warehouse/homepage.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="11" column="108" selection-start-line="11" selection-start-column="108" selection-end-line="11" selection-end-column="108" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/warehouse/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-714">
-          <folding>
-            <element signature="e#0#86#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dashboard/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="34" selection-start-line="34" selection-end-line="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/catalogue/urls.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dashboard/source/dashboard_files/index.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/warehouse/templates/warehouse/ajax/report_page.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/warehouse/templates/warehouse/ajax/invoice_result_data.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="36" column="10" selection-start-line="36" selection-start-column="10" selection-end-line="36" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/warehouse/admin.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -574,13 +510,6 @@
         <state relative-caret-position="-812" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dashboard/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-34">
-          <caret line="335" column="19" selection-start-line="335" selection-start-column="19" selection-end-line="335" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/warehouse/payroll_views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -613,13 +542,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="463">
           <caret line="144" selection-start-line="144" selection-end-line="144" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dashboard/tables.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1730">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
         </state>
       </provider>
     </entry>
@@ -677,13 +599,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/frontend/templates/frontend/coffee/homepage.html" />
     <entry file="file://$PROJECT_DIR$/frontend/templates/frontend/coffee/navbar.html" />
-    <entry file="file://$PROJECT_DIR$/shop_manager/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="5" column="55" selection-start-line="5" selection-start-column="55" selection-end-line="5" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/frontend/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -733,33 +648,131 @@
         <state relative-caret-position="-2958" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/point_of_sale/templates/point_of_sale/include/navbar.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1275">
-          <caret line="75" column="55" selection-start-line="75" selection-start-column="55" selection-end-line="75" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/voucher/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shop_manager/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
+        <state relative-caret-position="867">
           <caret line="51" column="14" selection-start-line="51" selection-start-column="14" selection-end-line="51" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashboard/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="101">
+          <caret line="6" selection-start-line="6" selection-end-line="7" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dashboard/tables.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="48" column="55" lean-forward="true" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="55" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/voucher/tables.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="55" lean-forward="true" selection-start-line="13" selection-start-column="55" selection-end-line="13" selection-end-column="55" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/point_of_sale/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="11" selection-start-line="15" selection-end-line="15" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/voucher/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="66" selection-start-line="7" selection-start-column="66" selection-end-line="7" selection-end-column="66" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/voucher/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="25" lean-forward="true" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/voucher/apps.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/voucher/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="48" selection-start-column="48" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop_manager/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="18" column="53" selection-start-line="18" selection-start-column="53" selection-end-line="18" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/point_of_sale/templates/point_of_sale/include/navbar.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="245">
+          <caret line="75" column="55" selection-start-line="75" selection-start-column="55" selection-end-line="75" selection-end-column="55" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/voucher/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="107" column="32" selection-start-line="107" selection-start-column="32" selection-end-line="107" selection-end-column="32" />
+        <state relative-caret-position="1700">
+          <caret line="119" selection-start-line="119" selection-end-line="120" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/voucher/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
           <folding>
-            <element signature="e#0#28#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/voucher/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="765">
+          <caret line="45" selection-start-line="45" selection-end-line="45" />
+          <folding>
+            <element signature="e#0#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/voucher/signals.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="71" selection-start-line="11" selection-start-column="71" selection-end-line="11" selection-end-column="71" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
           </folding>
         </state>
       </provider>

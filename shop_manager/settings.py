@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'frontend',
     'accounts',
     'report',
+    'voucher',
 
     'mptt',
     'django_tables2',

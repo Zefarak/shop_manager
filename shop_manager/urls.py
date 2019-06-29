@@ -16,6 +16,8 @@ urlpatterns = [
     path('reports/', include('report.urls')),
     path('', include('accounts.urls')),
 
+    path('dashboard/vouchers/', include('voucher.urls')),
+
     path('api/', include('shop_manager.api_urls')),
 
 
