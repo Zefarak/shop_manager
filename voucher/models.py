@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.shortcuts import reverse
 
 from catalogue.models import Product, ProductClass, Category, Brand
 
@@ -25,13 +26,15 @@ class Voucher(models.Model):
     num_orders = models.PositiveIntegerField(default=0)
     total_discount = models.DecimalField(decimal_places=2, max_digits=12, default=0.00)
 
-
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
         self.code = self.code.upper()
         super().save(*args, **kwargs)
+
+    def get_edit_url(self):
+        return reverse('vouchers:voucher_detail', kwargs={'pk': self.id})
 
     def is_expired(self):
         now = timezone.now()
@@ -69,7 +72,7 @@ class Voucher(models.Model):
 
 
 class Benefit(models.Model):
-    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE)
+    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_benefit')
     PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = (
         "Percentage", "Absolute", "Multibuy", "Fixed price")
     SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
@@ -92,7 +95,7 @@ class Benefit(models.Model):
 
 
 class ProductRange(models.Model):
-    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE)
+    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_range')
     include_all_products = models.BooleanField(default=True)
     included_products = models.ManyToManyField(Product, related_name='included_products')
     excluded_products = models.ManyToManyField(Product, related_name='excluded_products')
@@ -102,7 +105,7 @@ class ProductRange(models.Model):
 
 
 class VoucherRules(models.Model):
-    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE)
+    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_rule')
     SITE, CATEGORY, BRAND, PRODUCTS, SHIPPING_DISCOOUNT = ("Site", "Category", "Brand", "Products", "Shipping Discount")
     TYPE_CHOICES = (
         (SITE, _("Site offer - available to all users and products")),
@@ -111,14 +114,12 @@ class VoucherRules(models.Model):
         (PRODUCTS, _("Products offer - Manual add Products")),
     )
     OPEN, SUSPENDED, CONSUMED = "Open", "Suspended", "Consumed"
-    name= models.CharField(unique=True, max_length=124)
     description = models.TextField(blank=True, help_text='Description for the costumers')
     offer_type = models.CharField(choices=TYPE_CHOICES, default=SITE, max_length=128)
     exclusive = models.BooleanField(default=True)
     status = models.CharField(_("Status"), max_length=64, default=OPEN)
     priority = models.IntegerField(default=0, db_index=True)
-    start_date = models.DateField(blank=True, null=True)
-    date_end = models.DateField(blank=True, null=True)
+
     max_global_applications = models.PositiveIntegerField(blank=True, null=True)
     max_user_applications = models.PositiveIntegerField(blank=True, null=True)
     max_basket_applications = models.PositiveIntegerField(blank=True, null=True)
