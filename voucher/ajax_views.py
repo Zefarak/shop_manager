@@ -1,15 +1,14 @@
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
-
+from django_tables2 import RequestConfig
 
 from catalogue.categories import Category
 from catalogue.product_details import Brand
 from catalogue.models import Product
-from .models import ProductRange
-from .tables import CategorySelectedDataTable, BrandSelectedDataTable, ProductSelectedDataTable
+from .models import ProductRange, Voucher
+from .tables import CategorySelectedDataTable, BrandSelectedDataTable, ProductSelectedDataTable, VoucherProductForSelectTable
 
 
 @staff_member_required
@@ -26,11 +25,12 @@ def ajax_add_category_to_voucher(request, pk, dk, action):
     voucher = product_range.voucher
     product_range.refresh_from_db()
     selected_table = CategorySelectedDataTable(product_range.included_categories.all())
+    RequestConfig(request).configure(selected_table)
     data['result'] = render_to_string(request=request,
                                       template_name='voucher/ajax/selected_data.html',
                                       context={
-                                          voucher: voucher,
-                                          selected_table: selected_table
+                                          'voucher': voucher,
+                                          'selected_table': selected_table
                                       })
     return JsonResponse(data)
 
@@ -78,3 +78,15 @@ def ajax_add_or_remove_products(request, pk, dk, action):
                                       }
                                       )
     return JsonResponse(data)
+
+
+@staff_member_required
+def ajax_search_products(request, pk):
+    q = request.GET.get('q', None)
+    voucher = get_object_or_404(Voucher, id=pk)
+    rule_type = voucher.voucher_rule.offer_type
+
+    products = Product.filters_data(request, Product.my_query.active())
+    queryset_table = VoucherProductForSelectTable(products)
+    if rule_type == 'Category':
+        categories =

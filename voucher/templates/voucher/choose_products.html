@@ -13,7 +13,6 @@
                                     <div class="card-header">
                                         <h4>Κουπόνι... {{ voucher }}, {{ rule_type }}</h4>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -22,6 +21,13 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <h4>Προσθήκη στο Κουπόνι</h4>
+                                        <br />
+                                        <input class="form-control"
+                                               type="text"
+                                               placeholder="Αναζήτηση"
+                                               id="search_button"
+                                               data-href=""
+                                        >
                                     </div>
                                     <div class="card-body" id="result_container">
                                         {% include 'voucher/ajax/result_data.html' %}
@@ -50,16 +56,17 @@
 {% block extra_js %}
     <script>
         $('.plus_button').click(function(evt){
+            console.log('is woring?');
             evt.preventDefault();
-            const btn = this;
-            const url = btn.attr('data-url');
+            const btn = $(this);
+            const url = btn.attr('data-href');
             $.ajax({
                 method: 'GET',
                 dataType: 'json',
                 url: url,
 
                 success: function(data){
-                    $('#result_container').html(data.result)
+                    $('#select_container').html(data.result)
                 }
             })
         })
@@ -68,14 +75,30 @@
     <script>
         $('.delete_button').click(function(evt){
             evt.preventDefault();
-            const btn = this;
-            const url = btn.attr('data-url');
+            const btn = $(this);
+            const url = btn.attr('data-href');
             $.ajax({
                 method: 'GET',
                 dataType: 'json',
                 url: url,
                 success: function(data) {
-                    $('#selected_container').html(data.result)
+                    $('#select_container').html(data.result)
+                }
+            })
+        })
+    </script>
+    <script>
+        $('#search_button').change(function (evt) {
+            evt.preventDefault();
+            const my_input = $(this);
+            const url = my_input.attr('data-href');
+            const value = my_input.val();
+            $.ajax({
+                method: 'GET',
+                dataType: 'json',
+                url: url + '?q=' + value,
+                success: function (data) {
+                    $('#result_container').html(data.result)
                 }
             })
         })

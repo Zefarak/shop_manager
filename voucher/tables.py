@@ -18,10 +18,12 @@ class VoucherTable(tables.Table):
 
 
 class VoucherProductForSelectTable(tables.Table):
-    action = tables.TemplateColumn("<a data-href='' class='btn btn-primary btn-round plus_button'>"
-                                   "<i class='fa fa-plus'> </i></a>",
-                                   orderable=False
-                                   )
+    action = tables.TemplateColumn(
+        "<a data-href='' "
+        "class='btn btn-primary btn-round plus_button'><i class='fa fa-plus'> </i></a>",
+        orderable=False
+    )
+
     class Meta:
         model = Product
         fields = ['title']
@@ -29,14 +31,15 @@ class VoucherProductForSelectTable(tables.Table):
 
 
 class VoucherCategoryTable(tables.Table):
-    action = tables.TemplateColumn("<a data-href='' class='btn btn-primary btn-round plus_button'>"
+    action = tables.TemplateColumn("<a data-href='{% url 'vouchers:ajax_voucher_category' voucher.id record.id 'add' %}'"
+                                   " class='btn btn-primary btn-round plus_button'>"
                                    "<i class='fa fa-plus'> </i></a>",
                                    orderable=False
                                    )
 
     class Meta:
         model = Category
-        fields = ['title']
+        fields = ['name']
         template_name = 'django_tables2/bootstrap.html'
 
 
@@ -45,6 +48,7 @@ class VoucherBrandTable(tables.Table):
                                    "<i class='fa fa-plus'> </i></a>",
                                    orderable=False
                                    )
+
     class Meta:
         model = Brand
         fields = ['title']
@@ -64,13 +68,15 @@ class ProductSelectedDataTable(tables.Table):
 
 
 class CategorySelectedDataTable(tables.Table):
-    action = tables.TemplateColumn("<a data-href='' class='btn btn-primary btn-round delete_button'>"
-                                   "<i class='fa fa-remove'> </i></a>",
+    action = tables.TemplateColumn("<a data-href='{% url 'vouchers:ajax_voucher_category' voucher.id record.id 'delete' %}'"
+                                   " class='btn btn-danger btn-round delete_button'>"
+                                   "<i class='fa fa-trash'> </i></a>",
                                    orderable=False
                                    )
+
     class Meta:
         model = Category
-        fields = ['title', ]
+        fields = ['name', ]
         template_name = 'django_tables2/bootstrap.html'
 
 
@@ -79,6 +85,7 @@ class BrandSelectedDataTable(tables.Table):
                                    "<i class='fa fa-remove'> </i></a>",
                                    orderable=False
                                    )
+
     class Meta:
         model = Brand
         fields = ['title', ]
