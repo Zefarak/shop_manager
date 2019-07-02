@@ -12,6 +12,7 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <h4>Κουπόνι... {{ voucher }}, {{ rule_type }}</h4>
+                                        <a class="btn btn-primary btn-rounded fluid right" href="{{ voucher.get_edit_url }}">Επιστροφή</a>
                                     </div>
                                 </div>
                             </div>
@@ -26,7 +27,7 @@
                                                type="text"
                                                placeholder="Αναζήτηση"
                                                id="search_button"
-                                               data-href=""
+                                               data-href="{{ search_url }}"
                                         >
                                     </div>
                                     <div class="card-body" id="result_container">

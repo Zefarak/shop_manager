@@ -10,20 +10,20 @@ class Voucher(models.Model):
     SINGLE_USE, MULTI_USE, ONCE_PER_CUSTOMER = (
         'Single use', 'Multi-use', 'Once per customer')
     USAGE_CHOICES = (
-        (SINGLE_USE, _("Can be used once by one customer")),
-        (MULTI_USE, _("Can be used multiple times by multiple customers")),
-        (ONCE_PER_CUSTOMER, _("Can only be used once per customer")),
+        (SINGLE_USE, _("Χρήση μόνο μια φορά")),
+        (MULTI_USE, _("Πολλαπλή Χρήση από όλους")),
+        (ONCE_PER_CUSTOMER, _("Χρήση μια φορά ανά Πελάτη")),
     )
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=False, verbose_name='Κατάσταση')
     name = models.CharField(_("Name"), max_length=128, help_text="This will be shown in the checkout"
                                         " and basket once the voucher is"
                                         " entered")
     code = models.CharField(_('Code'), max_length=128, db_index=True, unique=True)
-    usage = models.CharField(max_length=128, choices=USAGE_CHOICES, default=MULTI_USE)
-    start_date = models.DateField(_('Start Date'), db_index=True, blank=True, null=True)
-    end_date = models.DateField(_('End Date'), db_index=True, blank=True, null=True)
-    num_basket_additons = models.PositiveIntegerField(default=0)
-    num_orders = models.PositiveIntegerField(default=0)
+    usage = models.CharField(max_length=128, choices=USAGE_CHOICES, default=MULTI_USE, verbose_name='Είδος Χρήσης')
+    start_date = models.DateField(db_index=True, blank=True, null=True, verbose_name='Χρήση από')
+    end_date = models.DateField(db_index=True, blank=True, null=True, verbose_name='Χρήση εώς')
+    num_basket_additons = models.PositiveIntegerField(default=0, verbose_name='Συνολικές Προσθήκες στο καλάθι')
+    num_orders = models.PositiveIntegerField(default=0, verbose_name='Συνολικές Προσθήκες στις Παραγγελίες')
     total_discount = models.DecimalField(decimal_places=2, max_digits=12, default=0.00)
 
     def __str__(self):
@@ -89,10 +89,15 @@ class Benefit(models.Model):
         (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping"
                                 " cost")),
     )
-    benefit_type = models.CharField(choices=TYPE_CHOICES, default=PERCENTAGE, max_length=128)
+    benefit_type = models.CharField(_('Discount Type'), choices=TYPE_CHOICES, default=PERCENTAGE, max_length=128)
     value = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     max_affected_items = models.PositiveIntegerField(blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        self.voucher.save()
+        super(Benefit, self).save(*args, **kwargs)
+        
+        
 
 class ProductRange(models.Model):
     voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_range')

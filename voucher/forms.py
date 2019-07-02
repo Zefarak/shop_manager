@@ -11,8 +11,8 @@ class BaseForm(forms.Form):
 
 
 class VoucherForm(BaseForm, forms.ModelForm):
-    start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
-    end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False, label='Χρήση Από')
+    end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False, label='Χρήση Εώς')
 
     class Meta:
         model = Voucher

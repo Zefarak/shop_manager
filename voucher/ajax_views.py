@@ -8,7 +8,7 @@ from catalogue.categories import Category
 from catalogue.product_details import Brand
 from catalogue.models import Product
 from .models import ProductRange, Voucher
-from .tables import CategorySelectedDataTable, BrandSelectedDataTable, ProductSelectedDataTable, VoucherProductForSelectTable
+from .tables import CategorySelectedDataTable, BrandSelectedDataTable, ProductSelectedDataTable, VoucherProductForSelectTable, VoucherCategoryTable, VoucherBrandTable
 
 
 @staff_member_required
@@ -81,12 +81,27 @@ def ajax_add_or_remove_products(request, pk, dk, action):
 
 
 @staff_member_required
-def ajax_search_products(request, pk):
+def ajax_search_queryset(request, pk):
     q = request.GET.get('q', None)
     voucher = get_object_or_404(Voucher, id=pk)
     rule_type = voucher.voucher_rule.offer_type
-
-    products = Product.filters_data(request, Product.my_query.active())
+    products = Product.objects.none()
     queryset_table = VoucherProductForSelectTable(products)
     if rule_type == 'Category':
-        categories =
+        print('Works!')
+        categories = Category.objects.filter(name__startswith=q.capitalize()) if q else Category.objects.filter(active=True)
+        queryset_table = VoucherCategoryTable(categories)
+    if rule_type == 'Brand':
+        brands = Brand.objects.filter(title=q.capitalize()) if q else Brand.objects.filter(active=True)
+        queryset_table = VoucherBrandTable(brands)
+    RequestConfig(request).configure(queryset_table)
+    data = dict()
+    data['result'] = render_to_string(request=request,
+                                      template_name='voucher/ajax/result_data.html',
+                                      context={
+                                          'queryset_table': queryset_table,
+                                          'voucher': voucher
+                                      }
+                                    )
+    return JsonResponse(data)
+

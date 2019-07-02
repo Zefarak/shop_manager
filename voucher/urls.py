@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import VoucherListView, voucher_detail_view, VoucherCreateView, voucher_choose_products_view
-from .ajax_views import ajax_add_brand_to_voucher, ajax_add_category_to_voucher, ajax_add_or_remove_products
+from .ajax_views import ajax_add_brand_to_voucher, ajax_add_category_to_voucher, ajax_add_or_remove_products, ajax_search_queryset
 
 app_name= 'vouchers'
 
@@ -15,5 +15,6 @@ urlpatterns = [
     path('ajax/category-voucher/<int:pk>/<int:dk>/<slug:action>/', ajax_add_category_to_voucher, name='ajax_voucher_category'),
     path('ajax/brand-voucher/<int:pk>/<int:dk>/<slug:action>/', ajax_add_brand_to_voucher, name='ajax_voucher_brand'),
     path('ajax/products-voucher/<int:pk>/<int:dk>/<slug:action>/', ajax_add_or_remove_products, name='ajax_voucher_product'),
+    path('ajax/search-queryset/<int:pk>/', ajax_search_queryset, name='ajax_search_queryset')
 
 ]
