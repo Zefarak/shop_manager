@@ -91,12 +91,10 @@ class Benefit(models.Model):
     )
     benefit_type = models.CharField(_('Discount Type'), choices=TYPE_CHOICES, default=PERCENTAGE, max_length=128)
     value = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
-    max_affected_items = models.PositiveIntegerField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         self.voucher.save()
         super(Benefit, self).save(*args, **kwargs)
-        
         
 
 class ProductRange(models.Model):
@@ -118,11 +116,11 @@ class VoucherRules(models.Model):
         (BRAND, _("Brand offer - available to certain brands")),
         (PRODUCTS, _("Products offer - Manual add Products")),
     )
-    OPEN, SUSPENDED, CONSUMED = "Open", "Suspended", "Consumed"
+
     description = models.TextField(blank=True, help_text='Description for the costumers')
     offer_type = models.CharField(choices=TYPE_CHOICES, default=SITE, max_length=128)
     exclusive = models.BooleanField(default=True)
-    status = models.CharField(_("Status"), max_length=64, default=OPEN)
+
     priority = models.IntegerField(default=0, db_index=True)
 
     max_global_applications = models.PositiveIntegerField(blank=True, null=True)

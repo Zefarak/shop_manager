@@ -7,9 +7,21 @@
                 <div class="page-wrapper">
                     <div class="page-body">
                         <div class="row">
+                            <div class="col-md-12">
+                                <a href="{% url 'point_of_sale:auto_create_order' 'eshop' %}">
+                                    <div class="card bg-c-green update-card">
+                                        <div class="card-block">
+                                            <div class="row align-items-end">
+                                                <div class="col-8"><h4 class="text-white">Εshop Πώληση</h4></div>
+                                                <div class="col-4 text-right"><canvas id="update-chart-1" height="50"></canvas></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
                             <div class="col-6">
                                 <a href="{% url 'point_of_sale:auto_create_order' 'sell' %}">
-                                    <div class="card bg-c-green update-card">
+                                    <div class="card bg-c-blue update-card">
                                         <div class="card-block">
                                             <div class="row align-items-end">
                                                 <div class="col-8"><h4 class="text-white">Νέα Πώληση</h4></div>

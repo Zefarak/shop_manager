@@ -11,11 +11,11 @@
         <div class="col-sm-6 ">
         <div class="card card-border-primary">
             <div class="card-header">
-                <h5>{{ product }} </h5>
+                <h3>{{ product }} </h3>
                 <!-- <span class="label label-default f-right"> 28 January, 2015 </span> -->
                 <div class="dropdown-secondary dropdown f-right">
                     <!-- end of dropdown menu -->
-                    <span class="f-left m-r-5 text-inverse">Αξία : {{ product.tag_final_price }}</span>
+                    <span class="f-left m-r-5 text-inverse">Αξία : <h4>{{ product.tag_final_price }}</h4></span>
                 </div>
             </div>
             <div class="card-block">
@@ -23,31 +23,26 @@
                     <div class="col-sm-6">
                         <ul class="list list-unstyled">
                             <li>Sku #: &nbsp;{{ product.sku }}</li>
-                            <li>Αρχική Αξία: <span class="text-semibold">{{ product.tag_value }}</span></li>
+                            <li> <p class="task-due"><strong> Υπόλοιπο : </strong><strong class="label label-primary">{{ product.qty }}</strong></p></li>
                         </ul>
                     </div>
                     <div class="col-sm-6">
                         <ul class="list list-unstyled text-right">
-                            <li>$8,750</li>
-                            <li><a href="{{ product.get_edit_url }}" target="_blank"
-                                   class="btn btn-primary btn-small btn-round">
-                                <i class="fa fa-edit"></i> </a>
-                            </li>
+                            <li>Αρχική Αξία:</li>
+                            <li>{{ product.tag_price }}</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <div class="task-list-table">
-                    <p class="task-due"><strong> Υπόλοιπο : </strong><strong class="label label-primary">{{ product.qty }}</strong></p>
-                </div>
-                <div class="task-board m-0">
-                    {% if product.have_attr %}
-                        <a href="{% url 'point_of_sale:add_to_order_attr' instance.id product.id %}" class="btn btn-warning">Add</a>
-                    {% else %}
-                        <button data-href="{% url 'point_of_sale:ajax_add_product' instance.id product.id %}" class="btn btn-warning add_button">Add</button>
-                    {% endif %}
-                </div>
+
+                {% if product.have_attr %}
+                    <a href="{% url 'point_of_sale:add_to_order_attr' instance.id product.id %}" class="btn btn-info">Διάλεξε Νούμερο</a>
+                {% else %}
+                    <button data-href="{% url 'point_of_sale:ajax_add_product' instance.id product.id %}" class="btn btn-warning add_button block">
+                       <i class="fa fa-plus"></i> Προσθήκη
+                    </button>
+                {% endif %}
             </div>
         </div>
         </div>

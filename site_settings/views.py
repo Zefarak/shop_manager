@@ -68,12 +68,12 @@ def store_delete_view(request, pk):
 @method_decorator(staff_member_required, name='dispatch')
 class PaymentMethodListView(ListView):
     model = PaymentMethod
-    template_name = 'dashboard/list_page.html'
+    template_name = 'site_settings/list_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         page_title = 'Payment Method'
-        create_url = reverse('site_settings:payment_create')
+        create_url, back_url = reverse('site_settings:payment_create'), reverse('site_settings:dashboard')
         queryset_table = PaymentMethodTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
         context.update(locals())
@@ -83,7 +83,7 @@ class PaymentMethodListView(ListView):
 @method_decorator(staff_member_required, name='dispatch')
 class PaymentMethodCreateView(PaymentBaseMixin, CreateView):
     model = PaymentMethod
-    template_name = 'dashboard/form.html'
+    template_name = 'site_settings/form.html'
     form_class = PaymentMethodForm
 
     def get_context_data(self, **kwargs):
@@ -97,7 +97,7 @@ class PaymentMethodCreateView(PaymentBaseMixin, CreateView):
 @method_decorator(staff_member_required, name='dispatch')
 class PaymentMethodUpdateView(UpdateView):
     model = PaymentMethod
-    template_name = 'dashboard/form.html'
+    template_name = 'site_settings/form.html'
     form_class = PaymentMethodForm
     success_url = reverse_lazy('site_settings:payment_methods')
 
@@ -119,11 +119,12 @@ def payment_delete_view(request, pk):
 @method_decorator(staff_member_required, name='dispatch')
 class ShippingListView(ListView):
     model = Shipping
-    template_name = 'dashboard/list_page.html'
+    template_name = 'site_settings/list_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         page_title = 'Shipping'
+        create_url, back_url = reverse('site_settings:shipping_create'), reverse('site_settings:dashboard')
         queryset_table = ShippingTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
         create_url = reverse('site_settings:shipping_create')
@@ -137,7 +138,7 @@ class ShippingListView(ListView):
 @method_decorator(staff_member_required, name='dispatch')
 class ShippingCreateView(ShippingBaseMixin, CreateView):
     model = Shipping
-    template_name = 'dashboard/form.html'
+    template_name = 'site_settings/form.html'
     form_class = ShippingForm
 
     def get_context_data(self, **kwargs):
@@ -151,7 +152,7 @@ class ShippingCreateView(ShippingBaseMixin, CreateView):
 @method_decorator(staff_member_required, name='dispatch')
 class ShippingEditView(ShippingBaseMixin, UpdateView):
     model = Shipping
-    template_name = 'dashboard/form.html'
+    template_name = 'site_settings/form.html'
     form_class = ShippingForm
 
     def get_context_data(self, **kwargs):
@@ -165,13 +166,13 @@ class ShippingEditView(ShippingBaseMixin, UpdateView):
 @method_decorator(staff_member_required, name='dispatch')
 class BannerListView(ListView):
     model = Banner
-    template_name = 'dashboard/list_page.html'
+    template_name = 'site_settings/list_page.html'
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         page_title = 'Banners'
-        create_url, back_url = reverse('site_settings:banner_create'), reverse('dashboard:home')
+        create_url, back_url = reverse('site_settings:banner_create'), reverse('site_settings:dashboard')
         queryset_table = BannerTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
         context.update(locals())
@@ -182,7 +183,7 @@ class BannerListView(ListView):
 class BannerCreateView(CreateView):
     model = Banner
     form_class = BannerForm
-    template_name = 'dashboard/form.html'
+    template_name = 'site_settings/form.html'
     success_url = reverse_lazy('site_settings:banner_list')
 
     def form_valid(self, form):
@@ -191,7 +192,7 @@ class BannerCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form_title = 'Create Banner'
+        form_title = 'Δημιουργία Banner'
         back_url, delete_url = self.success_url, None
         context.update(locals())
         return context

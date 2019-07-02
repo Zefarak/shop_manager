@@ -156,9 +156,9 @@ class BannerManager(models.Manager):
 
 
 class Banner(models.Model):
-    active = models.BooleanField(default=False)
-    title = models.CharField(unique=True, max_length=100)
-    text = models.CharField(max_length=200)
+    active = models.BooleanField(default=False, verbose_name='Κατάσταση')
+    title = models.CharField(unique=True, max_length=100, verbose_name='Τίτλος')
+    text = models.CharField(max_length=200, verbose_name='Σχόλiα', blank=True, null=True)
     image = models.ImageField(upload_to=upload_banner, validators=[validate_size, ])
     url = models.URLField(blank=True, null=True)
     browser = BannerManager()
