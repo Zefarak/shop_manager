@@ -63,44 +63,40 @@
             </div>
         </div>
         <br>
-        <table class='table table-responsive'>
+        <table class='table'>
             <thead>
-            <tr>
-                <th>Sku</th>
-                <th>Προϊόν</th>
-                <th>Qty</th>
-                <th>Τιμή</th>
-                <th>Σύνολο</th>
-                <th colspan="2">Actions</th>
-            </tr>
-    </thead>
-    <tbody>
-    {% for order_item in instance.order_items.all %}
-        <tr>
-            <td>{{ order_item.title.sku }}</td>
-            <td>{{ order_item.title|truncatechars:25 }}</td>
-            <td>{{ order_item.qty }} {% for item in order_item.attributes.all %} {{ item.title.title }} {% endfor %}</td>
-            <td>{{ order_item.tag_final_value }}</td>
-            <td>{{ order_item.tag_total_value  }}</td>
-            {% if order_item.have_attr %}
-                <td>
-                    <a href="{% url 'point_of_sale:add_to_order_attr' order_item.order.id order_item.title.id  %}" class="btn btn-info"><i class="fa fa-edit"></i> </a>
-                    <button data-href="{% url 'point_of_sale:ajax_order_item_edit' 'delete' order_item.id %}" class="btn btn-danger edit_button"><i class="fa fa-trash"></i></button>
-                </td>
-            {% else %}
-                <td colspan="2">
-                    <button data-href="{% url 'point_of_sale:ajax_order_item_edit' 'remove' order_item.id %}" class="btn btn-sm btn-warning edit_button"><i class="fa fa-arrow-down"></i></button>
-                    <button data-href="{% url 'point_of_sale:ajax_order_item_edit' 'add' order_item.id %}" class="btn btn-sm btn-success edit_button"><i class="fa fa-arrow-up"></i></button>
-                    <button data-href="{% url 'point_of_sale:ajax_order_item_edit' 'delete' order_item.id %}" class="btn btn-sm btn-danger edit_button"><i class="fa fa-trash"></i></button>
-                </td>
-            {% endif %}
-        </tr>
-    {% empty %}
-        <tr>
-            <td colspan='6'>No items added</td>
-        </tr>
-    {% endfor %}
-    </tbody>
+                <tr>
+                    <th>Sku</th>
+                    <th>Προϊόν</th>
+                    <th>Qty</th>
+                    <th>Τιμή</th>
+                    <th>Σύνολο</th>
+                    <th colspan="2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for order_item in instance.order_items.all %}
+                <tr>
+                    <td>{{ order_item.title.sku }}</td>
+                    <td>{{ order_item.title|truncatechars:25 }}</td>
+                    <td>{{ order_item.qty }} {% for item in order_item.attributes.all %} {{ item.title.title }} {% endfor %}</td>
+                    <td>{{ order_item.tag_final_value }}</td>
+                    <td>{{ order_item.tag_total_value  }}</td>
+                    {% if order_item.have_attr %}
+                        <td>
+                            <a href="{% url 'point_of_sale:add_to_order_attr' order_item.order.id order_item.title.id  %}" class="btn btn-info"><i class="fa fa-edit"></i> </a>
+                            <button data-href="{% url 'point_of_sale:ajax_order_item_edit' 'delete' order_item.id %}" class="btn btn-danger edit_button"><i class="fa fa-trash"></i></button>
+                        </td>
+                    {% else %}
+                        <td colspan="2">
+                            <button data-href="{% url 'point_of_sale:ajax_order_item_edit' 'remove' order_item.id %}" class="btn btn-sm btn-warning edit_button"><i class="fa fa-arrow-down"></i></button>
+                            <button data-href="{% url 'point_of_sale:ajax_order_item_edit' 'add' order_item.id %}" class="btn btn-sm btn-success edit_button"><i class="fa fa-arrow-up"></i></button>
+                            <button data-href="{% url 'point_of_sale:ajax_order_item_edit' 'delete' order_item.id %}" class="btn btn-sm btn-danger edit_button"><i class="fa fa-trash"></i></button>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
     <tfoot>
     <tr>
         <td>Μεταφορικά</td>
@@ -116,7 +112,12 @@
         <td>{{ instance.tag_final_value }}</td>
     </tr>
     <tr>
-        <td colspan="6"><a href="{% url 'point_of_sale:action_order_done' instance.id 'paid' %}" class="btn btn-success btn-outline-success btn-block"><i class="fa fa-save"></i>Ολοκλήρωση</a></td>
+        <td colspan="3">
+            <a href="{% url 'point_of_sale:action_order_done' instance.id 'paid' %}" class="btn btn-success btn-outline-success btn-block"><i class="fa fa-save"></i>Αποθήκευση</a>
+        </td>
+         <td colspan="3">
+            <a onclick="return confirm('Are you sure?')" href="{% url 'point_of_sale:action_order_done' instance.id 'paid' %}" class="btn btn-danger btn-outline-danger btn-block"><i class="fa fa-money"></i>Πληρωμή</a>
+        </td>
     </tr>
     </tfoot>
 </table>

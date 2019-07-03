@@ -113,6 +113,24 @@ def ajax_costumers_report(request):
 
 
 @staff_member_required
+def ajax_order_search_costumer(request, pk):
+    instance = get_object_or_404(Order, id=pk)
+    q = request.GET.get('q', None)
+    costumers = Profile.objects.none()
+    if q:
+        costumers = Profile.filters_data(request, Profile.objects.all())
+    data = dict()
+    data['result'] = render_to_string(request=request,
+                                      template_name='point_of_sale/ajax/order_costumer_container.html',
+                                      context={
+                                          'costumers': costumers,
+                                          'instance': instance
+                                      }
+                                      )
+    return JsonResponse(data)
+
+
+@staff_member_required
 def ajax_search_costumers(request):
     data = dict()
     search_name = request.GET.get('search_name', None)

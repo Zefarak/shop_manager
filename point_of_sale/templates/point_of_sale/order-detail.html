@@ -25,16 +25,19 @@
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="header my_header">
-                                        <div class="title .my_header"></div>
+                                        <div class="title .my_header"><a href="{% url 'point_of_sale:copy_order' instance.id %}" class="btn btn-info"><i class="fa fa-copy"></i> </a></div>
                                     </div>
                                     <div class="content" id="order_items_container">{% include 'point_of_sale/ajax/order_container.html' %}</div>
                                 </div>
 
                                 <div class="card">
-                                    <div class="card-header">Επιλογές</div>
+                                    <div class="card-header">Πελάτης...>  {{ instance.costumer }}</div>
                                     <div class="card-body">
-                                        <a href="{% url 'point_of_sale:action_order_done' instance.id 'not_paid' %}" class="btn btn-danger">Κλείσιμο χωρίς Πληρωμή</a>
-                                        <a href="{% url 'point_of_sale:copy_order' instance.id %}" class="btn btn-info">Αντιγραφή Παραστατικού</a>
+                                       <form class="form">
+                                           <input type="text" class="form-control" placeholder="Αναζήτηση Πελάτη">
+
+                                       </form>
+
                                     </div>
                                 </div>
 

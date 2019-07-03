@@ -22,7 +22,7 @@ class DefaultOrderModel(models.Model):
                                        verbose_name='Τρόπος Πληρωμής')
     date_expired = models.DateField(default=datetime.datetime.now().today().date(), verbose_name='Ημερομηνία')
     value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Αρχική Αξία')
-    taxes_modifier = models.CharField(max_length=1, choices=TAXES_CHOICES, default='1', verbose_name='ΦΠΑ')
+    taxes_modifier = models.CharField(max_length=1, choices=TAXES_CHOICES, default='3', verbose_name='ΦΠΑ')
     paid_value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Πληρωτέο Ποσό')
     final_value = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Αξία')
     discount = models.DecimalField(decimal_places=2, max_digits=20, default=0, verbose_name='Έκπτωση')
