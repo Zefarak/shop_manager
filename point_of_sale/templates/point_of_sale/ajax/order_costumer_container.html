@@ -1,0 +1,44 @@
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Πελάτης</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for costumer in costumers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ costumer }}</td>
+                        <td><a data-href="" class="btn btn-primary">Επιλογή</a> </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <div class="card social-card bg-simple-c-blue">
+            <div class="card-block">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fa fa-user f-34 text-c-blue social-icon"></i>
+                    </div>
+                    <div class="col">
+                        <h6 class="m-b-0">{{ instance.profile }}</h6>
+                        <p>Email ==></p>
+                        <p class="m-b-0">
+                            Διευθυνση...
+                            <br>
+                            Τηλεφωνα...
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <a href="#!" class="download-icon"><i class="feather icon-arrow-down"></i></a>
+        </div>
+    </div>
+</div>

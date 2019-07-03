@@ -20,6 +20,19 @@ def validate_positive_decimal(value):
     return value
 
 
+class Company(models.Model):
+    company_name = models.CharField(max_length=120)
+    company_address = models.CharField(max_length=200)
+    company_city_zip = models.CharField(max_length=5)
+    company_email = models.EmailField()
+    company_phone = models.CharField(max_length=10)
+    company_fax = models.CharField(max_length=10)
+
+
+    def __str__(self):
+        return self.company_name
+
+
 class Country(models.Model):
     active = models.BooleanField(default=True)
     title = models.CharField(unique=True, max_length=100)

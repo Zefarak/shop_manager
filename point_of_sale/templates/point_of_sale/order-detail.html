@@ -31,13 +31,47 @@
                                 </div>
 
                                 <div class="card">
-                                    <div class="card-header">Πελάτης...>  {{ instance.costumer }}</div>
+                                    <div class="card-header">
+                                        <h4>Πελάτης</h4>
+                                        <br><a href='' class="btn btn-success"><i class="fa fa-plus"></i>Νέος Πελάτης</a></div>
                                     <div class="card-body">
                                        <form class="form">
-                                           <input type="text" class="form-control" placeholder="Αναζήτηση Πελάτη">
-
+                                           <input  type="text" class="form-control search_costumer" placeholder="Αναζήτηση Πελάτη">
                                        </form>
-
+                                        <div id="costumer_container">
+                                            <br><br>
+                                            {% include 'point_of_sale/ajax/order_costumer_container.html' %}
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2">Πληροφορίες Αποστολής</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Διεύθυνση</td>
+                                                            <th></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>ΤΚ</td>
+                                                            <th></th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <a href="{% url 'point_of_sale:print_order' instance.id  %}" target="_blank"
+                                                   class="btn btn-success btn-outline-success btn-block">
+                                                    <i class="fa fa-print"></i>Εκτύπωση
+                                                </a>
+                                            </div>
+                                             <div class="col-md-6">
+                                                <a onclick="return confirm('Are you sure?')" href="{% url 'point_of_sale:action_order_done' instance.id 'paid' %}" class="btn btn-danger btn-outline-danger btn-block"><i class="fa fa-send"></i>Αποστολή</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -139,6 +173,22 @@
 
                 success: function (data) {
                     $('#order_items_container').html(data.order_container)
+                }
+            })
+        })
+    </script>
+    <script>
+        $('.search_costumer').change(function (evt) {
+            evt.preventDefault();
+            const my_input = $(this);
+            const url = my_input.attr('data-href');
+            const value = my_input.val();
+            $.ajax({
+                method: 'GET',
+                dataType: 'json',
+                url: url + '?search_name=' + value,
+                success: function (data) {
+                    $('#costumer_container').html(data.result)
                 }
             })
         })

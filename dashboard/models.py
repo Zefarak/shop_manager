@@ -42,7 +42,6 @@ class ProductDiscount(models.Model):
 
 @receiver(post_save, sender=ProductDiscount)
 def update_prices_to_products(sender, instance, **kwargs):
-    print('hey you! it me mario!')
     qs = instance.products_related.all()
     discount_type = instance.discount_type
     if discount_type == 'a':

@@ -6,9 +6,9 @@ from .views import (DashboardView, OrderListView, SellListView, CreateOrderView,
                     )
 from .ajax_views import (ajax_order_item, ajax_search_products, ajax_add_product, ajax_costumers_report,
                          ajax_search_costumers, ajax_costumer_order_pay_view, ajax_search_products_for_cart,
-                         ajax_add_product_with_attribute, ajax_edit_product_with_attr_view
+                         ajax_add_product_with_attribute, ajax_edit_product_with_attr_view, ajax_order_search_costumer
                          )
-from .views_actions import auto_create_retail_order, done_order_view, quick_pay_costumer_view, create_copy_order
+from .views_actions import auto_create_retail_order, done_order_view, quick_pay_costumer_view, create_copy_order, OrderPrintView
 from .autocomplete_widget import ProfileAutoComplete
 
 app_name = 'point_of_sale'
@@ -25,6 +25,7 @@ urlpatterns = [
     path('order/add-product-attr/<int:pk>/<int:dk>/', add_to_order_with_attr, name='add_to_order_attr'),
     path('order/edit-order-item-with-att/<int:pk>/', order_item_edit_with_attr, name='edit_order_item_attr'),
     path('copy-order/<int:pk>/', create_copy_order, name='copy_order'),
+    path('order/print/<int:pk>/', OrderPrintView.as_view(), name='print_order'),
 
     #  ajax calls
     path('order/ajax/edit-order-item/<slug:action>/<int:pk>/', ajax_order_item, name='ajax_order_item_edit'),
@@ -38,6 +39,7 @@ urlpatterns = [
          name='ajax_add_product_with_attr'),
     path('ajax-p/edit-product-with-attr/<slug:action>/<int:pk>/', ajax_edit_product_with_attr_view,
          name='ajax_edit_product_with_attr'),
+    path('ajax/order/costumer/search/<int:pk>/', ajax_order_search_costumer, name='ajax_order_search_costumer'),
     #  actions
     path('action/auto-create-order/<slug:action>/', auto_create_retail_order, name='auto_create_order'),
 

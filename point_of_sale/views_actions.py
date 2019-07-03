@@ -1,4 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.decorators import method_decorator
+from django.views.generic import DetailView
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
 from django.shortcuts import redirect, reverse
 from accounts.models import Profile
@@ -94,3 +96,14 @@ def create_copy_order(request, pk):
     return render(request, 'dashboard/form.html', context)
 
 
+@method_decorator(staff_member_required, name='dispatch')
+class OrderPrintView(DetailView):
+    model = Order
+    template_name = 'point_of_sale/print_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderPrintView, self).get_context_data(**kwargs)
+        order_items = self.object.order_items.all()
+
+        context.update(locals())
+        return context
