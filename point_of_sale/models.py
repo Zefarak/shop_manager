@@ -64,8 +64,8 @@ class Order(DefaultOrderModel):
     # coupons = models.ManyToManyField(Coupons, blank=True)
     order_related = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
     guest_email = models.EmailField(blank=True)
-    shipping_address = models.ForeignKey(ShippingAddress, blank=True, null=True, on_delete=models.SET_NULL)
-    billing_address = models.ForeignKey(BillingAddress, blank=True, null=True, on_delete=models.SET_NULL)
+    shipping_address = models.OneToOneField(ShippingAddress, blank=True, null=True, on_delete=models.SET_NULL)
+    billing_address = models.OneToOneField(BillingAddress, blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name_plural = '1. Orders'
@@ -437,3 +437,11 @@ class OrderProfile(models.Model):
         billing_profile.phone = form.cleaned_data.get('phone', None)
         billing_profile.notes = form.cleaned_data.get('notes', None)
         billing_profile.save()
+
+
+class SendReceipt(models.Model):
+    order_related = models.OneToOneField(Order, on_delete=models.CASCADE)
+    is_sent = models.BooleanField(default=False)
+    email = models.EmailField(blank=True)
+    shipping_code = models.CharField(max_length=240, blank=True)
+    shipping_method = models.ForeignKey(Shipping, on_delete=models.SET_NULL, null=True)

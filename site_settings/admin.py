@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Store, PaymentMethod
+from .models import Store, PaymentMethod, Company
 # Register your models here.
 
 
@@ -10,4 +10,9 @@ class StoreAdmin(admin.ModelAdmin):
 
 @admin.register(PaymentMethod)
 class PaymentMethodAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Company)
+class CompanyAdmin(admin.ModelAdmin):
     pass

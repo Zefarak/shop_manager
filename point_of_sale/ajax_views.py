@@ -115,7 +115,7 @@ def ajax_costumers_report(request):
 @staff_member_required
 def ajax_order_search_costumer(request, pk):
     instance = get_object_or_404(Order, id=pk)
-    q = request.GET.get('q', None)
+    q = request.GET.get('search_name', None)
     costumers = Profile.objects.none()
     if q:
         costumers = Profile.filters_data(request, Profile.objects.all())

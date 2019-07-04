@@ -1,5 +1,6 @@
 from django.db import models
 
+from site_settings.models import Shipping
 
 class ShippingAddress(models.Model):
     title = models.CharField(max_length=200, blank=True)
@@ -38,4 +39,11 @@ class BillingAddress(models.Model):
     company_detail = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
-        return  f'Billing Address {self.first_name} {self.last_name}'
+        return f'Billing Address {self.first_name} {self.last_name}'
+
+
+
+
+
+
+

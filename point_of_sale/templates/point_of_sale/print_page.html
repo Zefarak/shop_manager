@@ -20,30 +20,29 @@
     <link rel="stylesheet" href="{% static 'invoice/css/template.css' %}">
   </head>
   <body>
-    <div id="container">
+  <div id="container">
       <section id="memo">
         <div class="company-name">
-          <span>{company_name}</span>
+          <span>{{ company.company_name }}</span>
           <div class="right-arrow"></div>
         </div>
 
         <div class="logo">
-          <img data-logo="{company_logo}" />
+          <img data-logo="{{ company.logo.url }}" />
         </div>
 
         <div class="company-info">
-          <div>
-            <span>{company_address}</span> <span>{company_city_zip_state}</span>
-          </div>
-          <div>{company_email_web}</div>
-          <div>{company_phone_fax}</div>
+            <div>
+                <span>{{ company.company_address }}</span> <span>{{ company.company_city_zip }}</span>
+            </div>
+            <div>{{ company.company_email }}</div>
+            <div>{{ company.company_phone }}, Fax {{ company.company_fax }}</div>
         </div>
-
       </section>
 
       <section id="invoice-info">
         <div>
-          <span>{issue_date_label}</span>
+          <span>Ημερομηνία Δημιουργίας{issue_date_label}</span>
           <span>{due_date_label}</span>
           <span>{net_term_label}</span>
           <span>{po_number_label}</span>
@@ -58,14 +57,11 @@
       </section>
 
       <section id="client-info">
-        <span>{bill_to_label}</span>
-        <div>
-          <span class="bold">{client_name}</span>
-        </div>
-
-        <div>
-          <span>{client_address}</span>
-        </div>
+          <span>{bill_to_label}</span>
+          <div><span class="bold">{client_name}</span></div>
+          <div>
+              <span>{client_address}</span>
+          </div>
 
         <div>
           <span>{client_city_zip_state}</span>

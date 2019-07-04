@@ -3,8 +3,8 @@ from .views import (DashboardView,
                     StoreListView, StoreCreateView, StoreEditView,
                     PaymentMethodListView, PaymentMethodCreateView, PaymentMethodUpdateView, payment_delete_view,
                     ShippingListView, ShippingCreateView, ShippingEditView, store_delete_view,
-                    BannerListView, BannerCreateView, BannerUpdateView, banner_delete_view
-
+                    BannerListView, BannerCreateView, BannerUpdateView, banner_delete_view,
+                    company_edit_view
                     )
 
 app_name = 'site_settings'
@@ -29,4 +29,6 @@ urlpatterns = [
     path('banner/edit/<int:pk>/', BannerUpdateView.as_view(), name='banner_edit'),
     path('banner/create/', BannerCreateView.as_view(), name='banner_create'),
     path('banner/delete/<int:pk>/', banner_delete_view, name='banner_delete'),
+
+    path('company/', company_edit_view, name='company')
 ]

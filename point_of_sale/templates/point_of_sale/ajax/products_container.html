@@ -1,4 +1,4 @@
-<style>
+<style> {% load static %}
     .scrollable {
   height: 800px;
   overflow-y: scroll;
@@ -8,41 +8,33 @@
 <div class="row scrollable">
     <!-- Invoice list card start -->
     {% for product in products %}
-        <div class="col-sm-6 ">
-        <div class="card card-border-primary">
-            <div class="card-header">
-                <h3>{{ product }} </h3>
-                <!-- <span class="label label-default f-right"> 28 January, 2015 </span> -->
-                <div class="dropdown-secondary dropdown f-right">
-                    <!-- end of dropdown menu -->
-                    <span class="f-left m-r-5 text-inverse">Αξία : <h4>{{ product.tag_final_price }}</h4></span>
-                </div>
-            </div>
+        <div class="col-sm-6">
+            <div class="card rounded-card user-card">
             <div class="card-block">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <ul class="list list-unstyled">
-                            <li>Sku #: &nbsp;{{ product.sku }}</li>
-                            <li> <p class="task-due"><strong> Υπόλοιπο : </strong><strong class="label label-primary">{{ product.qty }}</strong></p></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-6">
-                        <ul class="list list-unstyled text-right">
-                            <li>Αρχική Αξία:</li>
-                            <li>{{ product.tag_price }}</li>
-                        </ul>
+                <div class="img-hover">
+                    {% if product.image %}
+                    <img class="img-fluid img-radius" src="{{ product.image.url }}" alt="round-img">
+                    {% else %}
+                    <img style="width: 200px; height: 200px;" class="img-fluid img-radius" src="{% static 'my_static/no_image.png' %}" alt="round-img">
+                    {% endif %}
+                    <div class="img-overlay img-radius">
+                        <span>
+                            {% if product.have_attr %}
+                                <a href="{% url 'point_of_sale:add_to_order_attr' instance.id product.id %}" class="btn btn-info">Διάλεξε Νούμερο</a>
+                            {% else %}
+                                 <button data-href="{% url 'point_of_sale:ajax_add_product' instance.id product.id %}" class="btn btn-warning add_button block">
+                            <i class="fa fa-plus"></i> Προσθήκη
+                             </button>
+                            {% endif %}
+                            <p>Υπολοιπο.. {{ product.qty }}</p>
+                        </span>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer">
-
-                {% if product.have_attr %}
-                    <a href="{% url 'point_of_sale:add_to_order_attr' instance.id product.id %}" class="btn btn-info">Διάλεξε Νούμερο</a>
-                {% else %}
-                    <button data-href="{% url 'point_of_sale:ajax_add_product' instance.id product.id %}" class="btn btn-warning add_button block">
-                       <i class="fa fa-plus"></i> Προσθήκη
-                    </button>
-                {% endif %}
+                <div class="user-content">
+                    <h4 class="">{{ product }}</h4>
+                    <p class="m-b-0 text-muted">Sku... {{ product.sku }}</p>
+                    <p class="m-b-0 text-muted">Τιμή... {{ product.tag_final_price }}</p>
+                </div>
             </div>
         </div>
         </div>

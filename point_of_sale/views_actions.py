@@ -1,12 +1,13 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
 from django.shortcuts import redirect, reverse
 from accounts.models import Profile
+from accounts.forms import ProfileForm
 from .models import Order, OrderItem
 from .forms import OrderCreateCopyForm
-from site_settings.models import PaymentMethod
+from site_settings.models import PaymentMethod, Company
 import datetime
 
 
@@ -23,6 +24,8 @@ def auto_create_retail_order(request, action):
     if action == 'sell':
         new_instance.title = f'Πώληση... {new_instance.id}'
         new_instance.order_type = 'r'
+    if action == 'eshop':
+        new_instance.order_type = 'e'
     if action == 'return':
         new_instance.title = f'Επιστροφή...{new_instance.id}'
         new_instance.order_type = 'b'
@@ -104,6 +107,66 @@ class OrderPrintView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(OrderPrintView, self).get_context_data(**kwargs)
         order_items = self.object.order_items.all()
-
+        company = Company.objects.first() if Company.objects.exists() else None
         context.update(locals())
         return context
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class CreateCostumerFromOrder(CreateView):
+    model = Profile
+    template_name = 'point_of_sale/form.html'
+    form_class = ProfileForm
+
+    def get_success_url(self):
+        invoice = get_object_or_404(Order, id=self.kwargs['pk'])
+        return invoice.get_edit_url()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form_title, back_url = 'Δημιουργία Πελάτη', self.get_success_url()
+        context.update(locals())
+        return context
+
+    def form_valid(self, form):
+        new_costumer = form.save()
+        invoice = get_object_or_404(Order, id=self.kwargs['pk'])
+        invoice.profile = new_costumer
+        invoice.save()
+        return super(CreateCostumerFromOrder, self).form_valid(form)
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class EditCostumerFromOrder(CreateView):
+    model = Profile
+    template_name = 'point_of_sale/form.html'
+    form_class = ProfileForm
+
+    def get_success_url(self):
+        invoice = get_object_or_404(Order, id=self.kwargs['pk'])
+        return invoice.get_edit_url()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form_title, back_url = 'Δημιουργία Πελάτη', self.get_success_url()
+        context.update(locals())
+        return context
+
+    def form_valid(self, form):
+        new_costumer = form.save()
+        invoice = get_object_or_404(Order, id=self.kwargs['pk'])
+        invoice.profile = new_costumer
+        invoice.save()
+        return super(CreateCostumerFromOrder, self).form_valid(form)
+
+
+@staff_member_required
+def order_change_costumer(request, pk, dk):
+    order = get_object_or_404(Order, id=pk)
+    new_costumer = get_object_or_404(Profile, id=dk)
+    old_costumer = order.profile
+    order.profile = new_costumer
+    order.save()
+    old_costumer.refresh_from_db()
+    old_costumer.save()
+    return HttpResponseRedirect(order.get_edit_url())

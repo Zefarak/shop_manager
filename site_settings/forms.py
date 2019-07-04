@@ -1,5 +1,5 @@
 from django import forms
-from .models import Store, PaymentMethod, Shipping, Banner
+from .models import Store, PaymentMethod, Shipping, Banner, Company
 
 
 class BaseForm(forms.Form):
@@ -37,3 +37,9 @@ class BannerForm(BaseForm, forms.ModelForm):
          model = Banner
          fields = '__all__'
 
+
+class CompanyForm(BaseForm, forms.ModelForm):
+
+    class Meta:
+        model = Company
+        fields = '__all__'

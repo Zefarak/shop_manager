@@ -21,29 +21,100 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="header my_header">
-                                        <div class="title .my_header"><a href="{% url 'point_of_sale:copy_order' instance.id %}" class="btn btn-info"><i class="fa fa-copy"></i> </a></div>
+                                       {% comment %} <div class="title .my_header"><a href="{% url 'point_of_sale:copy_order' instance.id %}" class="btn btn-info"><i class="fa fa-copy"></i> </a></div> {% endcomment %}
                                     </div>
                                     <div class="content" id="order_items_container">{% include 'point_of_sale/ajax/order_container.html' %}</div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="card">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- tab header start -->
+                                <div class="tab-header card">
+                                    <ul class="nav nav-tabs md-tabs tab-timeline" role="tablist" id="mytab">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab" href="#personal" role="tab" aria-expanded="true">Πελάτης</a>
+                                            <div class="slide"></div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#binfo" role="tab" aria-expanded="false">Στοιχεία</a>
+                                            <div class="slide"></div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#contacts" role="tab" aria-expanded="false">Φορμα</a>
+                                            <div class="slide"></div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#review" role="tab">Επιλογές</a>
+                                            <div class="slide"></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- tab header end -->
+
+
+                                <!-- tab content start -->
+                                <div class="tab-content">
+                                    <!-- tab panel personal start -->
+                                    <div class="tab-pane active" id="personal" role="tabpanel" aria-expanded="true">
+                                        <div class="card">
                                     <div class="card-header">
-                                        <h4>Πελάτης</h4>
-                                        <br><a href='' class="btn btn-success"><i class="fa fa-plus"></i>Νέος Πελάτης</a></div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4>Πελάτες</h4>
+                                                <br>
+                                                <a href='{% url "point_of_sale:order_create_costumer" instance.id %}' class="btn btn-success"><i class="fa fa-plus"></i>Νέος Πελάτης</a>
+                                                <br /> <br />
+                                                <form class="form">
+                                                    <input data-href="{% url 'point_of_sale:ajax_order_search_costumer' instance.id %}"  type="text" class="form-control search_costumer" placeholder="Αναζήτηση Πελάτη">
+                                                </form>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="card social-card bg-simple-c-blue">
+                                                    <div class="card-block">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-auto">
+                                                                <i class="fa fa-user f-34 text-c-blue social-icon"></i>
+                                                            </div>
+                                                            <div class="col">
+                                                                <h6 class="m-b-0">{{ instance.profile }}</h6>
+                                                                <p>Πληροφορίες</p>
+                                                                <p class="m-b-0">
+                                                                    Υπόλοιπο..
+                                                                    <br>
+
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <a href="#!" class="download-icon"><i class="feather icon-arrow-down"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     <div class="card-body">
-                                       <form class="form">
-                                           <input  type="text" class="form-control search_costumer" placeholder="Αναζήτηση Πελάτη">
-                                       </form>
                                         <div id="costumer_container">
                                             <br><br>
                                             {% include 'point_of_sale/ajax/order_costumer_container.html' %}
                                         </div>
-                                        <div class="row">
+                                    </div>
+                                </div>
+                                        </div>
+                                    </div>
+                                                    <!-- tab pane personal end
+
+                                                    <!-- tab pane info start -->
+                                    <div class="tab-pane" id="binfo" role="tabpanel" aria-expanded="false">
+                                        <!-- info card start -->
+                                       <div class="row">
                                             <div class="col-md-12">
+                                                <a href="" class="btn btn-primary btn-round btn-small"><i class="btn btn-edit">Επεξεργασία Στοιχείων Αποστολης</i> </a>
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
@@ -72,43 +143,37 @@
                                                 <a onclick="return confirm('Are you sure?')" href="{% url 'point_of_sale:action_order_done' instance.id 'paid' %}" class="btn btn-danger btn-outline-danger btn-block"><i class="fa fa-send"></i>Αποστολή</a>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
 
-                                <div class="card">
-                                    <div class="card-header text-center">
-                                        <button class="btn btn-primary btn-round"
-                                                type="button"
-                                                data-toggle="collapse"
-                                                data-target="#actions_info"
-                                                aria-expanded="false"
-                                                aria-controls="actions_info"
-                                        >Γενικές Πληροφορίες</button>
                                     </div>
-                                    <div class="row collapse" id="actions_info">
-                                        <div class="card-body">
-                                            <h4>Επεξεργασία</h4>
-                                            <form class="form" method="post">{% csrf_token %}
-                                                {{ form }}
-                                                <br> <br>
-                                                <button type='submit' name='order_sub' class="btn btn-success btn-outline-success">Save</button>
-                                            </form>
+                                    <!-- tab pane info end -->
+
+                                    <!-- tab pane contact start -->
+                                    <div class="tab-pane" id="contacts" role="tabpanel" aria-expanded="false">
+                                        <div class="row">
+                                            <div class="col-xl-12">
+                                                <!-- user contact card left side start -->
+                                                <div class="card">
+                                                    <div class="card-header contact-user">
+                                                        <h5 class="m-l-10">Επεξεργασία</h5>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <form class="form" method="post">
+                                                            {% csrf_token %} {{ form }}
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class='card'>
-                                    <div class="header text-center">
-                                       <button class="btn btn-primary"
-                                               type="button"
-                                               data-toggle="collapse"
-                                               data-target="#general_info"
-                                               aria-expanded="false"
-                                               aria-controls="general_info "
-                                       >Actions</button>
-                                    </div>
-                                    <div class="content">
-                                        <div class="row collapse" id="general_info">
+                                    <div class="tab-pane" id="review" role="tabpanel">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="card-header-text">Επιλογές</h5>
+                                            </div>
+                                            <div class="card-block">
+                                                <div class="row" id="general_info">
                                             <div class="col-md-12">
                                                 <a onclick="return confirm('Are you sure?')" href="{{ instance.get_delete_url }}" class="btn btn-warning"><i class="fa fa-remove"></i>Delete</a>
                                                 {% if not is_return %}
@@ -117,6 +182,9 @@
                                                     </a>
                                                 {% endif %}
                                             </div>
+                                        </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -178,8 +246,9 @@
         })
     </script>
     <script>
-        $('.search_costumer').change(function (evt) {
+        $('.search_costumer').keyup(function (evt) {
             evt.preventDefault();
+            console.log('works!');
             const my_input = $(this);
             const url = my_input.attr('data-href');
             const value = my_input.val();

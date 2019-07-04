@@ -1,12 +1,12 @@
-from django.shortcuts import reverse, get_object_or_404, redirect
+from django.shortcuts import reverse, get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 
 from .mixins import StoreBaseMixin, PaymentBaseMixin, ShippingBaseMixin
-from .models import Store, PaymentMethod, Shipping, Banner
-from .forms import StoreForm, PaymentMethodForm, ShippingForm, BannerForm
+from .models import Store, PaymentMethod, Shipping, Banner, Company
+from .forms import StoreForm, PaymentMethodForm, ShippingForm, BannerForm, CompanyForm
 from .tables import PaymentMethodTable, StoreTable, ShippingTable, BannerTable
 from django_tables2 import RequestConfig
 
@@ -222,3 +222,26 @@ def banner_delete_view(request, pk):
     instance = get_object_or_404(Banner, id=pk)
     instance.delete()
     return redirect(reverse('site_settings:banner_list'))
+
+
+@staff_member_required
+def company_edit_view(request):
+    company = Company.objects.first() if Company.objects.exists() else None
+    if not company:
+        company = Company.objects.create(company_name='Lets Begin')
+
+    form = CompanyForm(instance=company)
+    if request.POST:
+        form = CompanyForm(request.POST, request.FILES, instance=company)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('site_settings:dashboard'))
+        else:
+            print(form.errors)
+    page_title, back_url = 'Επεξεργασία στοιχεία επιχειρησης', reverse('site_settings:dashboard')
+    context = {
+        'form_title': page_title,
+        'back_url': back_url,
+        'form': form
+    }
+    return render(request, 'site_settings/form.html', context)
