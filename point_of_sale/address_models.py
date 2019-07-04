@@ -1,8 +1,10 @@
 from django.db import models
-
+from .models import Order
 from site_settings.models import Shipping
 
+
 class ShippingAddress(models.Model):
+    order_related = models.OneToOneField(Order, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=200, blank=True)
     email = models.EmailField()
     first_name = models.CharField(blank=True, null=True, max_length=150, verbose_name='First Name')
@@ -21,6 +23,7 @@ class ShippingAddress(models.Model):
 
 
 class BillingAddress(models.Model):
+    order_related = models.OneToOneField(Order, on_delete=models.CASCADE)
     first_name = models.CharField(blank=True, null=True, max_length=150, verbose_name='First Name')
     last_name = models.CharField(blank=True, null=True, max_length=150, verbose_name='Last Name')
     #  shipping_information

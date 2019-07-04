@@ -7,7 +7,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute
-from .models import Order, OrderItem, OrderItemAttribute
+from .models import Order, OrderItem, OrderItemAttribute, OrderProfile
+from .address_models import ShippingAddress
 from .forms import OrderCreateForm, OrderCreateCopyForm, OrderUpdateForm, forms, OrderAttributeCreateForm
 from site_settings.models import PaymentMethod
 from accounts.models import Profile
@@ -137,11 +138,11 @@ class OrderUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         homepage_cookie = self.request.COOKIES.get('order_redirect', None)
-        print('homepage cookie', homepage_cookie)
-
         products = Product.my_query.active()[:12]
         instance = self.object
         is_return = True if self.object.order_type in ['b', 'wr'] else False
+        profile_detail, created = OrderProfile.objects.get_or_create(order_related=instance)
+        shipping_detail, s_created = ShippingAddress.objects.get_or_create()
         context.update(locals())
         return context
 

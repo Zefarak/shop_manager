@@ -23,7 +23,6 @@ from site_settings.models import PaymentMethod, Shipping, Country
 from site_settings.constants import CURRENCY, ORDER_STATUS, ORDER_TYPES, ADDRESS_TYPES
 from cart.models import Cart, CartItem
 from .managers import OrderManager, OrderItemManager
-from .address_models import ShippingAddress, BillingAddress
 from accounts.models import Profile
 
 RETAIL_TRANSCATIONS, PRODUCT_ATTRIBUTE_TRANSCATIONS = settings.RETAIL_TRANSCATIONS, settings.PRODUCT_ATTRIBUTE_TRANSCATIONS
@@ -64,8 +63,6 @@ class Order(DefaultOrderModel):
     # coupons = models.ManyToManyField(Coupons, blank=True)
     order_related = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
     guest_email = models.EmailField(blank=True)
-    shipping_address = models.OneToOneField(ShippingAddress, blank=True, null=True, on_delete=models.SET_NULL)
-    billing_address = models.OneToOneField(BillingAddress, blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name_plural = '1. Orders'

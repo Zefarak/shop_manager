@@ -1,4 +1,4 @@
-{% extends 'point_of_sale/index.html' %} {% load render_table from django_tables2 %}
+{% extends 'point_of_sale/index.html' %} {% load render_table from django_tables2 %} {% load static %}
 
 {% block content %}
     <div class="pcoded-content">
@@ -113,37 +113,146 @@
                                     <div class="tab-pane" id="binfo" role="tabpanel" aria-expanded="false">
                                         <!-- info card start -->
                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <a href="" class="btn btn-primary btn-round btn-small"><i class="btn btn-edit">Επεξεργασία Στοιχείων Αποστολης</i> </a>
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th colspan="2">Πληροφορίες Αποστολής</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Διεύθυνση</td>
-                                                            <th></th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>ΤΚ</td>
-                                                            <th></th>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                            <div class="col-xl-6 col-md-6">
+                                                <div class="card table-card">
+                                                    <div class="card-header">
+                                                        <h5>Στοιχεία Παραλήπτη</h5>
+                                                        <div class="card-header-right">
+                                                            <ul class="list-unstyled card-option">
+                                                                <li><i class="fa fa fa-wrench open-card-option"></i></li>
+                                                                <li><i class="fa fa-window-maximize full-card"></i></li>
+                                                                <li><i class="fa fa-minus minimize-card"></i></li>
+                                                                <li><i class="fa fa-refresh reload-card"></i></li>
+                                                                <li><i class="fa fa-trash close-card"></i></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover table-borderless">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Ονομασία</th>
+                                                                        <th>Τιμή</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>Email</td>
+                                                                        <td>{{ profile_detail.email }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Ονοματεπώνυμο</td>
+                                                                        <td>{{ profile_detail.first_name }} {{ profile_detail.last_name }}</td>
+                                                                    </tr>
+                                                                     <tr>
+                                                                        <td>Διεύθυνση</td>
+                                                                        <td>{{ profile_detail.tag_full_address }}</td>
+                                                                    </tr>
+                                                                     <tr>
+                                                                        <td>Τηλέφωνα</td>
+                                                                        <td>{{ profile_detail.tag_phones }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Σημειώσεις</td>
+                                                                        <td>{{ profile_detail.notes }}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <a href="{% url 'point_of_sale:print_order' instance.id  %}" target="_blank"
-                                                   class="btn btn-success btn-outline-success btn-block">
-                                                    <i class="fa fa-print"></i>Εκτύπωση
-                                                </a>
-                                            </div>
-                                             <div class="col-md-6">
-                                                <a onclick="return confirm('Are you sure?')" href="{% url 'point_of_sale:action_order_done' instance.id 'paid' %}" class="btn btn-danger btn-outline-danger btn-block"><i class="fa fa-send"></i>Αποστολή</a>
+                                            <div class="col-xl-6 col-md-6">
+                                                <div class="card table-card">
+                                                    <div class="card-header">
+                                                        <h5>Recent Tickets</h5>
+                                                        <div class="card-header-right">
+                                                            <ul class="list-unstyled card-option">
+                                                                <li><i class="fa fa fa-wrench open-card-option"></i></li>
+                                                                <li><i class="fa fa-window-maximize full-card"></i></li>
+                                                                <li><i class="fa fa-minus minimize-card"></i></li>
+                                                                <li><i class="fa fa-refresh reload-card"></i></li>
+                                                                <li><i class="fa fa-trash close-card"></i></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover table-borderless">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Status</th>
+                                                                        <th>Subject</th>
+                                                                        <th>Department</th>
+                                                                        <th>Date</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td><label class="label label-success">open</label></td>
+                                                                        <td>Website down for one week</td>
+                                                                        <td>Support</td>
+                                                                        <td>Today 2:00</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="label label-primary">progress</label></td>
+                                                                        <td>Loosing control on server</td>
+                                                                        <td>Support</td>
+                                                                        <td>Yesterday</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="label label-danger">closed</label></td>
+                                                                        <td>Authorizations keys</td>
+                                                                        <td>Support</td>
+                                                                        <td>27, Aug</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="label label-success">open</label></td>
+                                                                        <td>Restoring default settings</td>
+                                                                        <td>Support</td>
+                                                                        <td>Today 9:00</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="label label-primary">progress</label></td>
+                                                                        <td>Loosing control on server</td>
+                                                                        <td>Support</td>
+                                                                        <td>Yesterday</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="label label-success">open</label></td>
+                                                                        <td>Restoring default settings</td>
+                                                                        <td>Support</td>
+                                                                        <td>Today 9:00</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="label label-danger">closed</label></td>
+                                                                        <td>Authorizations keys</td>
+                                                                        <td>Support</td>
+                                                                        <td>27, Aug</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="label label-success">open</label></td>
+                                                                        <td>Restoring default settings</td>
+                                                                        <td>Support</td>
+                                                                        <td>Today 9:00</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label class="label label-primary">progress</label></td>
+                                                                        <td>Loosing control on server</td>
+                                                                        <td>Support</td>
+                                                                        <td>Yesterday</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <div class="text-right m-r-20">
+                                                                <a href="#!" class=" b-b-primary text-primary">View all Projects</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-
                                     </div>
                                     <!-- tab pane info end -->
 
@@ -263,6 +372,9 @@
         })
     </script>
     {{ form.media }}
+
+
+
 {% endblock %}
 
 
