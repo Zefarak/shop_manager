@@ -172,11 +172,9 @@
                                                         <h5>Στοιχεία Αποστολής</h5>
                                                         <div class="card-header-right">
                                                             <ul class="list-unstyled card-option">
-
-                                                                <li><i class="fa fa-window-maximize full-card"></i></li>
-                                                                <li><i class="fa fa-minus minimize-card"></i></li>
-                                                                <li><i class="fa fa-refresh reload-card"></i></li>
-                                                                <li><i class="fa fa-trash close-card"></i></li>
+                                                                <li>
+                                                                    <a href="{% url 'point_of_sale:send_order_email' instance.id %}"><i class="fa fa-edit"></i></a>
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -191,26 +189,17 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td></td>
-                                                                        <td>Support</td>
+                                                                        <td>Απεσταλμένο</td>
+                                                                        <td>{{ shipping_voucher.is_sent }}</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Website down for one week</td>
-                                                                        <td>Support</td>
+                                                                        <td>Voucher Code</td>
+                                                                        <td>{{ shipping_voucher.shipping_code }}</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Website down for one week</td>
-                                                                        <td>Support</td>
+                                                                        <td>Τρόπος Αποστολής</td>
+                                                                        <td>{{ shipping_voucher.shipping_method }}</td>
                                                                     </tr>
-                                                                    <tr>
-                                                                        <td>Website down for one week</td>
-                                                                        <td>Support</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Website down for one week</td>
-                                                                        <td>Support</td>
-                                                                    </tr>
-
                                                                 </tbody>
                                                             </table>
                                                             <div class="text-right m-r-20">
@@ -227,7 +216,7 @@
                                     <!-- tab pane contact start -->
                                     <div class="tab-pane" id="contacts" role="tabpanel" aria-expanded="false">
                                         <div class="row">
-                                            <div class="col-xl-12">
+                                            <div class="col-xl-6 col-md-6">
                                                 <!-- user contact card left side start -->
                                                 <div class="card">
                                                     <div class="card-header contact-user">
@@ -238,7 +227,14 @@
                                                             {% csrf_token %} {{ form }}
                                                         </form>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">Κουπόνια</div>
+                                                    <div class="card-body">
 
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -1,12 +1,13 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
+from django.contrib import messages
 from django.views.generic import DetailView, CreateView, UpdateView
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
 from django.shortcuts import redirect, reverse
 from accounts.models import Profile
 from accounts.forms import ProfileForm
-from .models import Order, OrderItem, OrderProfile
-from .forms import OrderCreateCopyForm, OrderProfileForm
+from .models import Order, OrderItem, OrderProfile, SendReceipt
+from .forms import OrderCreateCopyForm, OrderProfileForm, SendReceiptForm
 from site_settings.models import PaymentMethod, Company
 import datetime
 
@@ -191,3 +192,22 @@ class ProfileOrderDetailView(UpdateView):
     def form_valid(self, form):
         form.save()
         return super(ProfileOrderDetailView, self).form_valid(form)
+
+
+@staff_member_required
+def create_or_edit_order_voucher_view(request, pk):
+    order = get_object_or_404(Order, id=pk)
+    if not order.order_type == 'e':
+        return HttpResponseRedirect(order.get_edit_url())
+    voucher, created = SendReceipt.objects.get_or_create(order_related=order)
+    if created:
+        voucher.email = order.profile.email
+        voucher.shipping_method = order.shipping
+        voucher.save()
+
+    form = SendReceiptForm(request.POST or None, instance=voucher)
+    if form.is_valid():
+        form.save()
+        messages.success(request, f'Στάλθηκε email sto {voucher.email} με κωδικό {voucher.shipping_code}')
+        return HttpResponseRedirect(order.get_edit_url())
+    return render(request, 'point_of_sale/form.html', locals())

@@ -40,14 +40,14 @@ class Voucher(models.Model):
         now = timezone.now()
         return self.end_date < now
 
-    def is_available_to_user(self, user=None):
+    def is_available_to_user(self, cart, voucher, user=None):
         is_available, message = False, ''
         if self.usage == self.SINGLE_USE:
-            is_available = 'Check if used!'
+            is_available = cart.check_voucher_if_used(voucher)
             if not is_available:
                 message = _("This voucher has already been used")
-        elif self.MULTI_USE:
-            is_available = True
+        elif self.usage == self.MULTI_USE:
+            is_available, message = True, ''
         elif self.usage == self.ONCE_PER_CUSTOMER:
             if not user.is_authenticated:
                 is_available = False
@@ -55,7 +55,7 @@ class Voucher(models.Model):
             else:
                 is_available = not False
                 if not is_available:
-                    message = _('You have laready used this voucher')
+                    message = _('You have allready used this voucher')
             return is_available, message
 
     def is_available_for_basket(self, basket):

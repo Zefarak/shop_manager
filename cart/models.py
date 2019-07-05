@@ -12,6 +12,7 @@ from site_settings.models import Shipping, PaymentMethod
 from site_settings.constants import CURRENCY
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute
+from voucher.models import Voucher
 
 
 User = get_user_model()
@@ -39,7 +40,7 @@ class Cart(models.Model):
     status = models.CharField(
         _("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
 
-    vouchers = ''
+    vouchers = models.ManyToManyField(Voucher)
     timestamp = models.DateTimeField(_("Date created"), auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     date_merged = models.DateTimeField(_("Date merged"), null=True, blank=True)
@@ -104,6 +105,10 @@ class Cart(models.Model):
         queryset = queryset.filter(user__username__contains=search_name) if search_name else queryset
         return queryset
 
+    @staticmethod
+    def check_voucher_if_used(voucher):
+        qs = Cart.objects.filter(vouchers=voucher)
+        return True if qs.exists() else False
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')

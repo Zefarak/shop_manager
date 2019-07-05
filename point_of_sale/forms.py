@@ -1,5 +1,5 @@
 from django import forms
-from .models import Order, OrderItem, OrderItemAttribute, ORDER_TYPES, OrderProfile
+from .models import Order, OrderItem, OrderItemAttribute, ORDER_TYPES, OrderProfile, SendReceipt
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute
 from dal import autocomplete
@@ -80,4 +80,11 @@ class OrderProfileForm(BaseForm, forms.ModelForm):
 
     class Meta:
         model = OrderProfile
+        fields = '__all__'
+
+
+class SendReceiptForm(BaseForm, forms.ModelForm):
+
+    class Meta:
+        model = SendReceipt
         fields = '__all__'

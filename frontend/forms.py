@@ -2,6 +2,14 @@ from django import forms
 from site_settings.models import PaymentMethod, Shipping
 
 
+class BaseForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+
 class CheckoutForm(forms.Form):
     email = forms.EmailField(required=True, label='Email*')
     cellphone = forms.CharField(required=True, label='CellPhone*')
@@ -19,3 +27,5 @@ class CheckoutForm(forms.Form):
             field.widget.attrs['class'] = 'form-control'
 
 
+class VoucherForm(BaseForm):
+    voucher = forms.CharField(required=True, label='Προσθήκη Κουπονιού')

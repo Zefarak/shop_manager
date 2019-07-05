@@ -1,15 +1,17 @@
 from django.shortcuts import render, get_object_or_404, reverse, HttpResponseRedirect
 from django.views.generic import TemplateView, FormView
 from django.forms import formset_factory
+from django.contrib import messages
 from site_settings.models import Banner, PaymentMethod, Shipping
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute, AttributeTitle
-from .forms import CheckoutForm
+from .forms import CheckoutForm, VoucherForm
 from point_of_sale.models import Order, OrderProfile
 from cart.tools import check_or_create_cart
+from cart.models import Cart
 from .mixins import SearchAndLoginMixin
 from point_of_sale.forms import OrderChangeTitle
-
+from voucher.models import Voucher
 from cart.forms import CartAttributeForm, CartAttributeFormset
 
 
@@ -27,9 +29,6 @@ class HomepageView(SearchAndLoginMixin):
 
 class NewProductsView(TemplateView):
     template_name = 'frontend/shop.html'
-
-
-import itertools
 
 
 def product_view(request, slug):
@@ -59,13 +58,26 @@ class AboutUsView(TemplateView):
     template_name = 'frontend/about.html'
 
 
-class CartView(TemplateView):
+class CartView(TemplateView, FormView):
     template_name = 'frontend/cart.html'
+    form_class = VoucherForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(locals())
-        return
+        return context
+
+    def form_valid(self, form):
+        title = form.cleaned_data.get('voucher')
+        qs = Voucher.objects.filter(code=title.upper())
+        voucher = qs.first() if qs.exists() else None
+        if not voucher:
+            messages.warning(self.request, f'Δεν υπάρχει κουπόνι με κωδικό {title}')
+            return super(CartView, self).form_valid(form)
+        user_can_use_it, message = voucher.is_available_to_user(Cart, voucher, self.request.user)
+        if not user_can_use_it:
+            messages.warning(self.request, message)
+            return super(CartView, self).form_valid(form)
 
 
 class CheckoutView(FormView):
