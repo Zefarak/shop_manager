@@ -119,11 +119,14 @@
                                                         <h5>Στοιχεία Παραλήπτη</h5>
                                                         <div class="card-header-right">
                                                             <ul class="list-unstyled card-option">
-                                                                <li><i class="fa fa fa-wrench open-card-option"></i></li>
-                                                                <li><i class="fa fa-window-maximize full-card"></i></li>
-                                                                <li><i class="fa fa-minus minimize-card"></i></li>
-                                                                <li><i class="fa fa-refresh reload-card"></i></li>
-                                                                <li><i class="fa fa-trash close-card"></i></li>
+                                                                <li><a href="{% url 'point_of_sale:order_profile_edit' instance.id %}">
+                                                                        <i class="fa fa fa-edit blue open-card-option"></i>
+                                                                    </a>
+                                                                </li>
+                                                                <li><a href="{% url 'point_of_sale:order_profile_edit' instance.id %}">
+                                                                        <i class="fa fa fa-user blue open-card-option"></i>
+                                                                    </a>
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -166,10 +169,10 @@
                                             <div class="col-xl-6 col-md-6">
                                                 <div class="card table-card">
                                                     <div class="card-header">
-                                                        <h5>Recent Tickets</h5>
+                                                        <h5>Στοιχεία Αποστολής</h5>
                                                         <div class="card-header-right">
                                                             <ul class="list-unstyled card-option">
-                                                                <li><i class="fa fa fa-wrench open-card-option"></i></li>
+
                                                                 <li><i class="fa fa-window-maximize full-card"></i></li>
                                                                 <li><i class="fa fa-minus minimize-card"></i></li>
                                                                 <li><i class="fa fa-refresh reload-card"></i></li>
@@ -182,67 +185,32 @@
                                                             <table class="table table-hover table-borderless">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th>Status</th>
-                                                                        <th>Subject</th>
-                                                                        <th>Department</th>
-                                                                        <th>Date</th>
+                                                                        <th>Ονομασία</th>
+                                                                        <th>Τιμή</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td><label class="label label-success">open</label></td>
+                                                                        <td></td>
+                                                                        <td>Support</td>
+                                                                    </tr>
+                                                                    <tr>
                                                                         <td>Website down for one week</td>
                                                                         <td>Support</td>
-                                                                        <td>Today 2:00</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><label class="label label-primary">progress</label></td>
-                                                                        <td>Loosing control on server</td>
+                                                                        <td>Website down for one week</td>
                                                                         <td>Support</td>
-                                                                        <td>Yesterday</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><label class="label label-danger">closed</label></td>
-                                                                        <td>Authorizations keys</td>
+                                                                        <td>Website down for one week</td>
                                                                         <td>Support</td>
-                                                                        <td>27, Aug</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><label class="label label-success">open</label></td>
-                                                                        <td>Restoring default settings</td>
+                                                                        <td>Website down for one week</td>
                                                                         <td>Support</td>
-                                                                        <td>Today 9:00</td>
                                                                     </tr>
-                                                                    <tr>
-                                                                        <td><label class="label label-primary">progress</label></td>
-                                                                        <td>Loosing control on server</td>
-                                                                        <td>Support</td>
-                                                                        <td>Yesterday</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><label class="label label-success">open</label></td>
-                                                                        <td>Restoring default settings</td>
-                                                                        <td>Support</td>
-                                                                        <td>Today 9:00</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><label class="label label-danger">closed</label></td>
-                                                                        <td>Authorizations keys</td>
-                                                                        <td>Support</td>
-                                                                        <td>27, Aug</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><label class="label label-success">open</label></td>
-                                                                        <td>Restoring default settings</td>
-                                                                        <td>Support</td>
-                                                                        <td>Today 9:00</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><label class="label label-primary">progress</label></td>
-                                                                        <td>Loosing control on server</td>
-                                                                        <td>Support</td>
-                                                                        <td>Yesterday</td>
-                                                                    </tr>
+
                                                                 </tbody>
                                                             </table>
                                                             <div class="text-right m-r-20">

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Order, OrderItem, OrderItemAttribute, ORDER_TYPES
+from .models import Order, OrderItem, OrderItemAttribute, ORDER_TYPES, OrderProfile
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute
 from dal import autocomplete
@@ -74,3 +74,10 @@ class OrderChangeTitle(BaseForm, forms.ModelForm):
 
 class OrderCreateCopyForm(BaseForm, forms.Form):
     order_type = forms.ChoiceField(required=True, choices=ORDER_TYPES)
+
+
+class OrderProfileForm(BaseForm, forms.ModelForm):
+
+    class Meta:
+        model = OrderProfile
+        fields = '__all__'

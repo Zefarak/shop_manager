@@ -142,7 +142,6 @@ class OrderUpdateView(UpdateView):
         instance = self.object
         is_return = True if self.object.order_type in ['b', 'wr'] else False
         profile_detail, created = OrderProfile.objects.get_or_create(order_related=instance)
-        shipping_detail, s_created = ShippingAddress.objects.get_or_create()
         context.update(locals())
         return context
 

@@ -1,12 +1,12 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
-from django.views.generic import DetailView, CreateView
+from django.views.generic import DetailView, CreateView, UpdateView
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
 from django.shortcuts import redirect, reverse
 from accounts.models import Profile
 from accounts.forms import ProfileForm
-from .models import Order, OrderItem
-from .forms import OrderCreateCopyForm
+from .models import Order, OrderItem, OrderProfile
+from .forms import OrderCreateCopyForm, OrderProfileForm
 from site_settings.models import PaymentMethod, Company
 import datetime
 
@@ -170,3 +170,24 @@ def order_change_costumer(request, pk, dk):
     old_costumer.refresh_from_db()
     old_costumer.save()
     return HttpResponseRedirect(order.get_edit_url())
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class ProfileOrderDetailView(UpdateView):
+    model = OrderProfile
+    form_class = OrderProfileForm
+    template_name = 'point_of_sale/form.html'
+
+    def get_success_url(self):
+        instance = self.object.order_related
+        return instance.get_edit_url()
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileOrderDetailView, self).get_context_data(**kwargs)
+        form_title, back_url = 'Επεξεργασία Προφίλ', self.get_success_url()
+        context.update(locals())
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        return super(ProfileOrderDetailView, self).form_valid(form)
