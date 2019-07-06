@@ -24,6 +24,7 @@ from site_settings.constants import CURRENCY, ORDER_STATUS, ORDER_TYPES, ADDRESS
 from cart.models import Cart, CartItem
 from .managers import OrderManager, OrderItemManager
 from accounts.models import Profile
+from voucher.models import Voucher
 
 RETAIL_TRANSCATIONS, PRODUCT_ATTRIBUTE_TRANSCATIONS = settings.RETAIL_TRANSCATIONS, settings.PRODUCT_ATTRIBUTE_TRANSCATIONS
 User = get_user_model()
@@ -63,6 +64,7 @@ class Order(DefaultOrderModel):
     # coupons = models.ManyToManyField(Coupons, blank=True)
     order_related = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
     guest_email = models.EmailField(blank=True)
+    vouchers = models.ManyToManyField(Voucher)
 
     class Meta:
         verbose_name_plural = '1. Orders'

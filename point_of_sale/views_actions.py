@@ -7,7 +7,8 @@ from django.shortcuts import redirect, reverse
 from accounts.models import Profile
 from accounts.forms import ProfileForm
 from .models import Order, OrderItem, OrderProfile, SendReceipt
-from .forms import OrderCreateCopyForm, OrderProfileForm, SendReceiptForm
+from voucher.models import Voucher
+from .forms import OrderCreateCopyForm, OrderProfileForm, SendReceiptForm, VoucherForm
 from site_settings.models import PaymentMethod, Company
 import datetime
 
@@ -211,3 +212,42 @@ def create_or_edit_order_voucher_view(request, pk):
         messages.success(request, f'Στάλθηκε email sto {voucher.email} με κωδικό {voucher.shipping_code}')
         return HttpResponseRedirect(order.get_edit_url())
     return render(request, 'point_of_sale/form.html', locals())
+
+
+@staff_member_required
+def order_voucher_manager_view(request, pk):
+    order = get_object_or_404(Order, id=pk)
+    back_url = order.get_edit_url()
+    vouchers = order.vouchers.all()
+
+    form = VoucherForm(request.POST or None)
+    if form.is_valid():
+        title = form.cleaned_data.get('title')
+        qs = Voucher.objects.filter(code=title.upper(), active=True)
+        voucher = qs.first() if qs.exists() else None
+        voucher_rule = voucher.voucher_rule  if voucher else None
+        voucher_benefit = voucher.benefit if voucher else None
+        if not voucher:
+            messages.warning(request, 'Δεν υπάρχει κουπόνι με αυτόν τον κωδικό')
+        is_available, message = Voucher.is_available_to_user(order, voucher, order.profile.user)
+        if not is_available:
+            messages.warning(request, message)
+            return redirect(reverse('point_of_sale:voucher_manager', kwargs={'pk': pk}))
+
+        if voucher_rule.exclusive and len(vouchers)>0:
+            messages.warning(request, 'Δε μπορείτε να προσθέσετε αυτόο το κουπόνι.')
+        order.vouchers.add(voucher)
+
+        order_items = order.order_items.all()
+        for order_item in order_items:
+            have_benefit = voucher_rule.gets_benefit(order_item)
+            if have_benefit:
+                pass
+
+
+    context = {
+        'form': form,
+        'vouchers': vouchers,
+        'back_url': back_url
+    }
+    return render(request, 'point_of_sale/action_pages/voucher_manager.html', context)

@@ -88,3 +88,7 @@ class SendReceiptForm(BaseForm, forms.ModelForm):
     class Meta:
         model = SendReceipt
         fields = '__all__'
+
+
+class VoucherForm(BaseForm):
+    title = forms.CharField(required=True)

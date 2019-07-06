@@ -42,6 +42,8 @@ class Voucher(models.Model):
 
     def is_available_to_user(self, cart, voucher, user=None):
         is_available, message = False, ''
+        if self.is_expired():
+            return False, 'Το κουπόνι έχει λήξει.'
         if self.usage == self.SINGLE_USE:
             is_available = cart.check_voucher_if_used(voucher)
             if not is_available:
@@ -70,6 +72,9 @@ class Voucher(models.Model):
     def record_usage(self, order, user):
         pass
 
+    def check_order_for_discount(self, order):
+        order_items = order.order_items.all()
+
 
 class Benefit(models.Model):
     voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_benefit')
@@ -95,6 +100,16 @@ class Benefit(models.Model):
     def save(self, *args, **kwargs):
         self.voucher.save()
         super(Benefit, self).save(*args, **kwargs)
+
+    def calculate_benefit(self, order_item):
+        if self.benefit_type == self.PERCENTAGE:
+            product = order_item.product
+            new_value = product.final_price * ((1-self.value)/100)
+            return new_value
+        if self.benefit_type == self.FIXED:
+            return order_item.final_value - self.value
+        if self.benefit_type == self.FIXED_PRICE:
+            return self.value
         
 
 class ProductRange(models.Model):
@@ -105,6 +120,18 @@ class ProductRange(models.Model):
     classes = models.ManyToManyField(ProductClass)
     included_categories = models.ManyToManyField(Category)
     included_brands = models.ManyToManyField(Brand)
+
+    def check_product(self, product, offer_type):
+        if offer_type == 'Categories':
+            product_categories = product.category_site.all()
+            for ele in product_categories:
+                if ele in self.included_categories:
+                    return True
+        if offer_type == 'Brands':
+            return product.brand in self.included_brands
+        if offer_type == 'products':
+            return product in self.included_products
+        return False
 
 
 class VoucherRules(models.Model):
@@ -129,6 +156,14 @@ class VoucherRules(models.Model):
     total_discount = models.DecimalField(default=0.00, decimal_places=2, max_digits=12)
     num_applications = models.PositiveIntegerField(default=0)
     num_orders = models.PositiveIntegerField(default=0)
+
+    def gets_benefit(self, order_item):
+        get_offer_type = self.offer_type
+        get_range = self.voucher.voucher_range
+        product = order_item.title
+        if get_offer_type == self.SITE:
+            return True
+        return get_range.check_product(product, get_offer_type)
 
 
 
