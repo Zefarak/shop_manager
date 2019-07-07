@@ -225,10 +225,22 @@ def order_voucher_manager_view(request, pk):
         title = form.cleaned_data.get('title')
         qs = Voucher.objects.filter(code=title.upper(), active=True)
         voucher = qs.first() if qs.exists() else None
-        voucher_rule = voucher.voucher_rule  if voucher else None
-        voucher_benefit = voucher.benefit if voucher else None
         if not voucher:
-            messages.warning(request, 'Δεν υπάρχει κουπόνι με αυτόν τον κωδικό')
+            is_available, message = False, 'Δεν υπάρχει κουπόνι με αυτόν τον κωδικό'
+            messages.warning(request, message)
+            print(is_available, message)
+            return HttpResponseRedirect(reverse('point_of_sale:voucher_manager', kwargs={'pk': pk}))
+        is_available, message = voucher.check_if_its_available(order, request.user, voucher)
+        if not is_available:
+            messages.warning(request, message)
+            print('result', message)
+            return HttpResponseRedirect(reverse('point_of_sale:voucher_manager', kwargs={'pk': pk}))
+        benefit_value = voucher.calculate_discount_value(order)
+
+        print('result', benefit_value, message)
+        return HttpResponseRedirect(reverse('point_of_sale:voucher_manager', kwargs={'pk': pk}))
+
+    '''
         is_available, message = Voucher.is_available_to_user(order, voucher, order.profile.user)
         if not is_available:
             messages.warning(request, message)
@@ -243,11 +255,12 @@ def order_voucher_manager_view(request, pk):
             have_benefit = voucher_rule.gets_benefit(order_item)
             if have_benefit:
                 pass
-
+    '''
 
     context = {
         'form': form,
         'vouchers': vouchers,
         'back_url': back_url
     }
+
     return render(request, 'point_of_sale/action_pages/voucher_manager.html', context)

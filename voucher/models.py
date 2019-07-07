@@ -36,21 +36,41 @@ class Voucher(models.Model):
     def get_edit_url(self):
         return reverse('vouchers:voucher_detail', kwargs={'pk': self.id})
 
+    def check_if_its_available(self, instance, user, voucher):
+        is_available, message = self.is_available_to_user(instance, voucher, user)
+        if not is_available:
+            return is_available, message
+        voucher_rule = self.voucher_rule
+        if voucher_rule.exclusive and len(instance.vouchers.all()) > 0:
+            is_available, message = False, 'Δε μπορείτε να προσθέσετε αυτό το κουπόνι.'
+        if not is_available:
+            return is_available, message
+        #  starts the calculate
+        return is_available, message
+
+    def calculate_discount_value(self, instance):
+        voucher_rule = self.voucher_rule
+        get_benefit = voucher_rule.gets_benefit(instance)
+
+
+
     def is_expired(self):
         now = timezone.now()
-        return self.end_date < now
+        return self.end_date < now if self.end_date else False
 
-    def is_available_to_user(self, cart, voucher, user=None):
+    def is_available_to_user(self, instance, voucher, user=None):
         is_available, message = False, ''
         if self.is_expired():
             return False, 'Το κουπόνι έχει λήξει.'
         if self.usage == self.SINGLE_USE:
-            is_available = cart.check_voucher_if_used(voucher)
+            is_available = instance.check_voucher_if_used(voucher)
             if not is_available:
                 message = _("This voucher has already been used")
-        elif self.usage == self.MULTI_USE:
+                return False, message
+        if self.usage == self.MULTI_USE:
             is_available, message = True, ''
-        elif self.usage == self.ONCE_PER_CUSTOMER:
+            return is_available, message
+        if self.usage == self.ONCE_PER_CUSTOMER:
             if not user.is_authenticated:
                 is_available = False
                 message = _('You need to log in to use this voucher')
@@ -59,6 +79,7 @@ class Voucher(models.Model):
                 if not is_available:
                     message = _('You have allready used this voucher')
             return is_available, message
+        return is_available, message
 
     def is_available_for_basket(self, basket):
         is_available, message = self.is_available_to_user(user=basket.owner)
@@ -72,45 +93,47 @@ class Voucher(models.Model):
     def record_usage(self, order, user):
         pass
 
-    def check_order_for_discount(self, order):
-        order_items = order.order_items.all()
 
-
-class Benefit(models.Model):
-    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_benefit')
-    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = (
-        "Percentage", "Absolute", "Multibuy", "Fixed price")
-    SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
-        'Shipping percentage', 'Shipping absolute', 'Shipping fixed price')
+class VoucherRules(models.Model):
+    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_rule')
+    SITE, CATEGORY, BRAND, PRODUCTS = ("Site", "Category", "Brand", "Products")
     TYPE_CHOICES = (
-        (PERCENTAGE, _("Discount is a percentage off of the product's value")),
-        (FIXED, _("Discount is a fixed amount off of the product's value")),
-        (MULTIBUY, _("Discount is to give the cheapest product for free")),
-        (FIXED_PRICE,
-         _("Get the products that meet the condition for a fixed price")),
-        (SHIPPING_ABSOLUTE,
-         _("Discount is a fixed amount of the shipping cost")),
-        (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
-        (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping"
-                                " cost")),
+        (SITE, _("Site offer - available to all users and products")),
+        (CATEGORY, _("Category offer - only available for certain categories ")),
+        (BRAND, _("Brand offer - available to certain brands")),
+        (PRODUCTS, _("Products offer - Manual add Products")),
     )
-    benefit_type = models.CharField(_('Discount Type'), choices=TYPE_CHOICES, default=PERCENTAGE, max_length=128)
-    value = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
 
-    def save(self, *args, **kwargs):
-        self.voucher.save()
-        super(Benefit, self).save(*args, **kwargs)
+    description = models.TextField(blank=True, help_text='Description for the costumers')
+    offer_type = models.CharField(choices=TYPE_CHOICES, default=SITE, max_length=128)
+    exclusive = models.BooleanField(default=True)
 
-    def calculate_benefit(self, order_item):
-        if self.benefit_type == self.PERCENTAGE:
-            product = order_item.product
-            new_value = product.final_price * ((1-self.value)/100)
-            return new_value
-        if self.benefit_type == self.FIXED:
-            return order_item.final_value - self.value
-        if self.benefit_type == self.FIXED_PRICE:
-            return self.value
-        
+    priority = models.IntegerField(default=0, db_index=True)
+
+    max_global_applications = models.PositiveIntegerField(blank=True, null=True)
+    max_user_applications = models.PositiveIntegerField(blank=True, null=True)
+    max_basket_applications = models.PositiveIntegerField(blank=True, null=True)
+    total_discount = models.DecimalField(default=0.00, decimal_places=2, max_digits=12)
+    num_applications = models.PositiveIntegerField(default=0)
+    num_orders = models.PositiveIntegerField(default=0)
+
+    def calculate_benefit(self, instance):
+        get_offer_type = self.offer_type
+        order_items = instance.order_items.all()
+        for order_item in order_items:
+            product = order_item.title
+            if get_offer_type == self.SITE:
+                total_benefit = self.voucher.voucher_benefit.calculate_benefit(instance)
+                return True, total_benefit
+            return self.check_product_range(product)
+        return False
+
+    def check_product_range(self, product):
+        range_ = self.voucher.voucher_range
+        if self.offer_type == self.CATEGORY:
+            have_benefit = range_.check_product(product, self.CATEGORY)
+        return False
+
 
 class ProductRange(models.Model):
     voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_range')
@@ -134,36 +157,60 @@ class ProductRange(models.Model):
         return False
 
 
-class VoucherRules(models.Model):
-    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_rule')
-    SITE, CATEGORY, BRAND, PRODUCTS, SHIPPING_DISCOOUNT = ("Site", "Category", "Brand", "Products", "Shipping Discount")
+class Benefit(models.Model):
+    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_benefit')
+    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = (
+        "Percentage", "Absolute", "Multibuy", "Fixed price")
+    SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
+        'Shipping percentage', 'Shipping absolute', 'Shipping fixed price')
     TYPE_CHOICES = (
-        (SITE, _("Site offer - available to all users and products")),
-        (CATEGORY, _("Category offer - only available for certain categories ")),
-        (BRAND, _("Brand offer - available to certain brands")),
-        (PRODUCTS, _("Products offer - Manual add Products")),
+        (PERCENTAGE, _("Discount is a percentage off of the product's value")),
+        (FIXED, _("Discount is a fixed amount off of the product's value")),
+        (MULTIBUY, _("Discount is to give the cheapest product for free")),
+        (FIXED_PRICE,
+         _("Get the products that meet the condition for a fixed price")),
+        (SHIPPING_ABSOLUTE,
+         _("Discount is a fixed amount of the shipping cost")),
+        (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
+        (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping"
+                                " cost")),
     )
+    benefit_type = models.CharField(_('Discount Type'), choices=TYPE_CHOICES, default=PERCENTAGE, max_length=128)
 
-    description = models.TextField(blank=True, help_text='Description for the costumers')
-    offer_type = models.CharField(choices=TYPE_CHOICES, default=SITE, max_length=128)
-    exclusive = models.BooleanField(default=True)
+    value = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
 
-    priority = models.IntegerField(default=0, db_index=True)
+    def save(self, *args, **kwargs):
+        self.voucher.save()
+        super(Benefit, self).save(*args, **kwargs)
 
-    max_global_applications = models.PositiveIntegerField(blank=True, null=True)
-    max_user_applications = models.PositiveIntegerField(blank=True, null=True)
-    max_basket_applications = models.PositiveIntegerField(blank=True, null=True)
-    total_discount = models.DecimalField(default=0.00, decimal_places=2, max_digits=12)
-    num_applications = models.PositiveIntegerField(default=0)
-    num_orders = models.PositiveIntegerField(default=0)
+    def calculate_benefit(self, my_instance):
+        total_discount = -1
+        order_items = my_instance.order_items.all()
 
-    def gets_benefit(self, order_item):
-        get_offer_type = self.offer_type
-        get_range = self.voucher.voucher_range
-        product = order_item.title
-        if get_offer_type == self.SITE:
-            return True
-        return get_range.check_product(product, get_offer_type)
+        if self.benefit_type == self.SHIPPING_ABSOLUTE:
+            total_discount = my_instance.shipping_cost
+
+        if self.benefit_type == self.FIXED_PRICE:
+            total_discount = self.value
+
+        if self.benefit_type == self.MULTIBUY:
+            new_order_items = order_items.order_by('final_value')
+            total_discount = order_items.first().final_value if order_items.exists() else 0
+
+        if self.benefit_type == self.PERCENTAGE:
+            total_discount = 0
+            for order_item in order_items:
+                discount = order_item.final_value * (self.value)/100
+                total_discount += discount
+
+        if self.benefit_type == self.FIXED:
+            return len(order_items) * self.value
+
+
+        return total_discount
+        
+
+
 
 
 

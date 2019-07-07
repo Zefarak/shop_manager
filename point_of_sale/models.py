@@ -174,6 +174,12 @@ class Order(DefaultOrderModel):
         return 'Printed' if self.printed else 'Not Printed'
 
     @staticmethod
+    def check_voucher_if_used(voucher):
+        print('check')
+        qs = Order.objects.filter(vouchers=voucher)
+        return True if qs.exists() else False
+
+    @staticmethod
     def create_eshop_order(request, form, cart):
         email = form.cleaned_data.get('email', 'admin@gmail.gr')
         shipping = form.cleaned_data.get('Shipping', Shipping.objects.first())
