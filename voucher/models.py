@@ -53,7 +53,6 @@ class Voucher(models.Model):
         get_benefit = voucher_rule.gets_benefit(instance)
 
 
-
     def is_expired(self):
         now = timezone.now()
         return self.end_date < now if self.end_date else False
@@ -107,6 +106,25 @@ class VoucherRules(models.Model):
     description = models.TextField(blank=True, help_text='Description for the costumers')
     offer_type = models.CharField(choices=TYPE_CHOICES, default=SITE, max_length=128)
     exclusive = models.BooleanField(default=True)
+    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = (
+        "Percentage", "Absolute", "Multibuy", "Fixed price")
+    SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
+        'Shipping percentage', 'Shipping absolute', 'Shipping fixed price')
+    TYPE_CHOICES = (
+        (PERCENTAGE, _("Discount is a percentage off of the product's value")),
+        (FIXED, _("Discount is a fixed amount off of the product's value")),
+        (MULTIBUY, _("Discount is to give the cheapest product for free")),
+        (FIXED_PRICE,
+         _("Get the products that meet the condition for a fixed price")),
+        (SHIPPING_ABSOLUTE,
+         _("Discount is a fixed amount of the shipping cost")),
+        (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
+        (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping"
+                                " cost")),
+    )
+    benefit_type = models.CharField(_('Discount Type'), choices=TYPE_CHOICES, default=PERCENTAGE, max_length=128)
+
+    value = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
 
     priority = models.IntegerField(default=0, db_index=True)
 
@@ -118,15 +136,14 @@ class VoucherRules(models.Model):
     num_orders = models.PositiveIntegerField(default=0)
 
     def calculate_benefit(self, instance):
-        get_offer_type = self.offer_type
-        order_items = instance.order_items.all()
-        for order_item in order_items:
-            product = order_item.title
-            if get_offer_type == self.SITE:
-                total_benefit = self.voucher.voucher_benefit.calculate_benefit(instance)
-                return True, total_benefit
-            return self.check_product_range(product)
-        return False
+        if self.benefit_type == self.SHIPPING_ABSOLUTE:
+            if self.offer_type == self.SITE:
+                return instance.shipping_cost
+            else:
+                have_benefit = self.voucher.voucher_range.calculate_discount_for_shipping(instance, self.offer_type)
+                return instance.shipping_cost if have_benefit else 0
+        if self.benefit_type == self.PERCENTAGE:
+            return self.voucher.voucher_range.calculate_benefit_for_percentage(instance, self.offer_type, value)
 
     def check_product_range(self, product):
         range_ = self.voucher.voucher_range
@@ -143,6 +160,43 @@ class ProductRange(models.Model):
     classes = models.ManyToManyField(ProductClass)
     included_categories = models.ManyToManyField(Category)
     included_brands = models.ManyToManyField(Brand)
+
+    def calculate_discount_for_shipping(self, instance, offer_type):
+        have_benefit = False
+        order_items = instance.order_items.all()
+        if offer_type == 'Categories':
+            for order_item in order_items:
+                if order_item.product.category_site in self.included_categories:
+                    have_benefit = True
+                    break
+        if offer_type == "Brands":
+            for order_item in order_items:
+                if order_item.product.brand in self.included_brands:
+                    have_benefit = True
+                    break
+        if offer_type == 'Products':
+            for order_item in order_items:
+                if order_item.product in self.included_products:
+                    have_benefit = True
+                    break
+        return have_benefit
+
+    def calculate_benefit_for_percentage(self, instance, offer_type, value):
+        discount_value = 0
+        if offer_type == 'SITE':
+            discount_value = instance.final_value * (value/100)
+        if offer_type == 'Categories':
+            order_items = instance.order_items.all()
+            for order_item in order_items:
+                if order_item.product.category_site.all() in self.included_categories:
+                    discount_value += order_item.final_value * (value/100)
+        if offer_type == 'Brands':
+            order_items = instance.order_items.all()
+            for order_item in order_items:
+                if order_item.product.brand in self.included_brands:
+                    discount_value += order_item.final_value * (value/100)
+        return discount_value
+
 
     def check_product(self, product, offer_type):
         if offer_type == 'Categories':
