@@ -33,7 +33,7 @@
                                         <form method="post" class="form">{% csrf_token %}
                                             {{ voucher_form }}
                                             <br />
-                                            <button type="submit" name="voucher" class="btn btn-primary">
+                                            <button type="submit" value="voucher" class="btn btn-primary">
                                                 <i class="fa fa-save"></i> Αποθήκευση
                                             </button>
                                         </form>
@@ -41,32 +41,6 @@
                             </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Ορισμός Έκπτωσης</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <form class="form" method="post">{% csrf_token %}
-                                            {{ benefit_form }}
-                                            <br />
-                                            <button type="submit" name="benefit" class="btn btn-primary">
-                                                <i class="fa fa-save"></i> Αποθήκευση
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                                <br />
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Επιλογή Προϊόντων</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <a href="{% url 'vouchers:voucher_range' voucher.id %}" class="btn btn-success btn-round">Επιλογή Προϊόντων</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-
                                 <div class="card">
                                     <div class="card-header">
                                         <h4>Οδηγίες</h4>
@@ -75,13 +49,22 @@
                                         <form method="post" class="form"> {% csrf_token %}
                                             {{ rules_form }}
                                             <br />
-                                            <button type="submit" name="rules" class="btn btn-primary">
+                                            <button type="submit" value="rules" class="btn btn-primary">
                                                 <i class="fa fa-save"></i> Αποθήκευση
                                             </button>
                                         </form>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>Επιλογή Προϊόντων</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <a href="{% url 'vouchers:voucher_range' voucher.id %}" class="btn btn-success btn-round">Επιλογή Προϊόντων</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

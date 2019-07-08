@@ -68,7 +68,10 @@
     					<h3>Κουπονια</h3>
                         {% for coupon in cart.vouchers.all %}
     					<p class="d-flex">
-    						<span>{{ coupon.code }}</span>
+    						<span>{{ coupon.code }} - {{ coupon.name }}
+                                <a href=""><i class="fa fa-trash"></i></a>
+                            </span>
+
     					</p>
                         {% empty %}
     					<p class="d-flex">
@@ -78,13 +81,20 @@
 
     				</div>
                     <p class="text-center">
-                    <form class="form" method="post">
-                    {% csrf_token %}
-                    {{ form }}
-                    <button type="submit" class="btn btn-primary py-3 px-4">Προσθήκη</button>
-                </form>
-
+                        <form class="form" method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                            <button type="submit" class="btn btn-primary py-3 px-4">Προσθήκη</button>
+                        </form>
                     </p>
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
     			</div>
                 <div class="col col-md-2"></div>
     			<div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">

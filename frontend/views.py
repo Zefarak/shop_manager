@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, reverse, HttpResponseRed
 from django.views.generic import TemplateView, FormView
 from django.forms import formset_factory
 from django.contrib import messages
+from django.urls import reverse_lazy
 from site_settings.models import Banner, PaymentMethod, Shipping
 from catalogue.models import Product
 from catalogue.product_attritubes import Attribute, AttributeTitle
@@ -61,6 +62,7 @@ class AboutUsView(TemplateView):
 class CartView(TemplateView, FormView):
     template_name = 'frontend/cart.html'
     form_class = VoucherForm
+    success_url = reverse_lazy('cart_page')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -74,10 +76,17 @@ class CartView(TemplateView, FormView):
         if not voucher:
             messages.warning(self.request, f'Δεν υπάρχει κουπόνι με κωδικό {title}')
             return super(CartView, self).form_valid(form)
-        user_can_use_it, message = voucher.is_available_to_user(Cart, voucher, self.request.user)
-        if not user_can_use_it:
-            messages.warning(self.request, message)
-            return super(CartView, self).form_valid(form)
+
+        cart = check_or_create_cart(self.request)
+        is_available, message = voucher.check_if_its_available(cart, voucher, self.request.user)
+        value = 0
+        if is_available:
+            value, message = voucher.calculate_discount_value(cart)
+            cart.vouchers.add(voucher)
+            cart.voucher_discount = value
+            cart.save()
+        messages.warning(self.request, f'{message} {value}')
+        return super(CartView, self).form_valid(form)
 
 
 class CheckoutView(FormView):

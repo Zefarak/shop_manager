@@ -71,6 +71,7 @@ class Cart(models.Model):
                                 verbose_name='Αξία Προϊόντων'
                                 )
     discount_value = models.DecimalField(decimal_places=2, max_digits=10, default=0.00, verbose_name='Έκπτωση')
+    voucher_discount = models.DecimalField(decimal_places=2, max_digits=10, default=0.00, verbose_name='Έκπτωση από Κουπόνια')
 
     class Meta:
         ordering = ['-id', ]
@@ -79,9 +80,9 @@ class Cart(models.Model):
         return f'Cart {self.id}'
 
     def save(self, *args, **kwargs):
-        cart_items = self.cart_items.all()
+        cart_items = self.order_items.all()
         self.value = cart_items.aggregate(Sum('total_value'))['total_value__sum'] if cart_items else 0
-        self.final_value = self.value - self.discount_value
+        self.final_value = self.value - self.discount_value - self.voucher_discount
         super().save(*args, **kwargs)
 
     def tag_final_value(self):
@@ -110,8 +111,9 @@ class Cart(models.Model):
         qs = Cart.objects.filter(vouchers=voucher)
         return True if qs.exists() else False
 
+
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='order_items')
     product = models.ForeignKey(Product, null=True, on_delete=models.CASCADE)
     qty = models.PositiveIntegerField(default=1)
     have_attributes = models.BooleanField(default=False)

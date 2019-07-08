@@ -1,5 +1,5 @@
 from django import forms
-from .models import Voucher, ProductRange, VoucherRules, Benefit
+from .models import Voucher, ProductRange, VoucherRules
 
 
 class BaseForm(forms.Form):
@@ -17,14 +17,6 @@ class VoucherForm(BaseForm, forms.ModelForm):
     class Meta:
         model = Voucher
         fields = ['active', 'usage', 'name', 'code', 'start_date', 'end_date']
-
-
-class BenefitForm(BaseForm, forms.ModelForm):
-    voucher = forms.ModelChoiceField(queryset=Voucher.objects.all(), widget=forms.HiddenInput())
-
-    class Meta:
-        model = Benefit
-        fields = '__all__'
 
 
 class ProductRangeForm(BaseForm, forms.ModelForm):

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.shortcuts import reverse
 
 from catalogue.models import Product, ProductClass, Category, Brand
+from .tools import calculate_product_benefit_helper
 
 
 class Voucher(models.Model):
@@ -50,8 +51,8 @@ class Voucher(models.Model):
 
     def calculate_discount_value(self, instance):
         voucher_rule = self.voucher_rule
-        get_benefit = voucher_rule.gets_benefit(instance)
-
+        get_benefit, message = voucher_rule.calculate_benefit(instance)
+        return get_benefit, message
 
     def is_expired(self):
         now = timezone.now()
@@ -80,18 +81,6 @@ class Voucher(models.Model):
             return is_available, message
         return is_available, message
 
-    def is_available_for_basket(self, basket):
-        is_available, message = self.is_available_to_user(user=basket.owner)
-        if not is_available:
-            return is_available, message
-
-        is_available, message = False, _('This voucher cant be used for this cart')
-        #  CHECK ID IS THE BASKET
-        return is_available, message
-
-    def record_usage(self, order, user):
-        pass
-
 
 class VoucherRules(models.Model):
     voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_rule')
@@ -115,12 +104,9 @@ class VoucherRules(models.Model):
         (FIXED, _("Discount is a fixed amount off of the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE,
-         _("Get the products that meet the condition for a fixed price")),
+         _("Reduce the cost of order by the value")),
         (SHIPPING_ABSOLUTE,
          _("Discount is a fixed amount of the shipping cost")),
-        (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
-        (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping"
-                                " cost")),
     )
     benefit_type = models.CharField(_('Discount Type'), choices=TYPE_CHOICES, default=PERCENTAGE, max_length=128)
 
@@ -136,20 +122,14 @@ class VoucherRules(models.Model):
     num_orders = models.PositiveIntegerField(default=0)
 
     def calculate_benefit(self, instance):
+        value, message = 0, 'Oups something is wrong'
         if self.benefit_type == self.SHIPPING_ABSOLUTE:
-            if self.offer_type == self.SITE:
-                return instance.shipping_cost
-            else:
-                have_benefit = self.voucher.voucher_range.calculate_discount_for_shipping(instance, self.offer_type)
-                return instance.shipping_cost if have_benefit else 0
+            pass
         if self.benefit_type == self.PERCENTAGE:
-            return self.voucher.voucher_range.calculate_benefit_for_percentage(instance, self.offer_type, value)
-
-    def check_product_range(self, product):
-        range_ = self.voucher.voucher_range
-        if self.offer_type == self.CATEGORY:
-            have_benefit = range_.check_product(product, self.CATEGORY)
-        return False
+            return self.voucher.voucher_range.calculate_benefit_for_percentage(instance, self.offer_type, self.value)
+        if self.benefit_type == self.FIXED:
+            return self.voucher.voucher_range.calculate_benefit_for_fixed(instance, self.offer_type, self.value)
+        return value, message
 
 
 class ProductRange(models.Model):
@@ -161,42 +141,14 @@ class ProductRange(models.Model):
     included_categories = models.ManyToManyField(Category)
     included_brands = models.ManyToManyField(Brand)
 
-    def calculate_discount_for_shipping(self, instance, offer_type):
-        have_benefit = False
-        order_items = instance.order_items.all()
-        if offer_type == 'Categories':
-            for order_item in order_items:
-                if order_item.product.category_site in self.included_categories:
-                    have_benefit = True
-                    break
-        if offer_type == "Brands":
-            for order_item in order_items:
-                if order_item.product.brand in self.included_brands:
-                    have_benefit = True
-                    break
-        if offer_type == 'Products':
-            for order_item in order_items:
-                if order_item.product in self.included_products:
-                    have_benefit = True
-                    break
-        return have_benefit
-
     def calculate_benefit_for_percentage(self, instance, offer_type, value):
-        discount_value = 0
-        if offer_type == 'SITE':
-            discount_value = instance.final_value * (value/100)
-        if offer_type == 'Categories':
-            order_items = instance.order_items.all()
-            for order_item in order_items:
-                if order_item.product.category_site.all() in self.included_categories:
-                    discount_value += order_item.final_value * (value/100)
-        if offer_type == 'Brands':
-            order_items = instance.order_items.all()
-            for order_item in order_items:
-                if order_item.product.brand in self.included_brands:
-                    discount_value += order_item.final_value * (value/100)
-        return discount_value
+        return calculate_product_benefit_helper(self, instance, offer_type, value, self.voucher.voucher_rule.PERCENTAGE)
 
+    def calculate_benefit_for_fixed(self, instance, offer_type, value):
+        return calculate_product_benefit_helper(self, instance, offer_type, value, self.voucher.voucher_rule.FIXED)
+
+    def calculated_benefit_for_fixed_price(self, instance, offer_type, value):
+        return calculate_product_benefit_helper(self, instance, offer_type, value, self.voucher.voucher_rule.FIXED_PRICE)
 
     def check_product(self, product, offer_type):
         if offer_type == 'Categories':
@@ -211,57 +163,7 @@ class ProductRange(models.Model):
         return False
 
 
-class Benefit(models.Model):
-    voucher = models.OneToOneField(Voucher, on_delete=models.CASCADE, related_name='voucher_benefit')
-    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = (
-        "Percentage", "Absolute", "Multibuy", "Fixed price")
-    SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
-        'Shipping percentage', 'Shipping absolute', 'Shipping fixed price')
-    TYPE_CHOICES = (
-        (PERCENTAGE, _("Discount is a percentage off of the product's value")),
-        (FIXED, _("Discount is a fixed amount off of the product's value")),
-        (MULTIBUY, _("Discount is to give the cheapest product for free")),
-        (FIXED_PRICE,
-         _("Get the products that meet the condition for a fixed price")),
-        (SHIPPING_ABSOLUTE,
-         _("Discount is a fixed amount of the shipping cost")),
-        (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
-        (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping"
-                                " cost")),
-    )
-    benefit_type = models.CharField(_('Discount Type'), choices=TYPE_CHOICES, default=PERCENTAGE, max_length=128)
 
-    value = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
-
-    def save(self, *args, **kwargs):
-        self.voucher.save()
-        super(Benefit, self).save(*args, **kwargs)
-
-    def calculate_benefit(self, my_instance):
-        total_discount = -1
-        order_items = my_instance.order_items.all()
-
-        if self.benefit_type == self.SHIPPING_ABSOLUTE:
-            total_discount = my_instance.shipping_cost
-
-        if self.benefit_type == self.FIXED_PRICE:
-            total_discount = self.value
-
-        if self.benefit_type == self.MULTIBUY:
-            new_order_items = order_items.order_by('final_value')
-            total_discount = order_items.first().final_value if order_items.exists() else 0
-
-        if self.benefit_type == self.PERCENTAGE:
-            total_discount = 0
-            for order_item in order_items:
-                discount = order_item.final_value * (self.value)/100
-                total_discount += discount
-
-        if self.benefit_type == self.FIXED:
-            return len(order_items) * self.value
-
-
-        return total_discount
         
 
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Voucher, VoucherRules, ProductRange, Benefit
+from .models import Voucher, VoucherRules, ProductRange
 
 
 @admin.register(Voucher)
@@ -18,6 +18,3 @@ class ProductRangeAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Benefit)
-class BenefitAdmin(admin.ModelAdmin):
-    pass
