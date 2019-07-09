@@ -81,9 +81,7 @@ class CartView(TemplateView, FormView):
         is_available, message = voucher.check_if_its_available(cart, voucher, self.request.user)
         value = 0
         if is_available:
-            value, message = voucher.calculate_discount_value(cart)
             cart.vouchers.add(voucher)
-            cart.voucher_discount = value
             cart.save()
         messages.warning(self.request, f'{message} {value}')
         return super(CartView, self).form_valid(form)

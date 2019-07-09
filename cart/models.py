@@ -82,6 +82,10 @@ class Cart(models.Model):
     def save(self, *args, **kwargs):
         cart_items = self.order_items.all()
         self.value = cart_items.aggregate(Sum('total_value'))['total_value__sum'] if cart_items else 0
+        if self.vouchers.exists():
+            self.voucher_discount = 0
+            for voucher in self.vouchers.all():
+                voucher.calculate_discount_value(self)
         self.final_value = self.value - self.discount_value - self.voucher_discount
         super().save(*args, **kwargs)
 

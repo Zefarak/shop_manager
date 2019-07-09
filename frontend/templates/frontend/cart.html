@@ -69,7 +69,7 @@
                         {% for coupon in cart.vouchers.all %}
     					<p class="d-flex">
     						<span>{{ coupon.code }} - {{ coupon.name }}
-                                <a href=""><i class="fa fa-trash"></i></a>
+                                <a href="{% url 'remove_voucher' coupon.id %}"><i class="fa fa-trash"></i></a>
                             </span>
 
     					</p>
