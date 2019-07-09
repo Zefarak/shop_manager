@@ -18,7 +18,7 @@ class OrderCreateForm(BaseForm, forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = ['date_expired', 'status', 'payment_method', 'profile']
+        fields = ['date_expired', 'status', 'order_type', 'payment_method', 'profile']
         widgets = {
             'profile': autocomplete.ModelSelect2(url='point_of_sale:autocomplete_profile', attrs={
                 'class': 'form-control', }

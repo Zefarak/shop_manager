@@ -27,10 +27,6 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #  create table
-        queryset_table = OrderTable(Order.objects.all()[:10])
-        RequestConfig(self.request).configure(queryset_table)
-
         qs_today = Order.objects.filter(date_expired=datetime.datetime.now())
         today_sells = qs_today.filter(order_type__in=['r', 'e']).aggregate(Sum('final_value'))['final_value__sum'] \
             if qs_today.filter(order_type__in=['r', 'e']).exists() else 0.00

@@ -22,8 +22,8 @@ class ProfileTable(tables.Table):
 
 
 class OrderTable(tables.Table):
-    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'>Edit</a>", orderable=False)
-    tag_final_value = tables.Column(orderable=False, verbose_name='Value')
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}' class='btn btn-primary'><i class='fa fa-edit'></i></a>", orderable=False)
+    tag_final_value = tables.Column(orderable=False, verbose_name='Αξία')
 
     class Meta:
         model = Order

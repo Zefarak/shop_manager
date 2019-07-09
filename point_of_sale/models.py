@@ -69,7 +69,7 @@ class Order(DefaultOrderModel):
     class Meta:
         verbose_name_plural = '1. Orders'
         verbose_name = 'Order'
-        ordering = ['-date_expired']
+        ordering = ['-date_expired', 'status', '-id']
 
     def __str__(self):
         return self.title if self.title else 'order'
@@ -175,7 +175,6 @@ class Order(DefaultOrderModel):
 
     @staticmethod
     def check_voucher_if_used(voucher):
-        print('check')
         qs = Order.objects.filter(vouchers=voucher)
         return True if qs.exists() else False
 
@@ -196,9 +195,6 @@ class Order(DefaultOrderModel):
         if user:
             new_order.user = user
             new_order.profile = user.profile
-        for voucher in cart.vouchers.all():
-            new_order.vouchers.add(voucher)
-        new_order.save()
         for item in cart.order_items.all():
             new_item = OrderItem.objects.create(
                 order=new_order,
@@ -218,6 +214,7 @@ class Order(DefaultOrderModel):
         status_name = request.GET.getlist('status_name', None)
         payment_name = request.GET.getlist('payment_name', None)
         sell_point_name = request.GET.getlist('sell_point_name', None)
+        sort_by = request.GET.get('sort', None)
         queryset = queryset.filter(printed=False) if printed_name else queryset
         queryset = queryset.filter(payment_method__id__in=payment_name) if payment_name else queryset
         queryset = queryset.filter(status__in=status_name) if status_name else queryset
@@ -232,6 +229,7 @@ class Order(DefaultOrderModel):
                                    Q(last_name__icontains=search_name)
                                    ).distinct() if search_name else queryset
         queryset = queryset.filter(seller_account__id__in=sell_point_name) if sell_point_name else queryset
+        queryset = queryset.order_by(sort_by) if sort_by else queryset
         return queryset
 
     @staticmethod

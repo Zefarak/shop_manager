@@ -93,7 +93,8 @@ class CheckoutView(FormView):
     success_url = '/'
 
     def get_success_url(self):
-        return reverse('order_detail', kwargs={'number': self.new_order.id})
+        self.new_order.refresh_from_db()
+        return reverse('order_detail', kwargs={'pk': self.new_order.id})
 
     def get_initial(self):
         initial = super().get_initial()
@@ -120,10 +121,14 @@ class CheckoutView(FormView):
 
     def form_valid(self, form):
         cart = check_or_create_cart(self.request)
+        if not cart.order_items.exists():
+            messages.warning(self.request, 'Δε έχετε προσθέσει Προϊόντα')
+            return super().form_valid(form)
         self.new_order = new_order = Order.create_eshop_order(self.request, form, cart)
         cart.status = 'Submitted'
         cart.save()
-        del self. request.session['cart_id']
+        new_profile = OrderProfile.create_profile_from_cart(form, new_order)
+        del self.request.session['cart_id']
         OrderProfile.create_profile_from_cart(form, new_order)
         return super().form_valid(form)
 
