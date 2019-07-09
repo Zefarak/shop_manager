@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
@@ -82,10 +82,6 @@ class Cart(models.Model):
     def save(self, *args, **kwargs):
         cart_items = self.order_items.all()
         self.value = cart_items.aggregate(Sum('total_value'))['total_value__sum'] if cart_items else 0
-        if self.vouchers.exists():
-            self.voucher_discount = 0
-            for voucher in self.vouchers.all():
-                voucher.calculate_discount_value(self)
         self.final_value = self.value - self.discount_value - self.voucher_discount
         super().save(*args, **kwargs)
 
@@ -114,6 +110,16 @@ class Cart(models.Model):
     def check_voucher_if_used(voucher):
         qs = Cart.objects.filter(vouchers=voucher)
         return True if qs.exists() else False
+
+
+@receiver(post_save, sender=Cart)
+def calculate_voucher_discount(sender, instance, **kwargs):
+    if instance.vouchers.all().exists():
+        voucher_discount = 0
+        for voucher in instance.vouchers.all():
+            voucher_discount += voucher.calculate_discount_value(instance)
+        final_value = instance.value - instance.discount_value - instance.voucher_discount
+        Cart.objects.filter(id=instance.id).update(final_value=final_value, voucher_discount=voucher_discount)
 
 
 class CartItem(models.Model):

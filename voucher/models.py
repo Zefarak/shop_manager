@@ -51,8 +51,8 @@ class Voucher(models.Model):
 
     def calculate_discount_value(self, instance):
         voucher_rule = self.voucher_rule
-        get_benefit, message = voucher_rule.calculate_benefit(instance)
-        return get_benefit, message
+        value = voucher_rule.calculate_benefit(instance)
+        return value
 
     def is_expired(self):
         now = timezone.now()
@@ -122,14 +122,14 @@ class VoucherRules(models.Model):
     num_orders = models.PositiveIntegerField(default=0)
 
     def calculate_benefit(self, instance):
-        value, message = 0, 'Oups something is wrong'
+        value = 0
         if self.benefit_type == self.SHIPPING_ABSOLUTE:
             pass
         if self.benefit_type == self.PERCENTAGE:
             return self.voucher.voucher_range.calculate_benefit_for_percentage(instance, self.offer_type, self.value)
         if self.benefit_type == self.FIXED:
             return self.voucher.voucher_range.calculate_benefit_for_fixed(instance, self.offer_type, self.value)
-        return value, message
+        return value
 
 
 class ProductRange(models.Model):

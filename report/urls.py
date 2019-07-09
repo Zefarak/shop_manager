@@ -10,4 +10,5 @@ urlpatterns = [
 
    path('vendor-analysis/', vendor_analysis_view, name='vendor_analysis'),
 
+
 ]

@@ -31,7 +31,7 @@ class OrderUpdateForm(BaseForm, forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = ['is_paid', 'discount', 'date_expired', 'title',
+        fields = ['discount', 'date_expired', 'title',
                   'payment_method', 'status', 'profile', 'taxes_modifier'
                   ]
         widgets = {
@@ -92,3 +92,6 @@ class SendReceiptForm(BaseForm, forms.ModelForm):
 
 class VoucherForm(BaseForm):
     title = forms.CharField(required=True)
+
+
+

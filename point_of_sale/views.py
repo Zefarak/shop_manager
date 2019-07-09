@@ -132,6 +132,11 @@ class OrderUpdateView(UpdateView):
     form_class = OrderUpdateForm
     template_name = 'point_of_sale/order-detail.html'
 
+    def get_initial(self):
+        initial = super(OrderUpdateView, self).get_initial()
+        initial['date_expired'] = datetime.datetime.strftime(self.object.date_expired, '%Y-%m-%d')
+        return initial
+
     def get_success_url(self):
         return reverse('point_of_sale:order_detail', kwargs={'pk': self.kwargs['pk']})
 

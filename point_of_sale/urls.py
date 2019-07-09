@@ -8,7 +8,9 @@ from .ajax_views import (ajax_order_item, ajax_search_products, ajax_add_product
                          ajax_search_costumers, ajax_costumer_order_pay_view, ajax_search_products_for_cart,
                          ajax_add_product_with_attribute, ajax_edit_product_with_attr_view, ajax_order_search_costumer
                          )
-from .views_actions import auto_create_retail_order, done_order_view, quick_pay_costumer_view, create_copy_order, OrderPrintView, CreateCostumerFromOrder, order_change_costumer, ProfileOrderDetailView, create_or_edit_order_voucher_view, order_voucher_manager_view
+from .views_actions import (auto_create_retail_order, done_order_view, quick_pay_costumer_view, create_copy_order,
+                            OrderPrintView, CreateCostumerFromOrder, order_change_costumer, ProfileOrderDetailView,
+                            create_or_edit_order_voucher_view, order_voucher_manager_view)
 from .autocomplete_widget import ProfileAutoComplete
 
 app_name = 'point_of_sale'
@@ -52,6 +54,7 @@ urlpatterns = [
     path('action/order-done/<int:pk>/<slug:action>/', done_order_view, name='action_order_done'),
     path('autocomplete/profile/', ProfileAutoComplete.as_view(), name='autocomplete_profile'),
 
+
     # costumer views
     path('costumer/list/', CostumerListView.as_view(), name='costumer_list_view'),
     path('costumer/create/', CostumerCreateView.as_view(), name='costumer_create_view'),
@@ -59,7 +62,4 @@ urlpatterns = [
     path('costumer/delete/<int:pk>/', delete_costumer_view, name='costumer_delete_view'),
     path('costumer/account-card/<int:pk>/', CostumerAccountCardView.as_view(), name='costumer_account_card'),
     path('costumer/quick/pay/<int:pk>/', quick_pay_costumer_view, name='costumer_pay'),
-
-
-
 ]

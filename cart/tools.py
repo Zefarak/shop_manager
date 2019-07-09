@@ -29,7 +29,6 @@ def check_or_create_cart(request):
 
 
 def add_to_cart_with_attr(product):
-    print('here')
     return redirect(reverse('product_view', kwargs={'slug': product.slug}))
 
 

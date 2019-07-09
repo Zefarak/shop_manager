@@ -50,6 +50,6 @@ def calculate_product_benefit_helper(self, instance, offer_type, value, discount
                     break
                 if discount_value == 'Multibuy':
                     pass
-    return discount_value, 'The voucher added'
+    return discount_value
 
 

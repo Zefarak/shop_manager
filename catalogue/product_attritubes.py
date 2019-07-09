@@ -115,9 +115,7 @@ class Attribute(models.Model):
         super().save(*args, **kwargs)
         if WAREHOUSE_ORDERS_TRANSCATIONS:
             self.qty_add = self.calculate_warehouse()
-
             self.qty = self.qty_add
-
         self.class_related.product_related.save()
 
     def __str__(self):
@@ -127,7 +125,9 @@ class Attribute(models.Model):
         invoices_items = self.invoice_attributes.all()
         items_added = invoices_items.filter(order_item__order__order_type__in=[['1', '2', '4']])
         item_removed = invoices_items.filter(order_item__order__order_type='5')
-        return items_added - item_removed
+        items_added = items_added.aggregate(Sum('qty'))['qty__sum'] if items_added.exists() else 0
+        items_removed = item_removed.aggregate(Sum('qty'))['qty__sum'] if item_removed.exists() else 0
+        return items_added - items_removed
 
     def check_product_in_order(self):
         return str(self.product_related + '. Χρώμα : ' + self.title.title + ', Μέγεθος : ' + self.title.title)

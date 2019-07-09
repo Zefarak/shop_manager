@@ -10,6 +10,7 @@ from .models import Order, OrderItem, OrderProfile, SendReceipt
 from voucher.models import Voucher
 from .forms import OrderCreateCopyForm, OrderProfileForm, SendReceiptForm, VoucherForm
 from site_settings.models import PaymentMethod, Company
+from catalogue.models import Product
 import datetime
 
 
@@ -169,8 +170,9 @@ def order_change_costumer(request, pk, dk):
     old_costumer = order.profile
     order.profile = new_costumer
     order.save()
-    old_costumer.refresh_from_db()
-    old_costumer.save()
+    if old_costumer:
+        old_costumer.refresh_from_db()
+        old_costumer.save()
     return HttpResponseRedirect(order.get_edit_url())
 
 

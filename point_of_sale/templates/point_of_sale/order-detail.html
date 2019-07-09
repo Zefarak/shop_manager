@@ -179,6 +179,10 @@
                                                         </div>
                                                     </div>
                                                     <div class="card-block">
+                                                        <form class="form-control" method="post">
+                                                            {% csrf_token %}
+
+                                                        </form>
                                                         <div class="table-responsive">
                                                             <table class="table table-hover table-borderless">
                                                                 <thead>
@@ -189,22 +193,28 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
+                                                                        <td>Τρόπος Αποστολής</td>
+                                                                        <td>{{ instance.shipping }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Κόστος Αποστολής</td>
+                                                                        <td>{{ instance.tag_shipping_cost }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Κόστος Αντικαταβολής</td>
+                                                                        <td>{{ instance.tag_payment_cost }}</td>
+                                                                    </tr>
+                                                                    <tr>
                                                                         <td>Απεσταλμένο</td>
-                                                                        <td>{{ shipping_voucher.is_sent }}</td>
+                                                                        <td>{{ shipping_voucher.is_sent|default_if_none:'Μη Απεσταλμένο' }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Voucher Code</td>
-                                                                        <td>{{ shipping_voucher.shipping_code }}</td>
+                                                                        <td>{{ shipping_voucher.shipping_code|default_if_none:'No data' }}</td>
                                                                     </tr>
-                                                                    <tr>
-                                                                        <td>Τρόπος Αποστολής</td>
-                                                                        <td>{{ shipping_voucher.shipping_method }}</td>
-                                                                    </tr>
+
                                                                 </tbody>
                                                             </table>
-                                                            <div class="text-right m-r-20">
-                                                                <a href="#!" class=" b-b-primary text-primary">View all Projects</a>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

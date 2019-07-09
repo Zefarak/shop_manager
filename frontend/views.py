@@ -136,3 +136,8 @@ def order_detail(request, pk):
         form.save()
         return HttpResponseRedirect(reverse('order_detail', kwargs={'pk': pk}))
     return render(request, 'frontend/order_detail.html', locals())
+
+
+def delete_session_view(request):
+    del request.session['cart_id']
+    return HttpResponseRedirect('/')

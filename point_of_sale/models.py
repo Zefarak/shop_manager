@@ -185,22 +185,29 @@ class Order(DefaultOrderModel):
         shipping = form.cleaned_data.get('Shipping', Shipping.objects.first())
         payment_method = form.cleaned_data.get('payment_method', PaymentMethod.objects.first())
         user = request.user if request.user.is_authenticated else None
+
         new_order = Order.objects.create(
             cart_related=cart,
             order_type='e',
             shipping=shipping,
             payment_method=payment_method,
-            guest_email=email
+            guest_email=email,
         )
         if user:
             new_order.user = user
+            new_order.profile = user.profile
+        for voucher in cart.vouchers.all():
+            new_order.vouchers.add(voucher)
         new_order.save()
-        for item in cart.cart_items.all():
+        for item in cart.order_items.all():
             new_item = OrderItem.objects.create(
                 order=new_order,
                 title=item.product,
                 qty=item.qty,
             )
+        for voucher in cart.vouchers.all():
+            new_order.vouchers.add(voucher)
+        new_order.save()
         return new_order
 
     @staticmethod
