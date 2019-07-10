@@ -44,6 +44,7 @@ class DashboardView(ListView):
 
         new_orders = Order.objects.filter(status='1')[:10]
         new_orders_table = OrderTable(new_orders)
+
         context.update(locals())
         return context
 
@@ -100,6 +101,8 @@ class OrderUpdateView(UpdateView):
         instance = self.object
         is_return = True if self.object.order_type in ['b', 'wr'] else False
         profile_detail, created = OrderProfile.objects.get_or_create(order_related=instance)
+        get_params = self.request.get_full_path().split('?', 1)[1] if '?' in self.request.get_full_path() else ''
+        back_url = get_params if len(get_params) > 2 else reverse('point_of_sale:home')
         context.update(locals())
         return context
 

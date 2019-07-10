@@ -24,6 +24,7 @@
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="header my_header">
+                                        <a href="{{ back_url }}" class="btn btn-warning fluid right">Επιστροφή</a>
                                        {% comment %} <div class="title .my_header"><a href="{% url 'point_of_sale:copy_order' instance.id %}" class="btn btn-info"><i class="fa fa-copy"></i> </a></div> {% endcomment %}
                                     </div>
                                     <div class="content" id="order_items_container">{% include 'point_of_sale/ajax/order_container.html' %}</div>

@@ -39,7 +39,6 @@ def product_view(request, slug):
     ids = set(ele.id for ele in attributes)
     answers = list(attributes)*2
     extra = attributes.count()
-    print(extra)
     New_Formset = formset_factory(CartAttributeForm, extra=extra)
     formset = New_Formset(
         initial=[
