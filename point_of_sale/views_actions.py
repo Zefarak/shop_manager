@@ -63,19 +63,13 @@ def done_order_view(request, pk, action):
     order_items = instance.order_items.exists()
     if not order_items:
         instance.delete()
-        return redirect(reverse('point_of_sale:order_list'))
+        return redirect(reverse('point_of_sale:home'))
     if action == 'paid':
         instance.is_paid = True
         instance.status = "8"
     instance.save()
     order_redirect = request.COOKIES.get('order_redirect', None)
-    if order_redirect == 'costumers':
-        del request.COOKIES['order_redirect']
-        return order_redirect(reverse('point_of_sale:costumer_account_card', kwargs={'pk': pk}))
-    if order_redirect == 'homepage':
-        del request.COOKIES['order_redirect']
-        return redirect('point_of_sale:home')
-    return redirect(reverse('point_of_sale:order_list'))
+    return redirect(reverse('point_of_sale:home'))
 
 
 @staff_member_required
