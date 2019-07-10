@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (DashboardView, OrderListView, SellListView, CreateOrderView, OrderUpdateView, delete_order,
+from .views import (DashboardView, CreateOrderView, OrderUpdateView, delete_order,
                     check_product, add_to_order_with_attr, order_item_edit_with_attr, OrderItemListView,
                     CostumerCreateView, CostumerListView, CostumerUpdateView, delete_costumer_view,
                     CostumerAccountCardView
@@ -17,8 +17,6 @@ app_name = 'point_of_sale'
 
 urlpatterns = [
     path('', DashboardView.as_view(), name='home'),
-    path('order-list/', OrderListView.as_view(), name='order_list'),
-    path('eshop-orders/', SellListView.as_view(), name='sell_list'),
     path('order-create/', CreateOrderView.as_view(), name='order_create'),
     path('order-items-list-view/', OrderItemListView.as_view(), name='order_item_list_view'),
     path('order-detail/<int:pk>/', OrderUpdateView.as_view(), name='order_detail'),

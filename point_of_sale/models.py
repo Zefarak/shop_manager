@@ -214,11 +214,15 @@ class Order(DefaultOrderModel):
         status_name = request.GET.getlist('status_name', None)
         payment_name = request.GET.getlist('payment_name', None)
         sell_point_name = request.GET.getlist('sell_point_name', None)
+        order_type_name = request.GET.getlist('order_type_name', None)
+        costumer_name = request.GET.getlist('costumer_name', None)
         sort_by = request.GET.get('sort', None)
         queryset = queryset.filter(printed=False) if printed_name else queryset
         queryset = queryset.filter(payment_method__id__in=payment_name) if payment_name else queryset
         queryset = queryset.filter(status__in=status_name) if status_name else queryset
         queryset = queryset.filter(is_paid=False) if paid_name else queryset
+        queryset = queryset.filter(order_type__in=order_type_name) if order_type_name else queryset
+        queryset = queryset.filter(profile__in=costumer_name) if costumer_name else queryset
         queryset = queryset.filter(Q(title__icontains=search_name) |
                                    Q(cellphone__icontains=search_name) |
                                    Q(address__icontains=search_name) |

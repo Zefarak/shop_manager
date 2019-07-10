@@ -16,32 +16,14 @@ from accounts.forms import ProfileForm
 from cart.models import Cart, CartItem
 from .tools import generate_or_remove_queryset
 from .tables import ProfileTable, OrderTable, OrderItemListTable
-from site_settings.constants import CURRENCY
+from site_settings.constants import CURRENCY, ORDER_TYPES
 from django_tables2 import RequestConfig
 import datetime
 
 
 @method_decorator(staff_member_required, name='dispatch')
-class DashboardView(TemplateView):
+class DashboardView(ListView):
     template_name = 'point_of_sale/dashboard.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        qs_today = Order.objects.filter(date_expired=datetime.datetime.now())
-        today_sells = qs_today.filter(order_type__in=['r', 'e']).aggregate(Sum('final_value'))['final_value__sum'] \
-            if qs_today.filter(order_type__in=['r', 'e']).exists() else 0.00
-        today_returns = qs_today.filter(order_type__in=['b', 'c', 'wr']).aggregate(Sum('final_value'))['final_value__sum']\
-            if qs_today.filter(order_type__in=['b', 'c', 'wr']).exists() else 0.00
-        today_sells, today_returns = f'{today_sells} {CURRENCY}', f'{today_returns} {CURRENCY}'
-        costumers_dept = f'0.00 {CURRENCY}'
-        billings = OrderTable(Order.objects.all())
-        context.update(locals())
-        return context
-
-
-@method_decorator(staff_member_required, name='dispatch')
-class OrderListView(ListView):
-    template_name = 'dashboard/list_page.html'
     model = Order
     paginate_by = 50
 
@@ -53,40 +35,15 @@ class OrderListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         queryset_table = OrderTable(self.object_list)
-        page_title, create_url, back_url = ['Παταστατικά Πωλήσεων', reverse('point_of_sale:order_create'),
-                                            reverse('point_of_sale:home')]
-
-        #  filters
-        search_filter, date_filter, paid_filter, costumer_filter = [True]*4
-
-        # print
-        print_button, print_url = True, reverse('dashboard:home')
-
-        # report
-        reports, report_url = True, reverse('dashboard:home')
-        context.update(locals())
-        return context
-
-
-@method_decorator(staff_member_required, name='dispatch')
-class SellListView(ListView):
-    template_name = 'point_of_sale/order-list.html'
-    model = Order
-    paginate_by = 30
-
-    def get_queryset(self):
-        queryset = Order.my_query.get_queryset().sells()
-        queryset = Order.eshop_orders_filtering(self.request, queryset)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        page_title, back_url, create_url = 'Πωλήσεις', reverse('point_of_sale:home'), reverse('point_of_sale:order_create')
-        queryset_table = OrderTable(self.object_list)
         RequestConfig(self.request).configure(queryset_table)
-        #  filters
-        search_filter, date_filter, costumer_filter, paid_filter = [True]*4
 
+        #  filters
+        search_filter, date_filter, paid_filter, costumer_filter, order_type_filter = [True] * 5
+        order_types = ORDER_TYPES
+        costumers = Profile.objects.all()
+
+        new_orders = Order.objects.filter(status='1')[:10]
+        new_orders_table = OrderTable(new_orders)
         context.update(locals())
         return context
 

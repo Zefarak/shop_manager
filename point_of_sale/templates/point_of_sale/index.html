@@ -138,7 +138,8 @@
                                         {% if active_filter %} {% include 'filters/active_filter.html' %} {% endif %}
                                         {% if employee_filter %} {% include 'filters/employee_filter.html' %} {% endif %}
                                         {% if date_filter %}{% include 'filters/date_range_filter.html' %} {% endif %}
-
+                                        {% if order_type_filter %} {% include 'filters/order_type_filter.html' %} {% endif %}
+                                        {% if costumer_filter %} {% include 'filters/costumer_filter.html' %} {% endif %}
                                         <button class="btn btn-primary btn round" type="submit">Υποβολή</button>
                                         <a href="{{ request.path }}" class="btn btn-warning">Καθαρισμός</a>
                                     </form>
