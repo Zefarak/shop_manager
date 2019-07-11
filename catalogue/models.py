@@ -37,12 +37,13 @@ class ProductClass(models.Model):
 
 
 class Product(DefaultBasicModel):
+    warehouse_active = models.BooleanField(default=True, verbose_name='Ενεργό στην Αποθήκη')
     is_offer = models.BooleanField(default=False, verbose_name='Προσφορά')
     product_class = models.ForeignKey(ProductClass, on_delete=models.CASCADE, verbose_name='Είδος')
     featured_product = models.BooleanField(default=False, verbose_name='Εμφάνιση Πρώτη Σελίδα')
     #  warehouse data
     order_code = models.CharField(null=True, blank=True, max_length=100, verbose_name="Κωδικός Τιμολογίου")
-    price_buy = models.DecimalField(decimal_places=2, max_digits=6, default=0, verbose_name="Αξία Αγοράς")
+    price_buy = models.DecimalField(decimal_places=2, max_digits=10, default=0.00, verbose_name="Αξία Αγοράς")
     order_discount = models.IntegerField(default=0, verbose_name="'Έκπτωση Τιμολογίου")
     category = models.ForeignKey(WarehouseCategory, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='Κατηγορία Αποθήκης')
     vendor = models.ForeignKey(Vendor, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='Προμηθευτής')
@@ -69,7 +70,7 @@ class Product(DefaultBasicModel):
     slug = models.SlugField(blank=True, null=True, allow_unicode=True)
 
     # price sell and discount sells
-    price = models.DecimalField(decimal_places=2, max_digits=6, default=0, verbose_name="Αρχική Τιμή")
+    price = models.DecimalField(decimal_places=2, max_digits=10, default=0.00, verbose_name="Αρχική Τιμή")
     price_discount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Εκπτωτική Τιμή')
     final_price = models.DecimalField(default=0, decimal_places=2, max_digits=10, blank=True, verbose_name='Τιμή Πώλησης')
 
@@ -84,7 +85,8 @@ class Product(DefaultBasicModel):
         self.is_offer = True if self.price_discount > 0 else False
         if self.have_attr:
             self.qty_add = self.calculate_qty_if_attributes()
-        self.qty = self.qty_add - self.qty_remove
+        if WAREHOUSE_ORDERS_TRANSCATIONS:
+            self.qty = self.qty_add - self.qty_remove
         super(Product, self).save(*args, **kwargs)
 
     def calculate_qty_if_attributes(self):
@@ -145,7 +147,6 @@ class Product(DefaultBasicModel):
         if product_class.is_service or not product_class.have_transcations:
             return False
         return True
-
 
     def get_copy_url(self):
         return reverse('dashboard:create_copy_product', kwargs={'pk': self.id})
@@ -218,6 +219,20 @@ class Product(DefaultBasicModel):
         queryset = queryset.filter(title__icontains=search_name.capitalize()) if search_name else queryset
 
         return queryset
+
+    #   django table
+    def delivery(self):
+        if self.qty > 0:
+            return 'positive'
+        return 'warning'
+
+    def color_qty(self):
+        if self.qty > 0:
+            return 'primary'
+        return 'danger'
+
+    def color_active(self):
+        return
 
 
 @receiver(post_save, sender=Product)

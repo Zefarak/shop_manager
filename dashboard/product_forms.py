@@ -12,7 +12,9 @@ RETAIL_TRANSCATIONS = settings.RETAIL_TRANSCATIONS
 class ProductFormWarehouseTranscations(BaseForm, forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['active', 'featured_product',
+        fields = ['active',
+                  'warehouse_active',
+                  'featured_product',
                   'title', 'sku',
                   'vendor', 'order_code',
                   'price_buy', 'order_discount',
@@ -33,14 +35,17 @@ class ProductFormWarehouseTranscations(BaseForm, forms.ModelForm):
 class ProductFormNoWarehouseNoTranscations(BaseForm, forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['active', 'featured_product',
+        fields = ['active',
+                  'warehouse_active',
+                  'featured_product',
                   'title', 'sku',
                   'vendor', 'price_buy',
                   'brand', 'category',
-                  'price', 'price_discount',
                   'measure_unit',
+                  'price', 'price_discount',
+
                   'site_text', 'slug',
-                  'qty_add'
+                  'qty'
                 ]
         widgets = {
             'vendor': autocomplete.ModelSelect2(url='vendors_auto', attrs={'class': 'form-control'}),

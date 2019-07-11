@@ -141,11 +141,3 @@ class VendorForm(BaseForm, forms.ModelForm):
         fields = '__all__'
         exclude = ['balance', 'output_value', 'input_value']
 
-
-
-
-class WarehouseCategoryForm(BaseForm, forms.ModelForm):
-
-    class Meta:
-        model = WarehouseCategory
-        fields = '__all__'

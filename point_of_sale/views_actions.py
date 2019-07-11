@@ -207,7 +207,7 @@ def create_or_edit_order_voucher_view(request, pk):
         form.save()
         messages.success(request, f'Στάλθηκε email sto {voucher.email} με κωδικό {voucher.shipping_code}')
         return HttpResponseRedirect(order.get_edit_url())
-    return render(request, 'point_of_sale/form.html', locals())
+    return render(request, 'point_of_sale/shipping_voucher.html', locals())
 
 
 @staff_member_required
@@ -260,3 +260,5 @@ def order_voucher_manager_view(request, pk):
     }
 
     return render(request, 'point_of_sale/action_pages/voucher_manager.html', context)
+
+

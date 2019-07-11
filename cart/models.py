@@ -35,7 +35,7 @@ class Cart(models.Model):
         (MERGED, _("Merged - superceded by another basket")),
         (SAVED, _("Saved - for items to be purchased later")),
         (FROZEN, _("Frozen - the basket cannot be modified")),
-        (SUBMITTED, _("Submitted - has been ordered at the checkout")),
+        (SUBMITTED, _("Submitted")),
     )
     status = models.CharField(
         _("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)

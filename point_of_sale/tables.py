@@ -22,8 +22,9 @@ class ProfileTable(tables.Table):
 
 
 class OrderTable(tables.Table):
-    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}?next={{ request.get_full_path|urlencode }}' class='btn btn-primary'><i class='fa fa-edit'></i></a>", orderable=False)
+    action = tables.TemplateColumn("<a href='{{ record.get_edit_url }}?next={{ request.get_full_path|urlencode }}' class='btn btn-{{ record.paid_color }}'><i class='fa fa-edit'></i></a>", orderable=False)
     tag_final_value = tables.Column(orderable=False, verbose_name='Αξία')
+    status = tables.TemplateColumn("<td class='table-{{ record.table_color }}'>{{ record.get_status_display }}</td>")
 
     class Meta:
         model = Order

@@ -1,6 +1,6 @@
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required

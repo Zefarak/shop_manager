@@ -25,7 +25,7 @@ import datetime
 class DashboardView(ListView):
     template_name = 'point_of_sale/dashboard.html'
     model = Order
-    paginate_by = 50
+    paginate_by = 25
 
     def get_queryset(self):
         qs = Order.objects.all()
@@ -35,7 +35,7 @@ class DashboardView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         queryset_table = OrderTable(self.object_list)
-        RequestConfig(self.request).configure(queryset_table)
+        RequestConfig(self.request, paginate={'per_page':self.paginate_by}).configure(queryset_table)
 
         #  filters
         search_filter, date_filter, paid_filter, costumer_filter, order_type_filter = [True] * 5
@@ -102,7 +102,7 @@ class OrderUpdateView(UpdateView):
         is_return = True if self.object.order_type in ['b', 'wr'] else False
         profile_detail, created = OrderProfile.objects.get_or_create(order_related=instance)
         get_params = self.request.get_full_path().split('?', 1)[1] if '?' in self.request.get_full_path() else ''
-        back_url = get_params if len(get_params) > 2 else reverse('point_of_sale:home')
+        back_url = reverse('point_of_sale:home') + '?' + get_params
         context.update(locals())
         return context
 

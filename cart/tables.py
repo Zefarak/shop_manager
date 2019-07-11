@@ -7,6 +7,13 @@ class CartTable(tables.Table):
     action = tables.TemplateColumn('<a href="{{ record.get_edit_url }}" class="btn btn-info">'
                                    '<i class="fa fa-info"></> </a>', orderable=False
                                    )
+    final_value = tables.TemplateColumn("<p> {{record.tag_final_value}} </p>")
+    status = tables.TemplateColumn("<p "
+                                   "{% if record.status == 'Submitted' %}"
+                                   " style='background-color: #d1efc2' "
+                                   "{% else %}"
+                                   "{% endif %}>{{ record.get_status_display }}</p>"
+                                   )
 
     class Meta:
         template_name = 'django_tables2/bootstrap.html'

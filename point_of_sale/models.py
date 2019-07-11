@@ -244,6 +244,13 @@ class Order(DefaultOrderModel):
     def order_outcome_type():
         return ['r', 'e', 'wa']
 
+    #  django tables
+    def table_color(self):
+        return 'danger' if self.status == '1' else 'success' if self.status == '8' else 'info'
+
+    def paid_color(self):
+        return 'success' if self.is_paid else 'primary'
+
 
 @receiver(post_save, sender=Order)
 def create_unique_number(sender, instance, **kwargs):
@@ -279,6 +286,17 @@ class OrderItem(DefaultOrderItemModel):
         verbose_name_plural = '2. Προϊόντα Πωληθέντα'
         ordering = ['-order__timestamp', ]
         unique_together = ['title', 'order']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._important_fields = ['qty']
+        for field in self._important_fields:
+            setattr(self, '__original_%s' % field, getattr(self, field))
+
+    def old_qty(self):
+        for field in self._important_fields:
+            orig = '__original_%s' % field
+            return getattr(self, orig)
 
     def __str__(self):
         return self.title.title if self.title else 'Something is wrong'

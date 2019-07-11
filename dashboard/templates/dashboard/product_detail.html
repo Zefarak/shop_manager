@@ -1,5 +1,15 @@
 {% extends 'catalogue_index.html' %} {% load static %}
 
+{% block extra_css %}
+    <style>
+        .form-inline .form-control {
+            display: inline-block;
+            width: 100%;
+            vertical-align: middle
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <div class="pcoded-content">
         <div class="pcoded-inner-content">
@@ -179,19 +189,50 @@
                             <!-- Task-detail-right start -->
                             <!-- Task-detail-left start -->
                             <div class="col-xl-8 col-lg-12 pull-xl-4">
+                                <div class="row">
+                                    <div class="col-md-12 col-xl-12">
+                                        <div class="card">
+                                            <div class="card-header"><h5><i class="icofont icofont-tasks-alt m-r-5"></i> Επεξεργασία</h5></div>
+                                            <div class="card-block">
+                                                <div class="row">
+                                                    <form method="post" class="form form-inline">
+                                                    {% for ele in form %}
+                                                        <div class="col-sm-12 col-xl-6 col-md-6 m-b-30">
+                                                            <h4 class="sub-title">{{ ele.label }}</h4>{{ ele }}
+                                                        </div>
+                                                        <br>
+                                                    {% endfor %}
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="card">
                                     <div class="card-header">
                                         <h5><i class="icofont icofont-tasks-alt m-r-5"></i> Επεξεργασία</h5>
-
                                     </div>
-                                    <div class="card-block">
-                                        <form class="form" method="post">
-                                            {% csrf_token %}
-                                            {{ form }}
-                                            <br>
-                                            <button name="_update" type="submit" class="btn btn-success btn-round"><i class="fa fa-save"></i>Αποθήκευση</button>
-                                            <button name="_save" type="submit" class="btn btn-danger btn-round f-right"><i class="fa fa-save"></i>Αποθήκευση και Κλείσιμο</button>
-                                        </form>
+                                    <div class="card-body">
+
+                                                <form class="form" method="post">
+                                                    {% csrf_token %}
+                                                <div class="row>">
+                                            <div class="col-md-12">
+                                                    {% for ele in form %}
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label>{{ ele.label }}</label>{{ ele }}
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                    <button name="_update" type="submit" class="btn btn-success btn-round"><i class="fa fa-save"></i>Αποθήκευση</button>
+                                                    <button name="_save" type="submit" class="btn btn-danger btn-round f-right"><i class="fa fa-save"></i>Αποθήκευση και Κλείσιμο</button>
+                                                </div>
+                                                </div>
+                                                </form>
+
+
                                     </div>
                                 </div>
                             </div>

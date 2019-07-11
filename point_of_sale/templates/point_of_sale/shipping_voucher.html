@@ -1,0 +1,29 @@
+{% extends 'point_of_sale/index.html' %}
+
+{% block content %}
+    <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <div class="page-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header"><h4>Επεξεργασία Τρόπου Αποστολής</h4></div>
+                                    <div class="card-block">
+                                        <form class="form" method="post">
+                                            {% csrf_token %}
+                                            {{ form }}
+                                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Αποθήκευση</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

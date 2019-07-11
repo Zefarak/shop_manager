@@ -5,7 +5,7 @@ import uuid
 
 
 class DefaultBasicModel(models.Model):
-    active = models.BooleanField(default=False, verbose_name='Status')
+    active = models.BooleanField(default=True, verbose_name='Status')
     title = models.CharField(max_length=255, verbose_name='Title')
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)

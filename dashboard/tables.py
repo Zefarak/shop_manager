@@ -27,12 +27,10 @@ class TableProduct(tables.Table):
                                    "<i class='fa fa-edit'> </i></a>",
                                    orderable=False
                                    )
+    qty = tables.TemplateColumn('<span class="label label-{{ record.color_qty }}">{{ record.tag_qty }}</span>')
     tag_final_price = tables.Column(orderable=False, verbose_name='Τιμή Πώλησης')
     tag_price_buy = tables.Column(orderable=False, verbose_name='Τιμή Αγοράς')
-    title = TruncatedTextColumn()
-    category = tables.TemplateColumn("<p>{{ record.title|truncatechars_html:25 }}</p>")
-    vendor = tables.TemplateColumn("<p>{{ record.title|truncatechars_html:25 }}</p>")
-
+    #  title = TruncatedTextColumn()
 
     class Meta:
         model = Product
